@@ -1,0 +1,258 @@
+/* ===== Survey App Styles ===== */
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+  --bg: #f6f6f8;
+  --card-bg: #fff;
+  --border: #e5e5ea;
+  --text: #444;
+  --text-h: #111;
+  --text-muted: #888;
+  --primary: #1a73e8;
+  --primary-hover: #1558b0;
+  --selected-bg: #eef4ff;
+  --selected-border: #1a73e8;
+  --badge-bg: #f0f0f5;
+  --badge-text: #555;
+  --error: #d93025;
+  --shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Page layout */
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 0 0 6px;
+  letter-spacing: -0.3px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+/* Card */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+.card-desc.example {
+  margin-top: 8px;
+}
+
+/* Badge */
+.badge {
+  font-size: 11px;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-family: var(--mono);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Options */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+  user-select: none;
+}
+
+.option-label:hover {
+  border-color: var(--primary);
+  background: #f5f8ff;
+}
+
+.option-label.selected {
+  border-color: var(--selected-border);
+  background: var(--selected-bg);
+}
+
+.option-label input[type="radio"] {
+  accent-color: var(--primary);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.option-text {
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+/* Submit row */
+.submit-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.submit-btn {
+  padding: 10px 28px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.submit-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Links */
+.results-link {
+  font-size: 14px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.results-link:hover {
+  text-decoration: underline;
+}
+
+.results-link.small {
+  font-size: 13px;
+}
+
+/* Error */
+.error-msg {
+  color: var(--error);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+/* Thank you card */
+.thank-you-card {
+  text-align: center;
+  padding: 40px;
+}
+
+.thank-you-text {
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* Chart */
+.chart-container {
+  margin-top: 8px;
+}
+
+.legend-counts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-name {
+  flex: 1;
+  color: var(--text);
+}
+
+.legend-count {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: #f1f1f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #555;
+}
