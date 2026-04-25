@@ -1,3 +1,15 @@
+/* Title row */
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.titleRow h1 {
+  margin: 0;
+}
+
 /* Subtitle */
 .subtitle {
   color: var(--text-muted);

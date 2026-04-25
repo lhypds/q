@@ -3,7 +3,7 @@ set -e
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
-echo "=== Restarting Survey App ==="
+echo "Restarting..."
 
 # Pull latest code
 echo "Pulling latest code..."

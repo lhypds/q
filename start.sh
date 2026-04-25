@@ -3,7 +3,7 @@ set -e
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
-echo "=== Starting Survey App ==="
+echo "Starting..."
 
 cd "$ROOT"
 pm2 start ecosystem.config.cjs --update-env

@@ -59,11 +59,6 @@ body {
 .card-desc {
   font-size: 13px;
   color: var(--text-muted);
-  margin: 0 0 16px;
-}
-
-.card-desc.example {
-  margin-top: 8px;
 }
 
 /* Badge */

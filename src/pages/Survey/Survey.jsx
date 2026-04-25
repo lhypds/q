@@ -1,9 +1,20 @@
 import { useState, useMemo } from "react";
 import styles from "./survey.module.css";
+import { ActionButton, showToast } from "../../ui";
+import Edit from "./Edit/Edit";
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function parseSurvey(search) {
   const params = new URLSearchParams(search);
-  const title = params.get("title") || "Survey";
+  const title = params.get("title") || "q";
   const surveyObj = {};
   for (const [k, v] of params.entries()) {
     surveyObj[k] = v;
@@ -29,7 +40,23 @@ export default function Survey() {
   const [selections, setSelections] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
   const allAnswered = questions.every((q) => selections[q.key]);
+
+  function handleEditSave(newTitle) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("title", newTitle);
+    window.location.href = url.toString();
+  }
+
+  async function handleShare() {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    params.delete("view");
+    url.search = params.toString();
+    const copied = await copyText(url.toString());
+    showToast(copied ? "Link copied to clipboard" : "Failed to copy link");
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -69,7 +96,27 @@ export default function Survey() {
 
   return (
     <div className="page">
-      <h1 className="page-title">{title}</h1>
+      <div className={styles.titleRow}>
+        <h1 className="page-title">{title}</h1>
+        <div className={styles.actions}>
+          <ActionButton tooltip="Edit" onClick={() => setEditOpen(true)}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
+              <path d="M14 6l3 3" />
+            </svg>
+          </ActionButton>
+          <ActionButton tooltip="Share" onClick={handleShare}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <path d="M8.59 13.51l6.83 3.98" />
+              <path d="M15.41 6.51L8.59 10.49" />
+            </svg>
+          </ActionButton>
+        </div>
+      </div>
+      <Edit isOpen={editOpen} onClose={() => setEditOpen(false)} currentTitle={title} onSave={handleEditSave} />
       <form onSubmit={handleSubmit}>
         {questions.map((q) => (
           <div key={q.key} className="card">
@@ -99,10 +146,7 @@ export default function Survey() {
         ))}
         {questions.length === 0 && (
           <div className="card">
-            <p className="card-desc">No questions found in URL parameters.</p>
-            <p className="card-desc example">
-              Example: <code>?title=My Survey&amp;q1=How?&amp;q1a1=Great&amp;q1a2=Fine</code>
-            </p>
+            <div className="card-desc">No questions found.</div>
           </div>
         )}
         {error && <p className="error-msg">{error}</p>}

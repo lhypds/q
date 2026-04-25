@@ -1,12 +1,22 @@
 import { useState, useEffect, useMemo } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import styles from "./results.module.css";
+import { ActionButton, showToast } from "../../ui";
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 const COLORS = ["#4f8ef7", "#f7934f", "#4fc17e", "#f74f7a", "#a24ff7", "#f7e04f", "#4fd6f7"];
 
 function parseSurvey(search) {
   const params = new URLSearchParams(search);
-  const title = params.get("title") || "Survey";
+  const title = params.get("title") || "q";
   const surveyObj = {};
   for (const [k, v] of params.entries()) {
     if (k !== "view") surveyObj[k] = v;
@@ -71,9 +81,25 @@ export default function Results() {
     return url.toString();
   })();
 
+  async function handleShare() {
+    const copied = await copyText(window.location.href);
+    showToast(copied ? "Link copied to clipboard" : "Failed to copy link");
+  }
+
   return (
     <div className="page">
-      <h1 className="page-title">{title} — Results</h1>
+      <div className={styles.titleRow}>
+        <h1 className="page-title">{title} — Results</h1>
+        <ActionButton tooltip="Share" onClick={handleShare}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <path d="M8.59 13.51l6.83 3.98" />
+            <path d="M15.41 6.51L8.59 10.49" />
+          </svg>
+        </ActionButton>
+      </div>
       <div className={styles.subtitle}>
         {loading ? "Loading…" : `${results.length} response${results.length !== 1 ? "s" : ""} collected`}
       </div>

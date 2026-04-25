@@ -2,7 +2,7 @@
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
-echo "=== Stopping Survey App ==="
+echo "Stopping..."
 
 # Read PM2_NAME from .env
 PM2_NAME=$(grep '^PM2_NAME=' "$ROOT/.env" 2>/dev/null | cut -d= -f2 || echo survey-app)

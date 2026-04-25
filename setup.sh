@@ -3,7 +3,7 @@ set -e
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
-echo "=== Setting up Survey App ==="
+echo "Setting up..."
 
 # Install pm2 globally if not present
 if ! command -v pm2 &> /dev/null; then
