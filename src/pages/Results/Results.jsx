@@ -1,18 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import styles from "./results.module.css";
 
 const COLORS = ["#4f8ef7", "#f7934f", "#4fc17e", "#f74f7a", "#a24ff7", "#f7e04f", "#4fd6f7"];
 
 function parseSurvey(search) {
   const params = new URLSearchParams(search);
   const title = params.get("title") || "Survey";
-
-  // Build survey JSON key for lookup
   const surveyObj = {};
   for (const [k, v] of params.entries()) {
     if (k !== "view") surveyObj[k] = v;
   }
-
   const questions = [];
   let i = 1;
   while (params.has(`q${i}`)) {
@@ -26,17 +24,11 @@ function parseSurvey(search) {
     questions.push({ key: `q${i}`, text: qText, answers });
     i++;
   }
-
   return { title, questions, surveyObj };
 }
 
-function buildSurveyParam(surveyObj) {
-  return JSON.stringify(surveyObj);
-}
-
-export default function ResultsPage() {
+export default function Results() {
   const { title, questions, surveyObj } = useMemo(() => {
-    // Strip 'view' param for survey lookup
     const url = new URL(window.location.href);
     url.searchParams.delete("view");
     return parseSurvey(url.search);
@@ -45,8 +37,7 @@ export default function ResultsPage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
-
-  const surveyKey = useMemo(() => buildSurveyParam(surveyObj), [surveyObj]);
+  const surveyKey = useMemo(() => JSON.stringify(surveyObj), [surveyObj]);
 
   useEffect(() => {
     fetch(`/surveyresults?survey=${encodeURIComponent(surveyKey)}`)
@@ -83,12 +74,10 @@ export default function ResultsPage() {
   return (
     <div className="page">
       <h1 className="page-title">{title} — Results</h1>
-      <p className="subtitle">
+      <div className={styles.subtitle}>
         {loading ? "Loading…" : `${results.length} response${results.length !== 1 ? "s" : ""} collected`}
-      </p>
-
+      </div>
       {fetchError && <p className="error-msg">{fetchError}</p>}
-
       {!loading &&
         questions.map((q) => {
           const data = getChartData(q.key, q.answers);
@@ -102,7 +91,7 @@ export default function ResultsPage() {
               {total === 0 ? (
                 <p className="card-desc">No responses yet.</p>
               ) : (
-                <div className="chart-container">
+                <div className={styles.chartContainer}>
                   <ResponsiveContainer width="100%" height={260}>
                     <PieChart>
                       <Pie data={data} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={3} dataKey="value">
@@ -116,12 +105,12 @@ export default function ResultsPage() {
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>
-                  <div className="legend-counts">
+                  <div className={styles.legendCounts}>
                     {data.map((d, idx) => (
-                      <div className="legend-item" key={d.name}>
-                        <span className="legend-dot" style={{ background: COLORS[idx % COLORS.length] }} />
-                        <span className="legend-name">{d.name}</span>
-                        <span className="legend-count">{d.value}</span>
+                      <div className={styles.legendItem} key={d.name}>
+                        <span className={styles.legendDot} style={{ background: COLORS[idx % COLORS.length] }} />
+                        <span className={styles.legendName}>{d.name}</span>
+                        <span className={styles.legendCount}>{d.value}</span>
                       </div>
                     ))}
                   </div>
@@ -130,7 +119,6 @@ export default function ResultsPage() {
             </div>
           );
         })}
-
       <div className="submit-row">
         <a href={surveyUrl} className="results-link small">
           ← Take Survey

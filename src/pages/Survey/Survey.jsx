@@ -1,16 +1,13 @@
 import { useState, useMemo } from "react";
+import styles from "./survey.module.css";
 
 function parseSurvey(search) {
   const params = new URLSearchParams(search);
   const title = params.get("title") || "Survey";
-
-  // Build survey JSON (for storage)
   const surveyObj = {};
   for (const [k, v] of params.entries()) {
     surveyObj[k] = v;
   }
-
-  // Parse questions
   const questions = [];
   let i = 1;
   while (params.has(`q${i}`)) {
@@ -24,17 +21,14 @@ function parseSurvey(search) {
     questions.push({ key: `q${i}`, text: qText, answers });
     i++;
   }
-
   return { title, questions, surveyObj };
 }
 
-export default function SurveyPage() {
+export default function Survey() {
   const { title, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
-
   const [selections, setSelections] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-
   const allAnswered = questions.every((q) => selections[q.key]);
 
   async function handleSubmit(e) {
@@ -62,9 +56,9 @@ export default function SurveyPage() {
   if (submitted) {
     return (
       <div className="page">
-        <div className="card thank-you-card">
+        <div className={`card ${styles.thankYouCard}`}>
           <h2 className="card-title">Thank you!</h2>
-          <p className="thank-you-text">Your response has been recorded.</p>
+          <p className={styles.thankYouText}>Your response has been recorded.</p>
           <a href={resultsUrl} className="results-link">
             View Results →
           </a>
@@ -84,9 +78,12 @@ export default function SurveyPage() {
               <span className="badge">{q.key}</span>
             </div>
             <p className="card-desc">Select one option below.</p>
-            <div className="options">
+            <div className={styles.options}>
               {q.answers.map((a) => (
-                <label key={a.key} className={`option-label ${selections[q.key] === a.key ? "selected" : ""}`}>
+                <label
+                  key={a.key}
+                  className={`${styles.optionLabel} ${selections[q.key] === a.key ? styles.optionLabelSelected : ""}`}
+                >
                   <input
                     type="radio"
                     name={q.key}
@@ -94,27 +91,24 @@ export default function SurveyPage() {
                     checked={selections[q.key] === a.key}
                     onChange={() => setSelections((prev) => ({ ...prev, [q.key]: a.key }))}
                   />
-                  <span className="option-text">{a.label}</span>
+                  <span className={styles.optionText}>{a.label}</span>
                 </label>
               ))}
             </div>
           </div>
         ))}
-
         {questions.length === 0 && (
           <div className="card">
             <p className="card-desc">No questions found in URL parameters.</p>
             <p className="card-desc example">
-              Example: <code>?title=My Survey&amp;q1=How are you?&amp;q1a1=Great&amp;q1a2=Fine</code>
+              Example: <code>?title=My Survey&amp;q1=How?&amp;q1a1=Great&amp;q1a2=Fine</code>
             </p>
           </div>
         )}
-
         {error && <p className="error-msg">{error}</p>}
-
         {questions.length > 0 && (
           <div className="submit-row">
-            <button type="submit" className="submit-btn" disabled={!allAnswered}>
+            <button type="submit" className={styles.submitBtn} disabled={!allAnswered}>
               Submit
             </button>
             <a href={resultsUrl} className="results-link small">

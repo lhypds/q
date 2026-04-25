@@ -1,0 +1,39 @@
+/* Subtitle */
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Chart */
+.chartContainer {
+  margin-top: 8px;
+}
+
+.legendCounts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legendName {
+  flex: 1;
+}
+
+.legendCount {
+  font-weight: 600;
+}

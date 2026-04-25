@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 const db = new Database(path.join(__dirname, 'db.sqlite'));
 
 db.exec(`
-  CREATE TABLE IF NOT EXISTS surveyresults (
+  CREATE TABLE IF NOT EXISTS records (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     time INTEGER NOT NULL,
     time_h TEXT NOT NULL,
@@ -43,7 +43,7 @@ app.post('/surveyresult', (req, res) => {
   const resultJson = typeof result === 'string' ? result : JSON.stringify(result);
 
   const stmt = db.prepare(
-    'INSERT INTO surveyresults (time, time_h, survey, result) VALUES (?, ?, ?, ?)'
+    'INSERT INTO records (time, time_h, survey, result) VALUES (?, ?, ?, ?)'
   );
   const info = stmt.run(time, time_h, surveyJson, resultJson);
 
@@ -58,7 +58,7 @@ app.get('/surveyresults', (req, res) => {
   }
 
   const rows = db.prepare(
-    'SELECT * FROM surveyresults WHERE survey = ? ORDER BY time DESC'
+    'SELECT * FROM records WHERE survey = ? ORDER BY time DESC'
   ).all(survey);
 
   res.json(rows.map(r => ({
