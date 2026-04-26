@@ -30,3 +30,9 @@
 .legendCount {
   font-weight: 600;
 }
+
+.legendPercent {
+  color: #888;
+  font-size: 12px;
+  margin-left: 4px;
+}

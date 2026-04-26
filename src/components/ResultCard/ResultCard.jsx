@@ -1,7 +1,16 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { useState } from "react";
 import styles from "./resultCard.module.css";
 
-const COLORS = ["#a8c8fa", "#fac4a0", "#9de0bc", "#fab4c8", "#cdb0fa", "#faf0a0", "#a0e8fa"];
+const COLORS = [
+  "#b3d4fc", // soft blue
+  "#ffd6a0", // soft orange
+  "#aee9c7", // soft green
+  "#ffb6c9", // soft pink
+  "#cbb7fa", // soft purple
+  "#fff3a0", // soft yellow
+  "#a0e8fa", // soft cyan
+];
 
 export default function ResultCard({ question, results }) {
   const counts = {};
@@ -14,6 +23,9 @@ export default function ResultCard({ question, results }) {
   });
   const data = question.answers.map((a) => ({ name: a.label, value: counts[a.key] || 0 }));
   const total = data.reduce((s, d) => s + d.value, 0);
+
+  // Randomize color start index
+  const [colorOffset] = useState(() => Math.floor(Math.random() * COLORS.length));
 
   return (
     <div className="card">
@@ -29,7 +41,7 @@ export default function ResultCard({ question, results }) {
             <PieChart>
               <Pie data={data} cx="50%" cy="50%" innerRadius={0} outerRadius={100} paddingAngle={0} dataKey="value">
                 {data.map((_, idx) => (
-                  <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+                  <Cell key={idx} fill={COLORS[(colorOffset + idx) % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip formatter={(value, name) => [`${value} (${total ? Math.round((value / total) * 100) : 0}%)`, name]} />
@@ -37,13 +49,18 @@ export default function ResultCard({ question, results }) {
             </PieChart>
           </ResponsiveContainer>
           <div className={styles.legendCounts}>
-            {data.map((d, idx) => (
-              <div className={styles.legendItem} key={d.name}>
-                <span className={styles.legendDot} style={{ background: COLORS[idx % COLORS.length] }} />
-                <span className={styles.legendName}>{d.name}</span>
-                <span className={styles.legendCount}>{d.value}</span>
-              </div>
-            ))}
+            {data.map((d, idx) => {
+              const percent = total ? Math.round((d.value / total) * 100) : 0;
+              return (
+                <div className={styles.legendItem} key={d.name}>
+                  <span className={styles.legendDot} style={{ background: COLORS[(colorOffset + idx) % COLORS.length] }} />
+                  <span className={styles.legendName}>{d.name}</span>
+                  <span className={styles.legendCount}>
+                    {d.value} <span className={styles.legendPercent}>({percent}%)</span>
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
