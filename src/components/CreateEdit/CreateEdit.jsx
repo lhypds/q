@@ -1,14 +1,25 @@
 import { useState } from "react";
 import { Modal } from "@ui";
+import { normalizeSurvey } from "@utils/surveyUtils";
 import styles from "./edit.module.css";
 
 function toJson(obj) {
   return JSON.stringify(obj, null, 2);
 }
 
-export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, surveyObj, onSave, mode }) {
+export default function CreateEdit({
+  isOpen,
+  onClose,
+  currentTitle,
+  currentSubtitle,
+  currentDescription,
+  surveyObj,
+  onSave,
+  mode,
+}) {
   const [title, setTitle] = useState(currentTitle || "");
   const [subtitle, setSubtitle] = useState(currentSubtitle || "");
+  const [description, setDescription] = useState(currentDescription || "");
   const [jsonText, setJsonText] = useState(() => toJson(surveyObj || {}));
   const [jsonError, setJsonError] = useState("");
 
@@ -39,6 +50,20 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, s
     }
   }
 
+  function handleDescriptionChange(e) {
+    const val = e.target.value;
+    setDescription(val);
+    try {
+      const obj = JSON.parse(jsonText);
+      if (val) obj.description = val;
+      else delete obj.description;
+      setJsonText(toJson(obj));
+      setJsonError("");
+    } catch {
+      console.error("Invalid JSON.");
+    }
+  }
+
   function handleJsonChange(e) {
     const val = e.target.value;
     setJsonText(val);
@@ -46,6 +71,7 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, s
       const obj = JSON.parse(val);
       setTitle(obj.title || "");
       setSubtitle(obj.subtitle || "");
+      setDescription(obj.description || "");
       setJsonError("");
     } catch {
       setJsonError("Invalid JSON");
@@ -59,11 +85,13 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, s
       if (title.trim()) obj.title = title.trim();
       if (subtitle.trim()) obj.subtitle = subtitle.trim();
       else delete obj.subtitle;
+      if (description.trim()) obj.description = description.trim();
+      else delete obj.description;
       if (!obj.title || !obj.title.trim()) {
         setJsonError("Title is required");
         return;
       }
-      onSave(obj);
+      onSave(normalizeSurvey(obj));
       onClose();
     } catch {
       setJsonError("Invalid JSON — cannot save");
@@ -73,12 +101,16 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, s
   function handleAddQuestion() {
     try {
       const obj = JSON.parse(jsonText);
-      // Find next question number
-      let n = 1;
-      while (obj[`q${n}`] !== undefined) n++;
-      obj[`q${n}`] = `Question ${n}`;
-      obj[`q${n}a1`] = "Option 1";
-      obj[`q${n}a2`] = "Option 2";
+      if (!obj.questions) obj.questions = {};
+      const nums = Object.keys(obj.questions)
+        .map(Number)
+        .filter((n) => !isNaN(n));
+      const n = nums.length > 0 ? Math.max(...nums) + 1 : 1;
+      obj.questions[String(n)] = {
+        title: `Question ${n}`,
+        description: "",
+        options: { 1: "Option 1", 2: "Option 2" },
+      };
       setJsonText(toJson(obj));
       setJsonError("");
     } catch {
@@ -111,6 +143,16 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, s
             type="text"
             value={subtitle}
             onChange={handleSubtitleChange}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+        <div className={styles.field}>
+          <label className={styles.label}>Description</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={description}
+            onChange={handleDescriptionChange}
             onKeyDown={handleKeyDown}
           />
         </div>

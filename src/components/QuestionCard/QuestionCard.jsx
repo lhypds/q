@@ -7,6 +7,7 @@ export default function QuestionCard({ question, selected, onSelect }) {
         <div className="card-title">{question.text}</div>
         <span className="badge">{question.key}</span>
       </div>
+      {question.description && <div className="card-desc">{question.description}</div>}
       <div className={styles.options}>
         {question.answers.map((a) => (
           <label key={a.key} className={`${styles.optionLabel} ${selected === a.key ? styles.optionLabelSelected : ""}`}>

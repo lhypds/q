@@ -12,6 +12,7 @@ export default defineConfig({
       '@ui': path.resolve(__dirname, 'src/ui'),
       '@components': path.resolve(__dirname, 'src/components'),
       '@pages': path.resolve(__dirname, 'src/pages'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
     },
   },
   server: {

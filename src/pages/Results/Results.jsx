@@ -14,32 +14,35 @@ async function copyText(text) {
 
 function parseSurvey(search) {
   const params = new URLSearchParams(search);
-  const title = params.get("title") || "q";
-  const surveyObj = {};
-  for (const [k, v] of params.entries()) {
-    if (k !== "view") surveyObj[k] = v;
+  const dataStr = params.get("data");
+  if (!dataStr) return { title: "q", questions: [], surveyObj: {} };
+  let obj;
+  try {
+    obj = JSON.parse(dataStr);
+  } catch {
+    return { title: "q", questions: [], surveyObj: {} };
   }
+  const title = obj.title || "q";
   const questions = [];
-  let i = 1;
-  while (params.has(`q${i}`)) {
-    const qText = params.get(`q${i}`);
-    const answers = [];
-    let j = 1;
-    while (params.has(`q${i}a${j}`)) {
-      answers.push({ key: `q${i}a${j}`, label: params.get(`q${i}a${j}`) });
-      j++;
+  if (obj.questions) {
+    for (const [qKey, q] of Object.entries(obj.questions)) {
+      const answers = [];
+      if (q.options) {
+        for (const [optKey, optLabel] of Object.entries(q.options)) {
+          answers.push({ key: optKey, label: optLabel });
+        }
+      }
+      questions.push({ key: qKey, text: q.title || "", description: q.description || "", answers });
     }
-    questions.push({ key: `q${i}`, text: qText, answers });
-    i++;
   }
-  return { title, questions, surveyObj };
+  return { title, questions, surveyObj: obj };
 }
 
 export default function Results() {
   const { title, questions, surveyObj } = useMemo(() => {
-    const url = new URL(window.location.href);
-    url.searchParams.delete("view");
-    return parseSurvey(url.search);
+    const params = new URLSearchParams(window.location.search);
+    params.delete("view");
+    return parseSurvey("?" + params.toString());
   }, []);
 
   const [results, setResults] = useState([]);
@@ -62,9 +65,9 @@ export default function Results() {
   }, [surveyKey]);
 
   const surveyUrl = (() => {
-    const url = new URL(window.location.href);
-    url.searchParams.delete("view");
-    return url.toString();
+    const params = new URLSearchParams(window.location.search);
+    params.delete("view");
+    return window.location.pathname + "?" + params.toString();
   })();
 
   async function handleShare() {

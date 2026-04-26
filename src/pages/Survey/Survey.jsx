@@ -3,6 +3,7 @@ import styles from "./survey.module.css";
 import { ActionButton, showToast, Modal } from "@ui";
 import { CreateEdit } from "@components/CreateEdit";
 import QuestionCard from "@components/QuestionCard";
+import { normalizeSurvey } from "@utils/surveyUtils";
 
 async function copyText(text) {
   try {
@@ -15,30 +16,34 @@ async function copyText(text) {
 
 function parseSurvey(search) {
   const params = new URLSearchParams(search);
-  const title = params.get("title");
-  const subtitle = params.get("subtitle") || "";
-  const surveyObj = {};
-  for (const [k, v] of params.entries()) {
-    surveyObj[k] = v;
+  const dataStr = params.get("data");
+  if (!dataStr) return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
+  let obj;
+  try {
+    obj = JSON.parse(dataStr);
+  } catch {
+    return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
   }
+  const title = obj.title || null;
+  const subtitle = obj.subtitle || "";
+  const description = obj.description || "";
   const questions = [];
-  let i = 1;
-  while (params.has(`q${i}`)) {
-    const qText = params.get(`q${i}`);
-    const answers = [];
-    let j = 1;
-    while (params.has(`q${i}a${j}`)) {
-      answers.push({ key: `q${i}a${j}`, label: params.get(`q${i}a${j}`) });
-      j++;
+  if (obj.questions) {
+    for (const [qKey, q] of Object.entries(obj.questions)) {
+      const answers = [];
+      if (q.options) {
+        for (const [optKey, optLabel] of Object.entries(q.options)) {
+          answers.push({ key: optKey, label: optLabel });
+        }
+      }
+      questions.push({ key: qKey, text: q.title || "", description: q.description || "", answers });
     }
-    questions.push({ key: `q${i}`, text: qText, answers });
-    i++;
   }
-  return { title, subtitle, questions, surveyObj };
+  return { title, subtitle, description, questions, surveyObj: obj };
 }
 
 export default function Survey() {
-  const { title, subtitle, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
+  const { title, subtitle, description, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
 
   const [selections, setSelections] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -51,13 +56,8 @@ export default function Survey() {
 
   function handleEditSave(newSurveyObj) {
     const url = new URL(window.location.href);
-    // Clear existing search params and rebuild from newSurveyObj
     url.search = "";
-    for (const [k, v] of Object.entries(newSurveyObj)) {
-      if (v !== null && v !== undefined && v !== "") {
-        url.searchParams.set(k, v);
-      }
-    }
+    url.searchParams.set("data", JSON.stringify(newSurveyObj));
     window.location.href = url.toString();
   }
 
@@ -72,10 +72,13 @@ export default function Survey() {
 
   async function doSubmit(emailValue) {
     try {
+      // Normalize the survey object
+      const normalizedSurvey = normalizeSurvey(surveyObj);
+
       const res = await fetch("/surveyresult", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ survey: surveyObj, result: selections, email: emailValue }),
+        body: JSON.stringify({ survey: normalizedSurvey, result: selections, email: emailValue }),
       });
       if (!res.ok) throw new Error("Server error");
       setSubmitted(true);
@@ -147,6 +150,7 @@ export default function Survey() {
       </div>
 
       {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
+      {description && <div className={styles.description}>{description}</div>}
 
       <Modal
         isOpen={emailModalOpen}
@@ -197,6 +201,7 @@ export default function Survey() {
         onClose={() => setCreateEditOpen(false)}
         currentTitle={title}
         currentSubtitle={subtitle}
+        currentDescription={description}
         surveyObj={surveyObj}
         onSave={handleEditSave}
         mode="edit"

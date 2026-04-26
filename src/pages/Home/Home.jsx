@@ -20,11 +20,7 @@ export default function Home() {
   function handleCreateSave(newSurveyObj) {
     const url = new URL(window.location.href);
     url.search = "";
-    for (const [k, v] of Object.entries(newSurveyObj)) {
-      if (v !== null && v !== undefined && v !== "") {
-        url.searchParams.set(k, v);
-      }
-    }
+    url.searchParams.set("data", JSON.stringify(newSurveyObj));
     window.location.href = url.toString();
   }
 

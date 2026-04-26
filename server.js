@@ -29,9 +29,6 @@ db.exec(`
   )
 `);
 
-// Migrate: add email column if it doesn't exist
-try { db.exec("ALTER TABLE records ADD COLUMN email TEXT NOT NULL DEFAULT ''"); } catch { }
-
 // POST /surveyresult
 app.post('/surveyresult', (req, res) => {
   const { survey, result, email } = req.body;
@@ -43,8 +40,14 @@ app.post('/surveyresult', (req, res) => {
   const time = Math.floor(now / 1000);
   const time_h = new Date(now).toISOString().replace('T', ' ').substring(0, 19);
 
-  const surveyJson = typeof survey === 'string' ? survey : JSON.stringify(survey);
-  const resultJson = typeof result === 'string' ? result : JSON.stringify(result);
+  // Normalize result keys order (sort question keys numerically)
+  const resultObj = typeof result === 'string' ? JSON.parse(result) : result;
+  const normalizedResult = Object.keys(resultObj)
+    .sort((a, b) => Number(a) - Number(b))
+    .reduce((acc, k) => { acc[k] = resultObj[k]; return acc; }, {});
+
+  const surveyJson = JSON.stringify(survey);
+  const resultJson = JSON.stringify(normalizedResult);
   const emailVal = typeof email === 'string' ? email.trim() : '';
 
   const stmt = db.prepare(

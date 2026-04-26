@@ -10,6 +10,12 @@
   margin-top: 12px;
 }
 
+.description {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
 .actions {
   display: flex;
   gap: 6px;

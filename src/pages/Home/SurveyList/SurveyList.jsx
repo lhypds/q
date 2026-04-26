@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./list.module.css";
 
 function surveyToUrl(survey) {
-  const params = new URLSearchParams(survey);
-  return "/?" + params.toString();
+  return "/?data=" + encodeURIComponent(JSON.stringify(survey));
 }
 
 export default function SurveyList() {
