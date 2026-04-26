@@ -31,9 +31,10 @@ export default function Home() {
 
   function handleGenerateComplete(surveyObj) {
     setGenerateOpen(false);
-    setCreateEditSurveyObj(surveyObj);
-    setCreateEditKey((k) => k + 1);
-    setCreateEditOpen(true);
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.searchParams.set("q", JSON.stringify(surveyObj));
+    window.location.href = url.toString();
   }
 
   async function handleShare() {

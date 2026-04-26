@@ -98,19 +98,28 @@ app.get('/surveyresults', (req, res) => {
 
 // Generate survey questions outline from topic
 app.post('/generate/prompt', async (req, res) => {
-  const { topic } = req.body;
+  const { topic, modification, currentPrompt } = req.body;
   if (!topic) return res.status(400).json({ error: 'Missing topic' });
+  const messages = modification
+    ? [
+      {
+        role: 'system',
+        content: 'You are a survey designer. Rewrite the given survey questions outline based on the modification request. Produce a concise numbered list of survey questions with multiple-choice answer options. Be clear and friendly. No continuations or explanations.',
+      },
+      { role: 'user', content: `Topic: ${topic}\n\nCurrent questions:\n${currentPrompt}\n\nModification request: ${modification}` },
+    ]
+    : [
+      {
+        role: 'system',
+        content: 'You are a survey designer. Given a topic, produce a concise numbered list of survey questions with multiple-choice answer options. Be clear and friendly. No continues or explanations.',
+      },
+      { role: 'user', content: `Create survey questions about: ${topic}` },
+    ];
   try {
     const stream = await openai.chat.completions.create({
       model: MODEL,
       stream: true,
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a survey designer. Given a topic, produce a concise numbered list of survey questions with multiple-choice answer options. Be clear and friendly. No continues or explanations.',
-        },
-        { role: 'user', content: `Create survey questions about: ${topic}` },
-      ],
+      messages,
     });
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     for await (const chunk of stream) {
