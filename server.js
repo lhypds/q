@@ -40,7 +40,8 @@ db.exec(`
     time_h TEXT NOT NULL,
     survey TEXT NOT NULL,
     result TEXT NOT NULL,
-    email TEXT NOT NULL DEFAULT ''
+    email TEXT NOT NULL DEFAULT '',
+    is_deleted INTEGER NOT NULL DEFAULT 0
   )
 `);
 
@@ -74,9 +75,9 @@ app.post('/surveyresult', (req, res) => {
 });
 
 // Distinct surveys for survey list
-app.get('/surveys', (req, res) => {
+app.get('/surveys', (_req, res) => {
   const rows = db.prepare(
-    'SELECT survey, COUNT(*) as count FROM records GROUP BY survey ORDER BY MAX(time) DESC'
+    'SELECT survey, COUNT(*) as count FROM records WHERE is_deleted = 0 GROUP BY survey ORDER BY MAX(time) DESC'
   ).all();
 
   const surveys = rows.map(r => ({
@@ -95,7 +96,7 @@ app.get('/surveyresults', (req, res) => {
   }
 
   const rows = db.prepare(
-    'SELECT * FROM records WHERE survey = ? ORDER BY time DESC'
+    'SELECT * FROM records WHERE survey = ? AND is_deleted = 0 ORDER BY time DESC'
   ).all(survey);
 
   res.json(rows.map(r => ({
@@ -104,6 +105,15 @@ app.get('/surveyresults', (req, res) => {
     survey: JSON.parse(r.survey),
     email: r.email || '',
   })));
+});
+
+// Soft delete all records for a survey
+app.delete('/survey', (req, res) => {
+  const { survey } = req.body;
+  if (!survey) return res.status(400).json({ error: 'Missing survey' });
+  const surveyJson = JSON.stringify(survey);
+  db.prepare('UPDATE records SET is_deleted = 1 WHERE survey = ?').run(surveyJson);
+  res.json({ ok: true });
 });
 
 // Generate survey questions outline from topic

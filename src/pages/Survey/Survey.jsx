@@ -17,6 +17,7 @@ export default function Survey() {
   const [createEditKey, setCreateEditKey] = useState(0);
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const allAnswered = questions.every((q) => selections[q.key]);
 
   function handleEditSave(newSurveyObj) {
@@ -24,6 +25,15 @@ export default function Survey() {
     url.search = "";
     url.searchParams.set("q", JSON.stringify(newSurveyObj));
     window.location.href = url.toString();
+  }
+
+  async function handleDelete() {
+    await fetch("/survey", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ survey: surveyObj }),
+    });
+    window.location.href = "/";
   }
 
   async function handleShare() {
@@ -123,11 +133,37 @@ export default function Survey() {
               <path d="M15.41 6.51L8.59 10.49" />
             </svg>
           </ActionButton>
+
+          {isEdit && (
+            <ActionButton tooltip="Delete" onClick={() => setDeleteModalOpen(true)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14H6L5 6" />
+                <path d="M10 11v6" />
+                <path d="M14 11v6" />
+                <path d="M9 6V4h6v2" />
+              </svg>
+            </ActionButton>
+          )}
         </div>
       </div>
 
       {subtitle && <div className={styles.subtitle}>[{subtitle}]</div>}
       {description && <div className={styles.description}>{description}</div>}
+
+      <Modal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} title="Delete survey">
+        <div className={styles.emailModal}>
+          <p className={styles.emailHint}>Delete all responses for this survey? This cannot be undone.</p>
+          <div className={styles.emailActions}>
+            <button className={styles.emailSkip} type="button" onClick={() => setDeleteModalOpen(false)}>
+              Cancel
+            </button>
+            <button className={styles.emailConfirm} type="button" onClick={handleDelete}>
+              Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       <Modal
         isOpen={emailModalOpen}
