@@ -1,14 +1,14 @@
-.titleLink {
-  color: black;
-  text-decoration: none;
-}
-
 .titleRow {
   display: flex;
   gap: 8px;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   line-height: 1;
+}
+
+.titleLink {
+  color: black;
+  text-decoration: none;
 }
 
 .subtitle {

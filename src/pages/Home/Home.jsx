@@ -29,10 +29,17 @@ export default function Home() {
     showToast(copied ? "Link copied to clipboard" : "Failed to copy link");
   }
 
+  const surveyUrl = (() => {
+    return window.location.pathname;
+  })();
+
   return (
     <div className="page">
       <div className={styles.titleRow}>
-        <div className="page-title">q</div>
+        <a href={surveyUrl} className={`page-title ${styles.titleLink}`}>
+          q
+        </a>
+
         <div className={styles.actions}>
           <ActionButton
             tooltip="Create"

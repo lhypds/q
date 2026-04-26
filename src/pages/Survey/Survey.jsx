@@ -74,7 +74,7 @@ export default function Survey() {
       <div className="page">
         <div className={`card ${styles.thankYouCard}`}>
           <div className="card-title">Thank you!</div>
-          <p className={styles.thankYouText}>Your response has been recorded.</p>
+          <div className={styles.thankYouText}>Your response has been recorded.</div>
           <a href={resultsUrl} className="results-link">
             View Results →
           </a>
@@ -83,11 +83,19 @@ export default function Survey() {
     );
   }
 
+  const surveyUrl = (() => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("view");
+    return window.location.pathname + "?" + params.toString();
+  })();
+
   return (
     <div className="page">
       {/* Title */}
       <div className={styles.titleRow}>
-        <div className="page-title">{title || "q"}</div>
+        <a href={surveyUrl} className={`page-title ${styles.titleLink}`}>
+          {title || "q"}
+        </a>
 
         <div className={styles.actions}>
           <ActionButton
