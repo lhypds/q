@@ -26,7 +26,10 @@ export default function SurveyList() {
       {surveys.length > 0 ? (
         surveys.map((item, i) => (
           <a key={i} href={surveyToUrl(item.survey)} className={styles.item}>
-            <span className={styles.title}>{item.survey.title || "Untitled"}</span>
+            <div className={styles.info}>
+              <span className={styles.title}>{item.survey.title || "Untitled"}</span>
+              {item.survey.subtitle && <span className={styles.subtitle}>[{item.survey.subtitle}]</span>}
+            </div>
             <span className={styles.count}>
               {item.count} {item.count === 1 ? "response" : "responses"}
             </span>
