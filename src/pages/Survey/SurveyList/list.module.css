@@ -1,6 +1,8 @@
 .list {
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
+  gap: 12px;
 }
 
 .item {
@@ -10,15 +12,10 @@
   justify-content: space-between;
   padding: 14px 18px;
   border: 1px solid black;
-  border-bottom: none;
   text-decoration: none;
   color: inherit;
   background: none;
   transition: background 0.1s;
-}
-
-.item:last-child {
-  border-bottom: 1px solid black;
 }
 
 .item:hover {

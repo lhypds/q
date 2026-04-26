@@ -222,32 +222,34 @@ export default function Survey() {
         {/* Survey Form */}
         {!isHome && (
           <form onSubmit={handleSubmit}>
-            {questions.map((q) => (
-              <div key={q.key} className="card">
-                <div className="card-header">
-                  <div className="card-title">{q.text}</div>
-                  <span className="badge">{q.key}</span>
+            <div className={styles.questions}>
+              {questions.map((q) => (
+                <div key={q.key} className="card">
+                  <div className="card-header">
+                    <div className="card-title">{q.text}</div>
+                    <span className="badge">{q.key}</span>
+                  </div>
+                  <div className="card-desc">Select one option below.</div>
+                  <div className={styles.options}>
+                    {q.answers.map((a) => (
+                      <label
+                        key={a.key}
+                        className={`${styles.optionLabel} ${selections[q.key] === a.key ? styles.optionLabelSelected : ""}`}
+                      >
+                        <input
+                          type="radio"
+                          name={q.key}
+                          value={a.key}
+                          checked={selections[q.key] === a.key}
+                          onChange={() => setSelections((prev) => ({ ...prev, [q.key]: a.key }))}
+                        />
+                        <span className={styles.optionText}>{a.label}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-                <div className="card-desc">Select one option below.</div>
-                <div className={styles.options}>
-                  {q.answers.map((a) => (
-                    <label
-                      key={a.key}
-                      className={`${styles.optionLabel} ${selections[q.key] === a.key ? styles.optionLabelSelected : ""}`}
-                    >
-                      <input
-                        type="radio"
-                        name={q.key}
-                        value={a.key}
-                        checked={selections[q.key] === a.key}
-                        onChange={() => setSelections((prev) => ({ ...prev, [q.key]: a.key }))}
-                      />
-                      <span className={styles.optionText}>{a.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
             {error && <p className="error-msg">{error}</p>}
             <div className="submit-row">
               <div className={styles.submitRowLeft}>

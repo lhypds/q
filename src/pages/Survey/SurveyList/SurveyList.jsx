@@ -22,20 +22,20 @@ export default function SurveyList() {
 
   if (loading) return null;
 
-  if (surveys.length === 0) {
-    return <div>Noq.</div>;
-  }
-
   return (
     <div className={styles.list}>
-      {surveys.map((item, i) => (
-        <a key={i} href={surveyToUrl(item.survey)} className={styles.item}>
-          <span className={styles.title}>{item.survey.title || "Untitled"}</span>
-          <span className={styles.count}>
-            {item.count} {item.count === 1 ? "response" : "responses"}
-          </span>
-        </a>
-      ))}
+      {surveys.length > 0 ? (
+        surveys.map((item, i) => (
+          <a key={i} href={surveyToUrl(item.survey)} className={styles.item}>
+            <span className={styles.title}>{item.survey.title || "Untitled"}</span>
+            <span className={styles.count}>
+              {item.count} {item.count === 1 ? "response" : "responses"}
+            </span>
+          </a>
+        ))
+      ) : (
+        <div>Noq.</div>
+      )}
     </div>
   );
 }

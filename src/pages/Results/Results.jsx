@@ -105,7 +105,7 @@ export default function Results() {
       </div>
 
       <div className={styles.subtitle}>
-        {loading ? "Loading…" : `${results.length} response${results.length !== 1 ? "s" : ""} collected`}
+        {loading ? "Loading…" : `${results.length} response${results.length !== 1 ? "s" : ""} collected.`}
       </div>
       {fetchError && <p className="error-msg">{fetchError}</p>}
 
@@ -154,9 +154,7 @@ export default function Results() {
       </div>
 
       <div className="submit-row">
-        <a href={surveyUrl} className="results-link small">
-          ← Take Survey
-        </a>
+        <div></div>
         <a href={"/"} className="results-link small">
           q
         </a>
