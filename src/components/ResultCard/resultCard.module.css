@@ -36,3 +36,19 @@
   font-size: 12px;
   margin-left: 4px;
 }
+
+.otherList {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.otherListTitle {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.otherItem {
+  font-size: 12px;
+}

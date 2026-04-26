@@ -37,7 +37,8 @@
     "fetchError": "加载结果失败。",
     "noResponses": "暂无回答。",
     "collected_one": "已收集 {{count}} 个回答。",
-    "collected_other": "已收集 {{count}} 个回答。"
+    "collected_other": "已收集 {{count}} 个回答。",
+    "otherResponses": "其他回答"
   },
   "home": {
     "noSurveys": "暂无调查。",
@@ -64,6 +65,6 @@
     "promptPlaceholder": "调查问题将显示在这里..."
   },
   "questionCard": {
-    "otherOption": "其他: "
+    "otherOption": "其他"
   }
 }

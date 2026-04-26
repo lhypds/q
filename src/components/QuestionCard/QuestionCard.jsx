@@ -38,7 +38,7 @@ export default function QuestionCard({ question, selected, onSelect, otherValue,
               checked={isOtherChecked}
               onChange={() => onSelect("__other__")}
             />
-            <div className={styles.optionText}>{t("questionCard.otherOption")}</div>
+            <div className={styles.optionText}>{t("questionCard.otherOption")}:</div>
             <input
               type="text"
               className={styles.otherInput}

@@ -37,7 +37,8 @@
     "fetchError": "結果の読み込みに失敗しました。",
     "noResponses": "まだ回答がありません。",
     "collected_one": "{{count}} 件の回答が収集されました。",
-    "collected_other": "{{count}} 件の回答が収集されました。"
+    "collected_other": "{{count}} 件の回答が収集されました。",
+    "otherResponses": "その他の回答"
   },
   "home": {
     "noSurveys": "アンケートなし。",
@@ -64,6 +65,6 @@
     "promptPlaceholder": "アンケートの質問がここに表示されます..."
   },
   "questionCard": {
-    "otherOption": "その他:"
+    "otherOption": "その他"
   }
 }

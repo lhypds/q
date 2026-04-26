@@ -80,7 +80,7 @@ export default function Results() {
         </div>
       </div>
 
-      <div className={styles.subtitle}>{subtitle}</div>
+      <div className={styles.subtitle}>[{subtitle}]</div>
       <div className={styles.description}>{description}</div>
 
       {fetchError && <p className="error-msg">{fetchError}</p>}

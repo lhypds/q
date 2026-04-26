@@ -37,7 +37,8 @@
     "fetchError": "Failed to load results.",
     "noResponses": "No responses yet.",
     "collected_one": "{{count}} response collected.",
-    "collected_other": "{{count}} responses collected."
+    "collected_other": "{{count}} responses collected.",
+    "otherResponses": "Other responses"
   },
   "home": {
     "noSurveys": "Noq.",
@@ -64,6 +65,6 @@
     "promptPlaceholder": "Your survey questions will appear here..."
   },
   "questionCard": {
-    "otherOption": "Other:"
+    "otherOption": "Other"
   }
 }
