@@ -105,7 +105,7 @@ export default function ResultCard({ question, results }) {
               <div className={styles.otherListTitle}>{t("results.otherResponses")}</div>
               {otherTexts.map((text, i) => (
                 <div key={i} className={styles.otherItem}>
-                  {text}
+                  - {text}
                 </div>
               ))}
             </div>
