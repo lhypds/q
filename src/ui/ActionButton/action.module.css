@@ -8,6 +8,8 @@
   font: inherit;
   cursor: pointer;
   position: relative;
+  width: 26px;
+  height: 22px;
 }
 
 .actionButton:hover {

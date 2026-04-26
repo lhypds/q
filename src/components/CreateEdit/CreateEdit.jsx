@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Modal } from "@ui";
 import { normalizeSurvey } from "@utils/surveyUtils";
 import styles from "./edit.module.css";
@@ -17,7 +18,7 @@ export default function CreateEdit({
   onSave,
   mode,
 }) {
-  // Normalize surveyObj if it exists
+  const { t } = useTranslation();
   const normalizedSurveyObj = surveyObj ? normalizeSurvey(surveyObj) : {};
 
   const [title, setTitle] = useState(currentTitle || normalizedSurveyObj.title || "");
@@ -78,31 +79,30 @@ export default function CreateEdit({
       setDescription(obj.description || "");
       setJsonError("");
     } catch {
-      setJsonError("Invalid JSON");
+      setJsonError(t("createEdit.invalidJson"));
     }
   }
 
   function handleSave() {
     try {
       const obj = JSON.parse(jsonText);
-      // title/subtitle inputs take final precedence
       if (title.trim()) obj.title = title.trim();
       if (subtitle.trim()) obj.subtitle = subtitle.trim();
       else delete obj.subtitle;
       if (description.trim()) obj.description = description.trim();
       else delete obj.description;
       if (!obj.title || !obj.title.trim()) {
-        setJsonError("Title is required");
+        setJsonError(t("createEdit.titleRequired"));
         return;
       }
       if (!obj.questions || Object.keys(obj.questions).length === 0) {
-        setJsonError("At least one question is required");
+        setJsonError(t("createEdit.questionRequired"));
         return;
       }
       onSave(normalizeSurvey(obj));
       onClose();
     } catch {
-      setJsonError("Invalid JSON — cannot save");
+      setJsonError(t("createEdit.invalidJsonSave"));
     }
   }
 
@@ -122,7 +122,7 @@ export default function CreateEdit({
       setJsonText(toJson(obj));
       setJsonError("");
     } catch {
-      setJsonError("Invalid JSON — fix it before adding a question");
+      setJsonError(t("createEdit.invalidJsonAddQ"));
     }
   }
 
@@ -131,11 +131,11 @@ export default function CreateEdit({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={mode === "create" ? "Create" : "Edit"}>
+    <Modal isOpen={isOpen} onClose={onClose} title={mode === "create" ? t("createEdit.createTitle") : t("createEdit.editTitle")}>
       <div className={styles.container}>
         {/* Title */}
         <div className={styles.field}>
-          <label className={styles.label}>Title</label>
+          <label className={styles.label}>{t("createEdit.titleLabel")}</label>
           <input
             className={styles.input}
             type="text"
@@ -148,7 +148,7 @@ export default function CreateEdit({
 
         {/* Subtitle */}
         <div className={styles.field}>
-          <label className={styles.label}>Subtitle</label>
+          <label className={styles.label}>{t("createEdit.subtitleLabel")}</label>
           <input
             className={styles.input}
             type="text"
@@ -160,7 +160,7 @@ export default function CreateEdit({
 
         {/* Description */}
         <div className={styles.descriptionField}>
-          <label className={styles.label}>Description</label>
+          <label className={styles.label}>{t("createEdit.descriptionLabel")}</label>
           <textarea
             className={styles.descriptionTextarea}
             value={description}
@@ -173,7 +173,7 @@ export default function CreateEdit({
         <div className={styles.qjsonField}>
           <div className={styles.qjsonFieldLabelRow}>
             <label className={styles.label}>q.json</label>
-            <button type="button" className={styles.addQuestionBtn} onClick={handleAddQuestion} title="Add question">
+            <button type="button" className={styles.addQuestionBtn} onClick={handleAddQuestion} title={t("button.addQuestion")}>
               +q
             </button>
           </div>
@@ -188,10 +188,10 @@ export default function CreateEdit({
         {jsonError && <div className={styles.jsonError}>{jsonError}</div>}
         <div className={styles.actions}>
           <button type="button" className={styles.cancelButton} onClick={onClose}>
-            Cancel
+            {t("button.cancel")}
           </button>
           <button type="button" className={styles.saveButton} onClick={handleSave}>
-            {mode === "create" ? "Create" : "Save"}
+            {mode === "create" ? t("button.create") : t("button.save")}
           </button>
         </div>
       </div>

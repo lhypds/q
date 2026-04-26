@@ -1,0 +1,64 @@
+{
+  "button": {
+    "generate": "Generate",
+    "create": "Create",
+    "edit": "Edit",
+    "share": "Share",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "submit": "Submit",
+    "skip": "Skip",
+    "rewrite": "Rewrite",
+    "complete": "Complete",
+    "viewResults": "View Results →",
+    "addQuestion": "Add question"
+  },
+  "toast": {
+    "linkCopied": "Link copied to clipboard",
+    "failedCopy": "Failed to copy link",
+    "creating": "Creating..."
+  },
+  "survey": {
+    "thankYou": "Thank you!",
+    "responseRecorded": "Your response has been recorded.",
+    "deleteTitle": "Delete survey",
+    "deleteConfirm": "Delete all responses for this survey? This cannot be undone.",
+    "submitTitle": "Submit",
+    "emailHint": "Enter your email to receive a copy of your response (optional).",
+    "emailPlaceholder": "your@email.com",
+    "answerAll": "Please answer all questions before submitting.",
+    "submitFailed": "Failed to submit. Please try again."
+  },
+  "results": {
+    "loading": "Loading…",
+    "fetchError": "Failed to load results.",
+    "noResponses": "No responses yet.",
+    "collected_one": "{{count}} response collected.",
+    "collected_other": "{{count}} responses collected."
+  },
+  "home": {
+    "noSurveys": "Noq.",
+    "untitled": "Untitled",
+    "response_one": "{{count}} response",
+    "response_other": "{{count}} responses"
+  },
+  "createEdit": {
+    "createTitle": "Create",
+    "editTitle": "Edit",
+    "titleLabel": "Title",
+    "subtitleLabel": "Subtitle",
+    "descriptionLabel": "Description",
+    "invalidJson": "Invalid JSON",
+    "titleRequired": "Title is required",
+    "questionRequired": "At least one question is required",
+    "invalidJsonSave": "Invalid JSON — cannot save",
+    "invalidJsonAddQ": "Invalid JSON — fix it before adding a question"
+  },
+  "generate": {
+    "title": "Generate",
+    "placeholderModify": "How you want to modify the survey?",
+    "placeholderNew": "What would you like to survey?",
+    "promptPlaceholder": "Your survey questions will appear here..."
+  }
+}

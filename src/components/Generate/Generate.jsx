@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Modal, showToast, hideToast } from "@ui";
 import styles from "./generate.module.css";
 
 export default function Generate({ isOpen, onClose, onComplete }) {
+  const { t } = useTranslation();
   const [inputValue, setInputValue] = useState("");
   const [prompt, setPrompt] = useState("");
   const [stage, setStage] = useState("input"); // "input" | "generated"
@@ -57,7 +59,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
   async function handleComplete() {
     setLoading(true);
     setError("");
-    showToast("Creating...", null, "center");
+    showToast(t("toast.creating"), null, "center");
     try {
       const res = await fetch("/generate/qjson", {
         method: "POST",
@@ -87,16 +89,16 @@ export default function Generate({ isOpen, onClose, onComplete }) {
 
   const isGenerated = stage === "generated";
   const hasModification = isGenerated && inputValue.trim().length > 0;
-  const buttonLabel = !isGenerated ? "Generate" : hasModification ? "Rewrite" : "Complete";
+  const buttonLabel = !isGenerated ? t("button.generate") : hasModification ? t("button.rewrite") : t("button.complete");
   const buttonDisabled = loading || (!isGenerated && !inputValue.trim());
 
   return (
-    <Modal isOpen={isOpen} onClose={loading ? undefined : onClose} title="Generate">
+    <Modal isOpen={isOpen} onClose={loading ? undefined : onClose} title={t("generate.title")}>
       <div className={styles.container}>
         {/* Input */}
         <textarea
           className={styles.inputTextarea}
-          placeholder={isGenerated ? "How you want to modify the survey?" : "What would you like to survey?"}
+          placeholder={isGenerated ? t("generate.placeholderModify") : t("generate.placeholderNew")}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           disabled={loading}
@@ -108,14 +110,14 @@ export default function Generate({ isOpen, onClose, onComplete }) {
           className={`${styles.promptTextarea} ${!isGenerated || loading ? styles.promptGrayed : ""}`}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Your survey questions will appear here..."
+          placeholder={t("generate.promptPlaceholder")}
           readOnly={!isGenerated || loading}
         />
 
         {error && <div className={styles.error}>{error}</div>}
         <div className={styles.actions}>
           <button type="button" className={styles.cancelButton} onClick={onClose} disabled={loading}>
-            Cancel
+            {t("button.cancel")}
           </button>
           <button type="button" className={styles.generateButton} onClick={handleButtonClick} disabled={buttonDisabled}>
             {buttonLabel}

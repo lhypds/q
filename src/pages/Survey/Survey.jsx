@@ -1,13 +1,16 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./survey.module.css";
 import { ActionButton, showToast, Modal } from "@ui";
 import { CreateEdit } from "@components/CreateEdit";
 import QuestionCard from "@components/QuestionCard";
+import LanguageSwitcher from "@components/LanguageSwitcher/LanguageSwitcher";
 import { normalizeSurvey } from "@utils/surveyUtils";
 import { parseSurvey } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 
 export default function Survey() {
+  const { t } = useTranslation();
   const { title, subtitle, description, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
 
   const [selections, setSelections] = useState({});
@@ -41,12 +44,11 @@ export default function Survey() {
     url.searchParams.delete("edit");
     url.searchParams.delete("view");
     const copied = await copyText(decodeURIComponent(url.toString()));
-    showToast(copied ? "Link copied to clipboard" : "Failed to copy link");
+    showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
 
   async function doSubmit(emailValue) {
     try {
-      // Normalize the survey object
       const normalizedSurvey = normalizeSurvey(surveyObj);
 
       const res = await fetch("/surveyresult", {
@@ -57,14 +59,14 @@ export default function Survey() {
       if (!res.ok) throw new Error("Server error");
       setSubmitted(true);
     } catch (err) {
-      setError("Failed to submit. Please try again. " + err.message);
+      setError(t("survey.submitFailed") + " " + err.message);
     }
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     if (!allAnswered) {
-      setError("Please answer all questions before submitting.");
+      setError(t("survey.answerAll"));
       return;
     }
     setError("");
@@ -84,10 +86,10 @@ export default function Survey() {
     return (
       <div className="page">
         <div className={`card ${styles.thankYouCard}`}>
-          <div className="card-title">Thank you!</div>
-          <div className={styles.thankYouText}>Your response has been recorded.</div>
+          <div className="card-title">{t("survey.thankYou")}</div>
+          <div className={styles.thankYouText}>{t("survey.responseRecorded")}</div>
           <a href={resultsUrl} className="results-link">
-            View Results →
+            {t("button.viewResults")}
           </a>
         </div>
       </div>
@@ -109,9 +111,11 @@ export default function Survey() {
         </a>
 
         <div className={styles.actions}>
+          <LanguageSwitcher />
+
           {isEdit && (
             <ActionButton
-              tooltip="Edit"
+              tooltip={t("button.edit")}
               onClick={() => {
                 setCreateEditKey((k) => k + 1);
                 setCreateEditOpen(true);
@@ -124,7 +128,7 @@ export default function Survey() {
             </ActionButton>
           )}
 
-          <ActionButton tooltip="Share" onClick={handleShare}>
+          <ActionButton tooltip={t("button.share")} onClick={handleShare}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="18" cy="5" r="3" />
               <circle cx="6" cy="12" r="3" />
@@ -135,7 +139,7 @@ export default function Survey() {
           </ActionButton>
 
           {isEdit && (
-            <ActionButton tooltip="Delete" onClick={() => setDeleteModalOpen(true)}>
+            <ActionButton tooltip={t("button.delete")} onClick={() => setDeleteModalOpen(true)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <polyline points="3 6 5 6 21 6" />
                 <path d="M19 6l-1 14H6L5 6" />
@@ -151,15 +155,15 @@ export default function Survey() {
       {subtitle && <div className={styles.subtitle}>[{subtitle}]</div>}
       {description && <div className={styles.description}>{description}</div>}
 
-      <Modal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} title="Delete survey">
+      <Modal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} title={t("survey.deleteTitle")}>
         <div className={styles.emailModal}>
-          <p className={styles.emailHint}>Delete all responses for this survey? This cannot be undone.</p>
+          <p className={styles.emailHint}>{t("survey.deleteConfirm")}</p>
           <div className={styles.emailActions}>
             <button className={styles.emailSkip} type="button" onClick={() => setDeleteModalOpen(false)}>
-              Cancel
+              {t("button.cancel")}
             </button>
             <button className={styles.emailConfirm} type="button" onClick={handleDelete}>
-              Delete
+              {t("button.delete")}
             </button>
           </div>
         </div>
@@ -171,14 +175,14 @@ export default function Survey() {
           setEmailModalOpen(false);
           doSubmit("");
         }}
-        title="Submit"
+        title={t("survey.submitTitle")}
       >
         <div className={styles.emailModal}>
-          <p className={styles.emailHint}>Enter your email to receive a copy of your response (optional).</p>
+          <p className={styles.emailHint}>{t("survey.emailHint")}</p>
           <input
             className={styles.emailInput}
             type="email"
-            placeholder="your@email.com"
+            placeholder={t("survey.emailPlaceholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             onKeyDown={(e) => {
@@ -199,10 +203,10 @@ export default function Survey() {
                 doSubmit("");
               }}
             >
-              Skip
+              {t("button.skip")}
             </button>
             <button className={styles.emailConfirm} type="button" onClick={handleEmailConfirm}>
-              Submit
+              {t("button.submit")}
             </button>
           </div>
         </div>
@@ -236,10 +240,10 @@ export default function Survey() {
           <div className="submit-row">
             <div className={styles.submitRowLeft}>
               <button type="submit" className={styles.submitBtn} disabled={!allAnswered}>
-                Submit
+                {t("button.submit")}
               </button>
               <a href={resultsUrl} className="results-link small">
-                View Results →
+                {t("button.viewResults")}
               </a>
             </div>
             <a href={"/"} className="results-link small">

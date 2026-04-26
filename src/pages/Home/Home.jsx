@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, showToast } from "@ui";
 import { CreateEdit } from "@components/CreateEdit";
 import { Generate } from "@components/Generate";
 import { SurveyList } from "./SurveyList";
+import LanguageSwitcher from "@components/LanguageSwitcher/LanguageSwitcher";
 import styles from "./home.module.css";
 
 async function copyText(text) {
@@ -15,6 +17,7 @@ async function copyText(text) {
 }
 
 export default function Home() {
+  const { t } = useTranslation();
   const [createEditOpen, setCreateEditOpen] = useState(false);
   const [createEditKey, setCreateEditKey] = useState(0);
   const [createEditSurveyObj, setCreateEditSurveyObj] = useState({ title: "", subtitle: "", description: "" });
@@ -41,7 +44,7 @@ export default function Home() {
 
   async function handleShare() {
     const copied = await copyText(decodeURIComponent(window.location.href));
-    showToast(copied ? "Link copied to clipboard" : "Failed to copy link");
+    showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
 
   const surveyUrl = (() => {
@@ -57,7 +60,7 @@ export default function Home() {
 
         <div className={styles.actions}>
           <ActionButton
-            tooltip="Generate"
+            tooltip={t("button.generate")}
             onClick={() => {
               setGenerateKey((k) => k + 1);
               setGenerateOpen(true);
@@ -82,7 +85,7 @@ export default function Home() {
           </ActionButton>
 
           <ActionButton
-            tooltip="Create"
+            tooltip={t("button.create")}
             onClick={() => {
               setCreateEditSurveyObj({ title: "", subtitle: "", description: "" });
               setCreateEditKey((k) => k + 1);
@@ -95,7 +98,7 @@ export default function Home() {
             </svg>
           </ActionButton>
 
-          <ActionButton tooltip="Share" onClick={handleShare}>
+          <ActionButton tooltip={t("button.share")} onClick={handleShare}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="18" cy="5" r="3" />
               <circle cx="6" cy="12" r="3" />
@@ -104,6 +107,8 @@ export default function Home() {
               <path d="M15.41 6.51L8.59 10.49" />
             </svg>
           </ActionButton>
+
+          <LanguageSwitcher />
         </div>
       </div>
 

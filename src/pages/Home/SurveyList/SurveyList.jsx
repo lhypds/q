@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./list.module.css";
 
 function surveyToUrl(survey) {
@@ -6,6 +7,7 @@ function surveyToUrl(survey) {
 }
 
 export default function SurveyList() {
+  const { t } = useTranslation();
   const [surveys, setSurveys] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,16 +29,16 @@ export default function SurveyList() {
         surveys.map((item, i) => (
           <a key={i} href={surveyToUrl(item.survey)} className={styles.item}>
             <div className={styles.info}>
-              <span className={styles.title}>{item.survey.title || "Untitled"}</span>
+              <span className={styles.title}>{item.survey.title || t("home.untitled")}</span>
               {item.survey.subtitle && <span className={styles.subtitle}>[{item.survey.subtitle}]</span>}
             </div>
             <span className={styles.count}>
-              {item.count} {item.count === 1 ? "response" : "responses"}
+              {t("home.response", { count: item.count })}
             </span>
           </a>
         ))
       ) : (
-        <div>Noq.</div>
+        <div>{t("home.noSurveys")}</div>
       )}
     </div>
   );

@@ -1,5 +1,6 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./resultCard.module.css";
 
 const COLORS = [
@@ -13,6 +14,7 @@ const COLORS = [
 ];
 
 export default function ResultCard({ question, results }) {
+  const { t } = useTranslation();
   const counts = {};
   question.answers.forEach((a) => {
     counts[a.key] = 0;
@@ -24,7 +26,6 @@ export default function ResultCard({ question, results }) {
   const data = question.answers.map((a) => ({ name: a.label, value: counts[a.key] || 0 }));
   const total = data.reduce((s, d) => s + d.value, 0);
 
-  // Randomize color start index
   const [colorOffset] = useState(() => Math.floor(Math.random() * COLORS.length));
 
   return (
@@ -34,7 +35,7 @@ export default function ResultCard({ question, results }) {
         <span className="badge">{question.key}</span>
       </div>
       {total === 0 ? (
-        <div className="card-desc">No responses yet.</div>
+        <div className="card-desc">{t("results.noResponses")}</div>
       ) : (
         <div className={styles.chartContainer}>
           <ResponsiveContainer width="100%" height={260}>
