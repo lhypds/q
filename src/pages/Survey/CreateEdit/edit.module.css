@@ -40,8 +40,33 @@
   margin-top: 4px;
 }
 
+.jsonFieldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .jsonField .label {
   width: auto;
+}
+
+.addQuestionBtn {
+  font-size: 14px;
+  line-height: 1;
+  width: 32px;
+  height: 24px;
+  border: 1px solid #ccc;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+}
+
+.addQuestionBtn:hover {
+  background: #f0f0f0;
+  border-color: #888;
 }
 
 .textarea {

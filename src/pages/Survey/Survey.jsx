@@ -45,6 +45,7 @@ export default function Survey() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [createEditOpen, setCreateEditOpen] = useState(false);
+  const [createEditKey, setCreateEditKey] = useState(0);
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [email, setEmail] = useState("");
   const allAnswered = questions.every((q) => selections[q.key]);
@@ -123,7 +124,13 @@ export default function Survey() {
 
         <div className={styles.actions}>
           {isHome && (
-            <ActionButton tooltip="Create" onClick={() => setCreateEditOpen(true)}>
+            <ActionButton
+              tooltip="Create"
+              onClick={() => {
+                setCreateEditKey((k) => k + 1);
+                setCreateEditOpen(true);
+              }}
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
                 <path d="M14 6l3 3" />
@@ -131,7 +138,13 @@ export default function Survey() {
             </ActionButton>
           )}
           {!isHome && (
-            <ActionButton tooltip="Edit" onClick={() => setCreateEditOpen(true)}>
+            <ActionButton
+              tooltip="Edit"
+              onClick={() => {
+                setCreateEditKey((k) => k + 1);
+                setCreateEditOpen(true);
+              }}
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
                 <path d="M14 6l3 3" />
@@ -196,6 +209,7 @@ export default function Survey() {
       </Modal>
 
       <CreateEdit
+        key={createEditKey}
         isOpen={createEditOpen}
         onClose={() => setCreateEditOpen(false)}
         currentTitle={title}

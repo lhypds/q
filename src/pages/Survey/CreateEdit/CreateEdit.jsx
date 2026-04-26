@@ -70,6 +70,22 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, s
     }
   }
 
+  function handleAddQuestion() {
+    try {
+      const obj = JSON.parse(jsonText);
+      // Find next question number
+      let n = 1;
+      while (obj[`q${n}`] !== undefined) n++;
+      obj[`q${n}`] = `Question ${n}`;
+      obj[`q${n}a1`] = "Option 1";
+      obj[`q${n}a2`] = "Option 2";
+      setJsonText(toJson(obj));
+      setJsonError("");
+    } catch {
+      setJsonError("Invalid JSON — fix it before adding a question");
+    }
+  }
+
   function handleKeyDown(e) {
     if (e.key === "Escape") onClose();
   }
@@ -99,7 +115,12 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, s
           />
         </div>
         <div className={styles.jsonField}>
-          <label className={styles.label}>q.json</label>
+          <div className={styles.jsonFieldHeader}>
+            <label className={styles.label}>q.json</label>
+            <button type="button" className={styles.addQuestionBtn} onClick={handleAddQuestion} title="Add question">
+              +q
+            </button>
+          </div>
           <textarea
             className={`${styles.input} ${styles.textarea}`}
             value={jsonText}

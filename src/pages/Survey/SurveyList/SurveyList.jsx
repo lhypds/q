@@ -23,11 +23,7 @@ export default function SurveyList() {
   if (loading) return null;
 
   if (surveys.length === 0) {
-    return (
-      <div className="card">
-        <div className="card-desc">No surveys found.</div>
-      </div>
-    );
+    return <div>Noq.</div>;
   }
 
   return (

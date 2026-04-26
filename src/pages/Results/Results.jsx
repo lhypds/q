@@ -89,7 +89,9 @@ export default function Results() {
   return (
     <div className="page">
       <div className={styles.titleRow}>
-        <div className="page-title">{title}</div>
+        <a href={surveyUrl} className={`page-title ${styles.titleLink}`}>
+          {title}
+        </a>
 
         <ActionButton tooltip="Share" onClick={handleShare}>
           <svg viewBox="0 0 24 24" aria-hidden="true">

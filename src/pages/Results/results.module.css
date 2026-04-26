@@ -1,3 +1,8 @@
+.titleLink {
+  color: black;
+  text-decoration: none;
+}
+
 .titleRow {
   display: flex;
   align-items: center;
