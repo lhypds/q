@@ -4,6 +4,7 @@ import cors from 'cors';
 import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 import OpenAI from 'openai';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -16,8 +17,15 @@ const openai = new OpenAI({
 });
 const MODEL = process.env.MODEL || 'gpt-4o';
 
+const logStream = fs.createWriteStream(path.join(__dirname, 'server.log'), { flags: 'a' });
+
 app.use(cors());
 app.use(express.json());
+app.use((req, _res, next) => {
+  const line = `${new Date().toISOString()} ${req.method} ${req.url}\n`;
+  logStream.write(line);
+  next();
+});
 
 
 // Init SQLite

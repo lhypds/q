@@ -4,3 +4,4 @@ dist/
 db.sqlite
 *.db
 .env
+server.log
