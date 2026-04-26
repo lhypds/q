@@ -69,12 +69,10 @@ export default function Results() {
         {!loading && questions.map((q) => <ResultCard key={q.key} question={q} results={results} />)}
       </div>
 
-      <div className={styles.collectionInfo}>
-        {loading ? "Loading…" : `${results.length} response${results.length !== 1 ? "s" : ""} collected.`}
-      </div>
-
       <div className="submit-row">
-        <div></div>
+        <div className={styles.collectionInfo}>
+          {loading ? "Loading…" : `${results.length} response${results.length !== 1 ? "s" : ""} collected.`}
+        </div>
         <a href={"/"} className="results-link small">
           q
         </a>
