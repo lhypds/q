@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./survey.module.css";
 import { ActionButton, showToast, Modal } from "@ui";
@@ -6,12 +6,35 @@ import { CreateEdit } from "@components/CreateEdit";
 import QuestionCard from "@components/QuestionCard";
 import LanguageSwitcher from "@components/LanguageSwitcher/LanguageSwitcher";
 import { normalizeSurvey } from "@utils/surveyUtils";
-import { parseSurvey } from "@utils/urlUtils";
+import { parseSurvey, parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
+
+const qParam = new URLSearchParams(window.location.search).get("q");
+const isNumericId = qParam !== null && /^\d+$/.test(qParam);
 
 export default function Survey() {
   const { t } = useTranslation();
-  const { title, subtitle, description, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
+  const [surveyData, setSurveyData] = useState(() =>
+    isNumericId
+      ? { title: null, subtitle: "", description: "", questions: [], surveyObj: {} }
+      : parseSurvey(window.location.search),
+  );
+
+  useEffect(() => {
+    if (!isNumericId) return;
+    fetch(`/survey?id=${qParam}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.survey) {
+          setSurveyData(parseSurveyObj(data.survey));
+          const params = new URLSearchParams(window.location.search);
+          params.set("q", JSON.stringify(data.survey));
+          window.history.replaceState(null, "", "?" + params.toString());
+        }
+      });
+  }, []);
+
+  const { title, subtitle, description, questions, surveyObj } = surveyData;
 
   const [selections, setSelections] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -40,10 +63,19 @@ export default function Survey() {
   }
 
   async function handleShare() {
-    const url = new URL(window.location.href);
-    url.searchParams.delete("edit");
-    url.searchParams.delete("view");
-    const copied = await copyText(decodeURIComponent(url.toString()));
+    let id = isNumericId ? qParam : null;
+    if (!id) {
+      const res = await fetch("/survey", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ survey: surveyObj }),
+      });
+      const data = await res.json();
+      id = data.id;
+    }
+    const shareUrl = `${window.location.origin}/?q=${id}`;
+    const text = t("survey.shareText", { title, subtitle, shareUrl });
+    const copied = await copyText(text);
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
 

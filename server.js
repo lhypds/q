@@ -45,6 +45,26 @@ db.exec(`
   )
 `);
 
+// Get survey by id
+app.get('/survey', (req, res) => {
+  const { id } = req.query;
+  if (!id) return res.status(400).json({ error: 'Missing id' });
+  const row = db.prepare('SELECT survey FROM surveys WHERE id = ?').get(id);
+  if (!row) return res.status(404).json({ error: 'Not found' });
+  res.json({ survey: JSON.parse(row.survey) });
+});
+
+// Upsert survey, return id
+app.post('/survey', (req, res) => {
+  const { survey } = req.body;
+  if (!survey) return res.status(400).json({ error: 'Missing survey' });
+  const surveyJson = JSON.stringify(survey);
+  const existing = db.prepare('SELECT id FROM surveys WHERE survey = ?').get(surveyJson);
+  if (existing) return res.json({ id: existing.id });
+  const info = db.prepare('INSERT INTO surveys (survey) VALUES (?)').run(surveyJson);
+  res.json({ id: info.lastInsertRowid });
+});
+
 // Record survey result
 app.post('/surveyresult', (req, res) => {
   const { survey, result, email } = req.body;

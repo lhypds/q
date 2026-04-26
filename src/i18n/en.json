@@ -29,7 +29,8 @@
     "emailHint": "Enter your email to receive a copy of your response (optional).",
     "emailPlaceholder": "your@email.com",
     "answerAll": "Please answer all questions before submitting.",
-    "submitFailed": "Failed to submit. Please try again."
+    "submitFailed": "Failed to submit. Please try again.",
+    "shareText": "Welcome to the survey, {{title}} - {{subtitle}}\n{{shareUrl}}"
   },
   "results": {
     "loading": "Loading…",

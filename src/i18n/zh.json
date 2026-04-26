@@ -29,7 +29,8 @@
     "emailHint": "输入您的电子邮件以接收回答副本（可选）。",
     "emailPlaceholder": "your@email.com",
     "answerAll": "请在提交前回答所有问题。",
-    "submitFailed": "提交失败，请重试。"
+    "submitFailed": "提交失败，请重试。",
+    "shareText": "欢迎参与调查，{{title}} - {{subtitle}}\n{{shareUrl}}"
   },
   "results": {
     "loading": "加载中…",

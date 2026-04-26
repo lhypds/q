@@ -1,13 +1,4 @@
-export function parseSurvey(search) {
-  const params = new URLSearchParams(search);
-  const dataStr = params.get("q");
-  if (!dataStr) return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
-  let obj;
-  try {
-    obj = JSON.parse(dataStr);
-  } catch {
-    return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
-  }
+export function parseSurveyObj(obj) {
   const title = obj.title || null;
   const subtitle = obj.subtitle || "";
   const description = obj.description || "";
@@ -24,4 +15,17 @@ export function parseSurvey(search) {
     }
   }
   return { title, subtitle, description, questions, surveyObj: obj };
+}
+
+export function parseSurvey(search) {
+  const params = new URLSearchParams(search);
+  const dataStr = params.get("q");
+  if (!dataStr) return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
+  let obj;
+  try {
+    obj = JSON.parse(dataStr);
+  } catch {
+    return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
+  }
+  return parseSurveyObj(obj);
 }
