@@ -4,16 +4,36 @@ import styles from "./results.module.css";
 import { ActionButton, showToast } from "@ui";
 import ResultCard from "@components/ResultCard";
 import LanguageSwitcher from "@components/LanguageSwitcher/LanguageSwitcher";
-import { parseSurvey } from "@utils/urlUtils";
+import { parseSurvey, parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
+
+const qParam = new URLSearchParams(window.location.search).get("q");
+const isNumericId = qParam !== null && /^\d+$/.test(qParam);
 
 export default function Results() {
   const { t } = useTranslation();
-  const { title, subtitle, description, questions, surveyObj } = useMemo(() => {
+  const [surveyData, setSurveyData] = useState(() => {
+    if (isNumericId) return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
     const params = new URLSearchParams(window.location.search);
     params.delete("view");
     return parseSurvey("?" + params.toString());
+  });
+
+  useEffect(() => {
+    if (!isNumericId) return;
+    fetch(`/survey?id=${qParam}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.survey) {
+          setSurveyData(parseSurveyObj(data.survey));
+          const params = new URLSearchParams(window.location.search);
+          params.set("q", JSON.stringify(data.survey));
+          window.history.replaceState(null, "", "?" + params.toString());
+        }
+      });
   }, []);
+
+  const { title, subtitle, description, questions, surveyObj } = surveyData;
 
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,9 +59,6 @@ export default function Results() {
     params.delete("view");
     return window.location.pathname + "?" + params.toString();
   })();
-
-  const qParam = new URLSearchParams(window.location.search).get("q");
-  const isNumericId = qParam !== null && /^\d+$/.test(qParam);
 
   async function handleShare() {
     let id = isNumericId ? qParam : null;
