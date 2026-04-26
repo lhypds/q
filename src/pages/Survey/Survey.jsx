@@ -104,12 +104,14 @@ export default function Survey() {
         <div className="page-title">{title || "q"}</div>
 
         <div className={styles.actions}>
-          <ActionButton tooltip="Edit" onClick={() => setEditOpen(true)}>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
-              <path d="M14 6l3 3" />
-            </svg>
-          </ActionButton>
+          {isHome && (
+            <ActionButton tooltip="Edit" onClick={() => setEditOpen(true)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
+                <path d="M14 6l3 3" />
+              </svg>
+            </ActionButton>
+          )}
           <ActionButton tooltip="Share" onClick={handleShare}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="18" cy="5" r="3" />
