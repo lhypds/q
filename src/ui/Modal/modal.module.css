@@ -6,6 +6,8 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 .modal {
@@ -16,6 +18,7 @@
   width: 90%;
   position: relative;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  touch-action: auto;
 }
 
 .header {
