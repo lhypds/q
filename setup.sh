@@ -26,5 +26,5 @@ echo "Building frontend..."
 npm run build
 
 echo ""
-echo "=== Setup complete ==="
+echo "Setup complete."
 echo "Run ./start.sh to start the app"

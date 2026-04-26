@@ -27,4 +27,4 @@ pm2 save
 echo ""
 pm2 list
 echo ""
-echo "=== Restart complete ==="
+echo "Restart completed!"

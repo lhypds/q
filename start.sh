@@ -15,4 +15,5 @@ pm2 list
 echo ""
 # Read PORT from .env for display
 PORT=$(grep '^PORT=' "$ROOT/.env" 2>/dev/null | cut -d= -f2 || echo 3001)
-echo "=== App running at http://localhost:$PORT ==="
+
+echo "App running at http://localhost:$PORT"
