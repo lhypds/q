@@ -111,8 +111,8 @@ export default function CreateEdit({
         .filter((n) => !isNaN(n));
       const n = nums.length > 0 ? Math.max(...nums) + 1 : 1;
       obj.questions[String(n)] = {
-        title: `Question ${n}`,
-        description: "",
+        title: `Question ${n} title`,
+        description: "Description for this question...",
         options: { 1: "Option 1", 2: "Option 2" },
       };
       setJsonText(toJson(obj));

@@ -74,7 +74,6 @@
   font-family: monospace;
   font-size: 12px;
   resize: vertical;
-  box-sizing: border-box;
   line-height: 1.5;
 }
 
