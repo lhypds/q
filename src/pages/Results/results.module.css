@@ -5,6 +5,7 @@
 
 .titleRow {
   display: flex;
+  gap: 8px;
   align-items: center;
   justify-content: space-between;
   line-height: 1;

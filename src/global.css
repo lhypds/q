@@ -30,7 +30,7 @@ body {
 .page-title {
   font-size: 28px;
   font-weight: 700;
-  letter-spacing: -0.3px;
+  line-height: 1.2;
 }
 
 /* Card */
