@@ -211,6 +211,7 @@ app.post('/generate/qjson', async (req, res) => {
     }
   }
 }
+"subtitle" cannot be empty. "description" can be empty.
 Use "multi": true, for questions that allow multiple selections (marked with [multi] in the outline). Omit the "multi" field for single-choice questions. Return only valid JSON, no markdown or explanation.
 Use "has_other_option": true, for questions that have an "Other" option for user free text input.
 `,
