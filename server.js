@@ -24,13 +24,17 @@ db.exec(`
     time INTEGER NOT NULL,
     time_h TEXT NOT NULL,
     survey TEXT NOT NULL,
-    result TEXT NOT NULL
+    result TEXT NOT NULL,
+    email TEXT NOT NULL DEFAULT ''
   )
 `);
 
+// Migrate: add email column if it doesn't exist
+try { db.exec("ALTER TABLE records ADD COLUMN email TEXT NOT NULL DEFAULT ''"); } catch { }
+
 // POST /surveyresult
 app.post('/surveyresult', (req, res) => {
-  const { survey, result } = req.body;
+  const { survey, result, email } = req.body;
   if (!survey || !result) {
     return res.status(400).json({ error: 'Missing survey or result' });
   }
@@ -41,11 +45,12 @@ app.post('/surveyresult', (req, res) => {
 
   const surveyJson = typeof survey === 'string' ? survey : JSON.stringify(survey);
   const resultJson = typeof result === 'string' ? result : JSON.stringify(result);
+  const emailVal = typeof email === 'string' ? email.trim() : '';
 
   const stmt = db.prepare(
-    'INSERT INTO records (time, time_h, survey, result) VALUES (?, ?, ?, ?)'
+    'INSERT INTO records (time, time_h, survey, result, email) VALUES (?, ?, ?, ?, ?)'
   );
-  const info = stmt.run(time, time_h, surveyJson, resultJson);
+  const info = stmt.run(time, time_h, surveyJson, resultJson, emailVal);
 
   res.json({ id: info.lastInsertRowid, time, time_h });
 });
@@ -79,6 +84,7 @@ app.get('/surveyresults', (req, res) => {
     ...r,
     result: JSON.parse(r.result),
     survey: JSON.parse(r.survey),
+    email: r.email || '',
   })));
 });
 

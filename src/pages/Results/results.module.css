@@ -51,3 +51,39 @@
 .legendCount {
   font-weight: 600;
 }
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 7px 10px;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+}
+
+.table th {
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 1px solid #ccc;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover td {
+  background: #fafafa;
+}
+
+.empty {
+  color: #bbb;
+}

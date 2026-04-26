@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import styles from "./survey.module.css";
-import { ActionButton, showToast } from "@ui";
+import { ActionButton, showToast, Modal } from "@ui";
 import { CreateEdit } from "./CreateEdit";
 import { SurveyList } from "./SurveyList";
 
@@ -45,6 +45,8 @@ export default function Survey() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [createEditOpen, setCreateEditOpen] = useState(false);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [email, setEmail] = useState("");
   const allAnswered = questions.every((q) => selections[q.key]);
 
   function handleEditSave(newSurveyObj) {
@@ -68,24 +70,33 @@ export default function Survey() {
     showToast(copied ? "Link copied to clipboard" : "Failed to copy link");
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!allAnswered) {
-      setError("Please answer all questions before submitting.");
-      return;
-    }
-    setError("");
+  async function doSubmit(emailValue) {
     try {
       const res = await fetch("/surveyresult", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ survey: surveyObj, result: selections }),
+        body: JSON.stringify({ survey: surveyObj, result: selections, email: emailValue }),
       });
       if (!res.ok) throw new Error("Server error");
       setSubmitted(true);
     } catch (err) {
       setError("Failed to submit. Please try again. " + err.message);
     }
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!allAnswered) {
+      setError("Please answer all questions before submitting.");
+      return;
+    }
+    setError("");
+    setEmailModalOpen(true);
+  }
+
+  function handleEmailConfirm() {
+    setEmailModalOpen(false);
+    doSubmit(email.trim());
   }
 
   const resultsUrl = window.location.pathname + window.location.search + (window.location.search ? "&" : "?") + "view=results";
@@ -140,6 +151,49 @@ export default function Survey() {
       </div>
 
       {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
+
+      <Modal
+        isOpen={emailModalOpen}
+        onClose={() => {
+          setEmailModalOpen(false);
+          doSubmit("");
+        }}
+        title="Submit"
+      >
+        <div className={styles.emailModal}>
+          <p className={styles.emailHint}>Enter your email to receive a copy of your response (optional).</p>
+          <input
+            className={styles.emailInput}
+            type="email"
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleEmailConfirm();
+              if (e.key === "Escape") {
+                setEmailModalOpen(false);
+                doSubmit("");
+              }
+            }}
+            autoFocus
+          />
+          <div className={styles.emailActions}>
+            <button
+              className={styles.emailSkip}
+              type="button"
+              onClick={() => {
+                setEmailModalOpen(false);
+                doSubmit("");
+              }}
+            >
+              Skip
+            </button>
+            <button className={styles.emailConfirm} type="button" onClick={handleEmailConfirm}>
+              Submit
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       <CreateEdit
         isOpen={createEditOpen}

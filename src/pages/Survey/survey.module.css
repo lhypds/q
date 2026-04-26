@@ -94,6 +94,63 @@
   gap: 12px;
 }
 
+.emailModal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 280px;
+}
+
+.emailHint {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.emailInput {
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  outline: none;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.emailInput:focus {
+  border-color: #555;
+}
+
+.emailActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.emailSkip,
+.emailConfirm {
+  width: 100px;
+  padding: 6px 16px;
+  font: inherit;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid black;
+  background: none;
+}
+
+.emailSkip:hover {
+  background: #f5f5f5;
+}
+
+.emailConfirm {
+  background: #111;
+  color: #fff;
+}
+
+.emailConfirm:hover {
+  background: #333;
+}
+
 /* Thank you */
 .thankYouCard {
   text-align: center;
