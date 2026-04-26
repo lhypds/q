@@ -4,10 +4,17 @@ import cors from 'cors';
 import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import OpenAI from 'openai';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+const openai = new OpenAI({
+  baseURL: process.env.OPENAI_BASE_URL,
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const MODEL = process.env.MODEL || 'gpt-4o';
 
 app.use(cors());
 app.use(express.json());
@@ -91,8 +98,62 @@ app.get('/surveyresults', (req, res) => {
   })));
 });
 
-// Generate q.json from description
-// TODO
+// Generate survey questions outline from topic
+app.post('/generate/prompt', async (req, res) => {
+  const { topic } = req.body;
+  if (!topic) return res.status(400).json({ error: 'Missing topic' });
+  try {
+    const completion = await openai.chat.completions.create({
+      model: MODEL,
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a survey designer. Given a topic, produce a concise numbered list of survey questions with multiple-choice answer options. Be clear and friendly.',
+        },
+        { role: 'user', content: `Create survey questions about: ${topic}` },
+      ],
+    });
+    res.json({ prompt: completion.choices[0].message.content });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Generate q.json structure from topic and questions outline
+app.post('/generate/qjson', async (req, res) => {
+  const { topic, prompt } = req.body;
+  if (!topic || !prompt) return res.status(400).json({ error: 'Missing topic or prompt' });
+  try {
+    const completion = await openai.chat.completions.create({
+      model: MODEL,
+      messages: [
+        {
+          role: 'system',
+          content: `You are a survey JSON generator. Convert the questions outline into this exact JSON format:
+{
+  "title": "Survey title",
+  "subtitle": "Optional subtitle",
+  "description": "Optional description",
+  "questions": {
+    "1": {
+      "title": "Question title",
+      "description": "Optional question description",
+      "options": { "1": "Option A", "2": "Option B" }
+    }
+  }
+}
+Return only valid JSON, no markdown or explanation.`,
+        },
+        { role: 'user', content: `Topic: ${topic}\n\nQuestions outline:\n${prompt}` },
+      ],
+      response_format: { type: 'json_object' },
+    });
+    const survey = JSON.parse(completion.choices[0].message.content);
+    res.json({ survey });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 
 // Catch-all: serve React app
 app.get('*', (req, res) => {

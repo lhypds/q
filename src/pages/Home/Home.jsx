@@ -17,6 +17,7 @@ async function copyText(text) {
 export default function Home() {
   const [createEditOpen, setCreateEditOpen] = useState(false);
   const [createEditKey, setCreateEditKey] = useState(0);
+  const [createEditSurveyObj, setCreateEditSurveyObj] = useState({ title: "", subtitle: "", description: "" });
 
   const [generateOpen, setGenerateOpen] = useState(false);
   const [generateKey, setGenerateKey] = useState(0);
@@ -26,6 +27,13 @@ export default function Home() {
     url.search = "";
     url.searchParams.set("data", JSON.stringify(newSurveyObj));
     window.location.href = url.toString();
+  }
+
+  function handleGenerateComplete(surveyObj) {
+    setGenerateOpen(false);
+    setCreateEditSurveyObj(surveyObj);
+    setCreateEditKey((k) => k + 1);
+    setCreateEditOpen(true);
   }
 
   async function handleShare() {
@@ -73,6 +81,7 @@ export default function Home() {
           <ActionButton
             tooltip="Create"
             onClick={() => {
+              setCreateEditSurveyObj({ title: "", subtitle: "", description: "" });
               setCreateEditKey((k) => k + 1);
               setCreateEditOpen(true);
             }}
@@ -99,11 +108,7 @@ export default function Home() {
         key={createEditKey}
         isOpen={createEditOpen}
         onClose={() => setCreateEditOpen(false)}
-        surveyObj={{
-          title: "",
-          subtitle: "",
-          description: "",
-        }}
+        surveyObj={createEditSurveyObj}
         onSave={handleCreateSave}
         mode="create"
       />
@@ -112,13 +117,7 @@ export default function Home() {
         key={generateKey}
         isOpen={generateOpen}
         onClose={() => setGenerateOpen(false)}
-        surveyObj={{
-          title: "",
-          subtitle: "",
-          description: "",
-        }}
-        onSave={handleCreateSave}
-        mode="create"
+        onComplete={handleGenerateComplete}
       />
 
       <div className={styles.content}>
