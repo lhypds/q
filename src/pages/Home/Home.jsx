@@ -43,7 +43,9 @@ export default function Home() {
   }
 
   async function handleShare() {
-    const copied = await copyText(decodeURIComponent(window.location.href));
+    const url = decodeURIComponent(window.location.href);
+    const text = `${t("toast.shareMessage")}\n${url}`;
+    const copied = await copyText(text);
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
 

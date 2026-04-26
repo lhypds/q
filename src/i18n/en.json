@@ -17,7 +17,8 @@
   "toast": {
     "linkCopied": "Link copied to clipboard",
     "failedCopy": "Failed to copy link",
-    "creating": "Creating..."
+    "creating": "Creating...",
+    "shareMessage": "Welcome to q - Survey Generator"
   },
   "survey": {
     "thankYou": "Thank you!",
