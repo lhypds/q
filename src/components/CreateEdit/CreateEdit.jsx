@@ -146,11 +146,10 @@ export default function CreateEdit({
             onKeyDown={handleKeyDown}
           />
         </div>
-        <div className={styles.field}>
+        <div className={styles.jsonField}>
           <label className={styles.label}>Description</label>
-          <input
-            className={styles.input}
-            type="text"
+          <textarea
+            className={`${styles.input} ${styles.descTextarea}`}
             value={description}
             onChange={handleDescriptionChange}
             onKeyDown={handleKeyDown}
