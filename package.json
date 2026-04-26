@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n server,client -c blue,green \"node --watch server.js\" \"vite\"",
+    "dev": "concurrently -n server,client -c blue,green \"node --watch server.js\" \"vite --host\"",
     "dev:server": "node --watch server.js",
-    "dev:client": "vite",
+    "dev:client": "vite --host",
     "build": "vite build",
     "start": "node server.js",
     "lint": "eslint ."
