@@ -27,7 +27,7 @@ export default function ResultCard({ question, results }) {
         <div className={styles.chartContainer}>
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
-              <Pie data={data} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={3} dataKey="value">
+              <Pie data={data} cx="50%" cy="50%" innerRadius={0} outerRadius={100} paddingAngle={0} dataKey="value">
                 {data.map((_, idx) => (
                   <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
                 ))}
