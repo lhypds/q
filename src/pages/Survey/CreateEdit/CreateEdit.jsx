@@ -59,6 +59,10 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, s
       if (title.trim()) obj.title = title.trim();
       if (subtitle.trim()) obj.subtitle = subtitle.trim();
       else delete obj.subtitle;
+      if (!obj.title || !obj.title.trim()) {
+        setJsonError("Title is required");
+        return;
+      }
       onSave(obj);
       onClose();
     } catch {
@@ -95,7 +99,7 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, s
           />
         </div>
         <div className={styles.jsonField}>
-          <label className={styles.label}>q.JSON</label>
+          <label className={styles.label}>q.json</label>
           <textarea
             className={`${styles.input} ${styles.textarea}`}
             value={jsonText}
