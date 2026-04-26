@@ -44,7 +44,10 @@ export default function Survey() {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const allAnswered = questions.every((q) => selections[q.key]);
+  const allAnswered = questions.every((q) => {
+    const v = selections[q.key];
+    return q.multi ? Array.isArray(v) && v.length > 0 : !!v;
+  });
 
   function handleEditSave(newSurveyObj) {
     const url = new URL(window.location.href);
@@ -265,7 +268,16 @@ export default function Survey() {
                 key={q.key}
                 question={q}
                 selected={selections[q.key]}
-                onSelect={(val) => setSelections((prev) => ({ ...prev, [q.key]: val }))}
+                onSelect={(val) =>
+                  setSelections((prev) => {
+                    if (q.multi) {
+                      const cur = Array.isArray(prev[q.key]) ? prev[q.key] : [];
+                      const updated = cur.includes(val) ? cur.filter((v) => v !== val) : [...cur, val];
+                      return { ...prev, [q.key]: updated };
+                    }
+                    return { ...prev, [q.key]: val };
+                  })
+                }
               />
             ))}
           </div>

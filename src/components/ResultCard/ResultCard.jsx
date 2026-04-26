@@ -21,10 +21,17 @@ export default function ResultCard({ question, results }) {
   });
   results.forEach((r) => {
     const chosen = r.result[question.key];
-    if (chosen && counts[chosen] !== undefined) counts[chosen]++;
+    if (Array.isArray(chosen)) {
+      chosen.forEach((k) => { if (counts[k] !== undefined) counts[k]++; });
+    } else if (chosen && counts[chosen] !== undefined) {
+      counts[chosen]++;
+    }
   });
   const data = question.answers.map((a) => ({ name: a.label, value: counts[a.key] || 0 }));
-  const total = data.reduce((s, d) => s + d.value, 0);
+  // For multi-select, total = respondents who answered; for single, total = sum of votes
+  const total = question.multi
+    ? results.filter((r) => { const c = r.result[question.key]; return Array.isArray(c) ? c.length > 0 : !!c; }).length
+    : data.reduce((s, d) => s + d.value, 0);
 
   const [colorOffset] = useState(() => Math.floor(Math.random() * COLORS.length));
 

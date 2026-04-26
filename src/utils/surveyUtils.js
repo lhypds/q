@@ -13,6 +13,7 @@ export function normalizeSurvey(survey) {
       const normQ = {};
       if (q.title !== undefined) normQ.title = q.title;
       if (q.description !== undefined) normQ.description = q.description;
+      if (q.multi) normQ.multi = true;
       if (q.options && typeof q.options === 'object') {
         const sortedOptKeys = Object.keys(q.options).sort((a, b) => Number(a) - Number(b));
         normQ.options = {};

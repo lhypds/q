@@ -141,7 +141,7 @@ app.post('/generate/prompt', async (req, res) => {
   const { topic, modification, currentPrompt } = req.body;
   if (!topic) return res.status(400).json({ error: 'Missing topic' });
 
-  const systemPrompt = 'You are a survey designer. Rewrite the given survey questions outline based on the modification request. Produce a concise numbered list of survey questions with multiple-choice answer options. Add descriptions for each question if necessary. Be clear and friendly.';
+  const systemPrompt = 'You are a survey designer. Rewrite the given survey questions outline based on the modification request. Produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add descriptions for each question if necessary. Be clear and friendly.';
 
   const userPrompt = modification
     ? `Topic: ${topic}\n\nCurrent questions:\n${currentPrompt}\n\nModification request: ${modification}`
@@ -192,10 +192,15 @@ app.post('/generate/qjson', async (req, res) => {
       "title": "Question title",
       "description": "Optional question description",
       "options": { "1": "Option A", "2": "Option B" }
+    },
+    "2": {
+      "title": "Multi-select question title",
+      "multi": true,
+      "options": { "1": "Option A", "2": "Option B", "3": "Option C" }
     }
   }
 }
-Return only valid JSON, no markdown or explanation.`,
+Use "multi": true for questions that allow multiple selections (marked with [multi] in the outline). Omit the "multi" field for single-choice questions. Return only valid JSON, no markdown or explanation.`,
         },
         { role: 'user', content: `Topic: ${topic}\n\nQuestions outline:\n${prompt}` },
       ],

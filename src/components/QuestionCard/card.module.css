@@ -23,10 +23,39 @@
   background: #f0f0f0;
 }
 
-.optionLabel input[type="radio"] {
+.optionLabel input[type="radio"],
+.optionLabel input[type="checkbox"] {
   accent-color: black;
   width: 12px;
   height: 12px;
+}
+
+.optionLabel input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid black;
+  border-radius: 0;
+  background: white;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.optionLabel input[type="checkbox"]:checked {
+  background: black;
+}
+
+.optionLabel input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: -1px;
+  width: 4px;
+  height: 7px;
+  border: 2px solid white;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
 }
 
 .optionText {

@@ -117,6 +117,7 @@ export default function CreateEdit({
       obj.questions[String(n)] = {
         title: `Question ${n} title`,
         description: "Description for this question...",
+        multi: false,
         options: { 1: "Option 1", 2: "Option 2" },
       };
       setJsonText(toJson(obj));
@@ -177,12 +178,7 @@ export default function CreateEdit({
               +q
             </button>
           </div>
-          <textarea
-            className={styles.qjsonTextarea}
-            value={jsonText}
-            onChange={handleJsonChange}
-            spellCheck={false}
-          />
+          <textarea className={styles.qjsonTextarea} value={jsonText} onChange={handleJsonChange} spellCheck={false} />
         </div>
 
         {jsonError && <div className={styles.jsonError}>{jsonError}</div>}
