@@ -147,7 +147,11 @@ app.post('/generate/prompt', async (req, res) => {
   const { topic, modification, currentPrompt } = req.body;
   if (!topic) return res.status(400).json({ error: 'Missing topic' });
 
-  const systemPrompt = 'You are a survey designer. Rewrite the given survey questions outline based on the modification request. Produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add descriptions for each question if necessary. Be clear and friendly.';
+  const systemPrompt = modification
+    ?
+    'You are a survey designer. Rewrite the given survey questions outline based on the modification request. Produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly.'
+    :
+    'You are a survey designer. First, generate the description for the survey. Then, produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly.';
 
   const userPrompt = modification
     ? `Topic: ${topic}\n\nCurrent questions:\n${currentPrompt}\n\nModification request: ${modification}`
