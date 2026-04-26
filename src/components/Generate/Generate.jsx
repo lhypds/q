@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, showToast, hideToast } from "@ui";
 import styles from "./generate.module.css";
+import { normalizeSurvey } from "@utils/surveyUtils";
 
 export default function Generate({ isOpen, onClose, onComplete }) {
   const { t } = useTranslation();
@@ -69,7 +70,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate survey");
       hideToast();
-      onComplete(data.survey);
+      onComplete(normalizeSurvey(data.survey));
     } catch (e) {
       hideToast();
       setError(e.message);
