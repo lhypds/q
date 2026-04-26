@@ -12,7 +12,7 @@ async function copyText(text) {
   }
 }
 
-const COLORS = ["#4f8ef7", "#f7934f", "#4fc17e", "#f74f7a", "#a24ff7", "#f7e04f", "#4fd6f7"];
+const COLORS = ["#a8c8fa", "#fac4a0", "#9de0bc", "#fab4c8", "#cdb0fa", "#faf0a0", "#a0e8fa"];
 
 function parseSurvey(search) {
   const params = new URLSearchParams(search);
