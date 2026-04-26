@@ -70,13 +70,8 @@ export default function Generate({ isOpen, onClose, onComplete }) {
           <button type="button" className={styles.cancelButton} onClick={onClose} disabled={loading}>
             Cancel
           </button>
-          <button
-            type="button"
-            className={styles.generateButton}
-            onClick={handleGenerate}
-            disabled={loading || !topic.trim()}
-          >
-            {loading ? "Generating..." : "Generate"}
+          <button type="button" className={styles.generateButton} onClick={handleGenerate} disabled={loading || !topic.trim()}>
+            {"Generate"}
           </button>
         </div>
       </div>

@@ -179,7 +179,7 @@ export default function CreateEdit({
             Cancel
           </button>
           <button type="button" className={styles.saveButton} onClick={handleSave}>
-            Save
+            {mode === "create" ? "Create" : "Save"}
           </button>
         </div>
       </div>

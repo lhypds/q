@@ -19,8 +19,6 @@ const MODEL = process.env.MODEL || 'gpt-4o';
 app.use(cors());
 app.use(express.json());
 
-// Serve built frontend
-app.use(express.static(path.join(__dirname, 'dist')));
 
 // Init SQLite
 const db = new Database(path.join(__dirname, 'db.sqlite'));
@@ -155,10 +153,19 @@ Return only valid JSON, no markdown or explanation.`,
   }
 });
 
-// Catch-all: serve React app
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
+if (process.env.NODE_ENV !== 'production') {
+  const { createServer: createViteServer } = await import('vite');
+  const vite = await createViteServer({
+    server: { middlewareMode: true },
+    appType: 'spa',
+  });
+  app.use(vite.middlewares);
+} else {
+  app.use(express.static(path.join(__dirname, 'dist')));
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

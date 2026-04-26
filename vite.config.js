@@ -15,11 +15,4 @@ export default defineConfig({
       '@utils': path.resolve(__dirname, 'src/utils'),
     },
   },
-  server: {
-    proxy: {
-      '/surveyresult': 'http://localhost:3001',
-      '/surveyresults': 'http://localhost:3001',
-      '/surveys': 'http://localhost:3001',
-    },
-  },
 })
