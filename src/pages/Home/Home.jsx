@@ -69,7 +69,11 @@ export default function Home() {
         key={createEditKey}
         isOpen={createEditOpen}
         onClose={() => setCreateEditOpen(false)}
-        surveyObj={{}}
+        surveyObj={{
+          title: "",
+          subtitle: "",
+          description: "",
+        }}
         onSave={handleCreateSave}
         mode="create"
       />

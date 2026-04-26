@@ -17,10 +17,14 @@ export default function CreateEdit({
   onSave,
   mode,
 }) {
-  const [title, setTitle] = useState(currentTitle || "");
-  const [subtitle, setSubtitle] = useState(currentSubtitle || "");
-  const [description, setDescription] = useState(currentDescription || "");
-  const [jsonText, setJsonText] = useState(() => toJson(surveyObj || {}));
+  // Normalize surveyObj if it exists
+  const normalizedSurveyObj = surveyObj ? normalizeSurvey(surveyObj) : {};
+
+  const [title, setTitle] = useState(currentTitle || normalizedSurveyObj.title || "");
+  const [subtitle, setSubtitle] = useState(currentSubtitle || normalizedSurveyObj.subtitle || "");
+  const [description, setDescription] = useState(currentDescription || normalizedSurveyObj.description || "");
+
+  const [jsonText, setJsonText] = useState(() => toJson(normalizedSurveyObj));
   const [jsonError, setJsonError] = useState("");
 
   function handleTitleChange(e) {
