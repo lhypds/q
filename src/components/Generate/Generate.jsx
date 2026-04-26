@@ -57,7 +57,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
   async function handleComplete() {
     setLoading(true);
     setError("");
-    showToast("Creating...", null);
+    showToast("Creating...", null, "center");
     try {
       const res = await fetch("/generate/qjson", {
         method: "POST",

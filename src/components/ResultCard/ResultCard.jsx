@@ -44,10 +44,14 @@ export default function ResultCard({ question, results }) {
                   <Cell key={idx} fill={COLORS[(colorOffset + idx) % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value, name) => [`${value} (${total ? Math.round((value / total) * 100) : 0}%)`, name]} />
-              <Legend />
+              <Tooltip
+                formatter={(value, name) => [`${value} (${total ? Math.round((value / total) * 100) : 0}%)`, name]}
+                contentStyle={{ fontSize: "12px", padding: "2px 8px" }}
+              />
+              <Legend wrapperStyle={{ fontSize: "12px" }} />
             </PieChart>
           </ResponsiveContainer>
+
           <div className={styles.legendCounts}>
             {data.map((d, idx) => {
               const percent = total ? Math.round((d.value / total) * 100) : 0;
