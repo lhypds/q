@@ -16,6 +16,7 @@ async function copyText(text) {
 function parseSurvey(search) {
   const params = new URLSearchParams(search);
   const title = params.get("title");
+  const subtitle = params.get("desc") || "";
   const surveyObj = {};
   for (const [k, v] of params.entries()) {
     surveyObj[k] = v;
@@ -33,11 +34,11 @@ function parseSurvey(search) {
     questions.push({ key: `q${i}`, text: qText, answers });
     i++;
   }
-  return { title, questions, surveyObj };
+  return { title, subtitle, questions, surveyObj };
 }
 
 export default function Survey() {
-  const { title, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
+  const { title, subtitle, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
   const isHome = !title && questions.length === 0;
 
   const [selections, setSelections] = useState({});
@@ -46,9 +47,11 @@ export default function Survey() {
   const [editOpen, setEditOpen] = useState(false);
   const allAnswered = questions.every((q) => selections[q.key]);
 
-  function handleEditSave(newTitle) {
+  function handleEditSave(newTitle, newSubtitle) {
     const url = new URL(window.location.href);
     url.searchParams.set("title", newTitle);
+    if (newSubtitle) url.searchParams.set("desc", newSubtitle);
+    else url.searchParams.delete("desc");
     window.location.href = url.toString();
   }
 
@@ -124,8 +127,15 @@ export default function Survey() {
         </div>
       </div>
 
-      {/* <div className={styles.subtitle}>Q list</div> */}
-      <Edit isOpen={editOpen} onClose={() => setEditOpen(false)} currentTitle={title} onSave={handleEditSave} />
+      {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
+
+      <Edit
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        currentTitle={title}
+        currentSubtitle={subtitle}
+        onSave={handleEditSave}
+      />
 
       <div className={styles.content}>
         {/* Survey Form */}

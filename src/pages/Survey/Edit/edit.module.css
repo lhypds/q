@@ -16,9 +16,11 @@
   font-weight: 600;
   white-space: nowrap;
   flex-shrink: 0;
+  width: 60px;
 }
 
 .input {
+  margin-left: 4px;
   flex: 1;
   padding: 8px 10px;
   font-size: 14px;
