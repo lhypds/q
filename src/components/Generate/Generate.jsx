@@ -50,6 +50,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Generate">
       <div className={styles.container}>
+        {/* Input */}
         <textarea
           className={styles.inputTextarea}
           placeholder="What would you like to survey?"
@@ -58,6 +59,8 @@ export default function Generate({ isOpen, onClose, onComplete }) {
           disabled={loading}
           autoFocus
         />
+
+        {/* Prompt */}
         <textarea
           className={`${styles.promptTextarea} ${stage === "input" ? styles.promptGrayed : ""}`}
           value={prompt}
@@ -65,6 +68,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
           placeholder="Your survey questions will appear here..."
           readOnly={stage === "input"}
         />
+
         {error && <div className={styles.error}>{error}</div>}
         <div className={styles.actions}>
           <button type="button" className={styles.cancelButton} onClick={onClose} disabled={loading}>

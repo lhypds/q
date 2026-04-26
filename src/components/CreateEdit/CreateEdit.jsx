@@ -129,6 +129,7 @@ export default function CreateEdit({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={mode === "create" ? "Create" : "Edit"}>
       <div className={styles.container}>
+        {/* Title */}
         <div className={styles.field}>
           <label className={styles.label}>Title</label>
           <input
@@ -140,6 +141,8 @@ export default function CreateEdit({
             autoFocus
           />
         </div>
+
+        {/* Subtitle */}
         <div className={styles.field}>
           <label className={styles.label}>Subtitle</label>
           <input
@@ -150,29 +153,34 @@ export default function CreateEdit({
             onKeyDown={handleKeyDown}
           />
         </div>
-        <div className={styles.jsonField}>
+
+        {/* Description */}
+        <div className={styles.descriptionField}>
           <label className={styles.label}>Description</label>
           <textarea
-            className={`${styles.input} ${styles.descTextarea}`}
+            className={`${styles.input} ${styles.descriptionTextarea}`}
             value={description}
             onChange={handleDescriptionChange}
             onKeyDown={handleKeyDown}
           />
         </div>
-        <div className={styles.jsonField}>
-          <div className={styles.jsonFieldHeader}>
+
+        {/* q.json */}
+        <div className={styles.qjsonField}>
+          <div className={styles.qjsonFieldLabelRow}>
             <label className={styles.label}>q.json</label>
             <button type="button" className={styles.addQuestionBtn} onClick={handleAddQuestion} title="Add question">
               +q
             </button>
           </div>
           <textarea
-            className={`${styles.input} ${styles.textarea}`}
+            className={`${styles.input} ${styles.qjsonTextarea}`}
             value={jsonText}
             onChange={handleJsonChange}
             spellCheck={false}
           />
         </div>
+
         {jsonError && <div className={styles.jsonError}>{jsonError}</div>}
         <div className={styles.actions}>
           <button type="button" className={styles.cancelButton} onClick={onClose}>
