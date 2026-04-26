@@ -1,11 +1,10 @@
-import React from "react";
 import styles from "./modal.module.css";
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+const Modal = ({ isOpen, onClose, title, children, closeOnOverlay = false }) => {
   if (!isOpen) return null;
 
   const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
+    if (closeOnOverlay && e.target === e.currentTarget) {
       onClose();
     }
   };

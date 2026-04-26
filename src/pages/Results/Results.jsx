@@ -89,7 +89,8 @@ export default function Results() {
   return (
     <div className="page">
       <div className={styles.titleRow}>
-        <h1 className="page-title">{title} — Results</h1>
+        <div className="page-title">{title} — Results</div>
+
         <ActionButton tooltip="Share" onClick={handleShare}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="18" cy="5" r="3" />
@@ -100,54 +101,62 @@ export default function Results() {
           </svg>
         </ActionButton>
       </div>
+
       <div className={styles.subtitle}>
         {loading ? "Loading…" : `${results.length} response${results.length !== 1 ? "s" : ""} collected`}
       </div>
       {fetchError && <p className="error-msg">{fetchError}</p>}
-      {!loading &&
-        questions.map((q) => {
-          const data = getChartData(q.key, q.answers);
-          const total = data.reduce((s, d) => s + d.value, 0);
-          return (
-            <div key={q.key} className="card">
-              <div className="card-header">
-                <h2 className="card-title">{q.text}</h2>
-                <span className="badge">{q.key}</span>
-              </div>
-              {total === 0 ? (
-                <p className="card-desc">No responses yet.</p>
-              ) : (
-                <div className={styles.chartContainer}>
-                  <ResponsiveContainer width="100%" height={260}>
-                    <PieChart>
-                      <Pie data={data} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={3} dataKey="value">
-                        {data.map((_, idx) => (
-                          <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        formatter={(value, name) => [`${value} (${total ? Math.round((value / total) * 100) : 0}%)`, name]}
-                      />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className={styles.legendCounts}>
-                    {data.map((d, idx) => (
-                      <div className={styles.legendItem} key={d.name}>
-                        <span className={styles.legendDot} style={{ background: COLORS[idx % COLORS.length] }} />
-                        <span className={styles.legendName}>{d.name}</span>
-                        <span className={styles.legendCount}>{d.value}</span>
-                      </div>
-                    ))}
-                  </div>
+
+      <div className={styles.content}>
+        {!loading &&
+          questions.map((q) => {
+            const data = getChartData(q.key, q.answers);
+            const total = data.reduce((s, d) => s + d.value, 0);
+            return (
+              <div key={q.key} className="card">
+                <div className="card-header">
+                  <div className="card-title">{q.text}</div>
+                  <span className="badge">{q.key}</span>
                 </div>
-              )}
-            </div>
-          );
-        })}
+                {total === 0 ? (
+                  <div className="card-desc">No responses yet.</div>
+                ) : (
+                  <div className={styles.chartContainer}>
+                    <ResponsiveContainer width="100%" height={260}>
+                      <PieChart>
+                        <Pie data={data} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={3} dataKey="value">
+                          {data.map((_, idx) => (
+                            <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          formatter={(value, name) => [`${value} (${total ? Math.round((value / total) * 100) : 0}%)`, name]}
+                        />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className={styles.legendCounts}>
+                      {data.map((d, idx) => (
+                        <div className={styles.legendItem} key={d.name}>
+                          <span className={styles.legendDot} style={{ background: COLORS[idx % COLORS.length] }} />
+                          <span className={styles.legendName}>{d.name}</span>
+                          <span className={styles.legendCount}>{d.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+      </div>
+
       <div className="submit-row">
         <a href={surveyUrl} className="results-link small">
           ← Take Survey
+        </a>
+        <a href={"/"} className="results-link small">
+          q
         </a>
       </div>
     </div>

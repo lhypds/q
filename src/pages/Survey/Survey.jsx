@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
 import styles from "./survey.module.css";
-import { ActionButton, showToast } from "../../ui";
-import Edit from "./Edit/Edit";
+import { ActionButton, showToast } from "@ui";
+import { Edit } from "./Edit";
+import { SurveyList } from "./SurveyList";
 
 async function copyText(text) {
   try {
@@ -37,6 +38,7 @@ function parseSurvey(search) {
 
 export default function Survey() {
   const { title, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
+
   const [selections, setSelections] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -84,7 +86,7 @@ export default function Survey() {
     return (
       <div className="page">
         <div className={`card ${styles.thankYouCard}`}>
-          <h2 className="card-title">Thank you!</h2>
+          <div className="card-title">Thank you!</div>
           <p className={styles.thankYouText}>Your response has been recorded.</p>
           <a href={resultsUrl} className="results-link">
             View Results →
@@ -96,8 +98,10 @@ export default function Survey() {
 
   return (
     <div className="page">
+      {/* Title */}
       <div className={styles.titleRow}>
-        <h1 className="page-title">{title}</h1>
+        <div className="page-title">{title}</div>
+
         <div className={styles.actions}>
           <ActionButton tooltip="Edit" onClick={() => setEditOpen(true)}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -116,51 +120,63 @@ export default function Survey() {
           </ActionButton>
         </div>
       </div>
+
+      {/* <div className={styles.subtitle}>Q list</div> */}
       <Edit isOpen={editOpen} onClose={() => setEditOpen(false)} currentTitle={title} onSave={handleEditSave} />
-      <form onSubmit={handleSubmit}>
-        {questions.map((q) => (
-          <div key={q.key} className="card">
-            <div className="card-header">
-              <h2 className="card-title">{q.text}</h2>
-              <span className="badge">{q.key}</span>
-            </div>
-            <p className="card-desc">Select one option below.</p>
-            <div className={styles.options}>
-              {q.answers.map((a) => (
-                <label
-                  key={a.key}
-                  className={`${styles.optionLabel} ${selections[q.key] === a.key ? styles.optionLabelSelected : ""}`}
-                >
-                  <input
-                    type="radio"
-                    name={q.key}
-                    value={a.key}
-                    checked={selections[q.key] === a.key}
-                    onChange={() => setSelections((prev) => ({ ...prev, [q.key]: a.key }))}
-                  />
-                  <span className={styles.optionText}>{a.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        ))}
-        {questions.length === 0 && (
-          <div className="card">
-            <div className="card-desc">No questions found.</div>
-          </div>
-        )}
-        {error && <p className="error-msg">{error}</p>}
+
+      <div className={styles.content}>
+        {/* Survey Form */}
         {questions.length > 0 && (
-          <div className="submit-row">
-            <button type="submit" className={styles.submitBtn} disabled={!allAnswered}>
-              Submit
-            </button>
-            <a href={resultsUrl} className="results-link small">
-              View Results →
-            </a>
+          <form onSubmit={handleSubmit}>
+            {questions.map((q) => (
+              <div key={q.key} className="card">
+                <div className="card-header">
+                  <div className="card-title">{q.text}</div>
+                  <span className="badge">{q.key}</span>
+                </div>
+                <div className="card-desc">Select one option below.</div>
+                <div className={styles.options}>
+                  {q.answers.map((a) => (
+                    <label
+                      key={a.key}
+                      className={`${styles.optionLabel} ${selections[q.key] === a.key ? styles.optionLabelSelected : ""}`}
+                    >
+                      <input
+                        type="radio"
+                        name={q.key}
+                        value={a.key}
+                        checked={selections[q.key] === a.key}
+                        onChange={() => setSelections((prev) => ({ ...prev, [q.key]: a.key }))}
+                      />
+                      <span className={styles.optionText}>{a.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+            {error && <p className="error-msg">{error}</p>}
+            <div className="submit-row">
+              <div className={styles.submitRowLeft}>
+                <button type="submit" className={styles.submitBtn} disabled={!allAnswered}>
+                  Submit
+                </button>
+                <a href={resultsUrl} className="results-link small">
+                  View Results →
+                </a>
+              </div>
+              <a href={"/"} className="results-link small">
+                q
+              </a>
+            </div>
+          </form>
+        )}
+
+        {questions.length === 0 && (
+          <div>
+            <SurveyList />
           </div>
         )}
-      </form>
+      </div>
     </div>
   );
 }

@@ -1,19 +1,21 @@
-/* Title row */
 .titleRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  line-height: 1;
 }
 
-.titleRow h1 {
-  margin: 0;
-}
-
-/* Subtitle */
 .subtitle {
   color: var(--text-muted);
   font-size: 14px;
+  margin-top: 16px;
+}
+
+.content {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* Chart */

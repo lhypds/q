@@ -1,0 +1,38 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border: 1px solid black;
+  border-bottom: none;
+  text-decoration: none;
+  color: inherit;
+  background: none;
+  transition: background 0.1s;
+}
+
+.item:last-child {
+  border-bottom: 1px solid black;
+}
+
+.item:hover {
+  background: #f5f5f5;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.count {
+  width: 80px;
+  font-size: 12px;
+  color: #666;
+}

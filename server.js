@@ -50,6 +50,20 @@ app.post('/surveyresult', (req, res) => {
   res.json({ id: info.lastInsertRowid, time, time_h });
 });
 
+// GET /surveys — distinct surveys with response counts
+app.get('/surveys', (req, res) => {
+  const rows = db.prepare(
+    'SELECT survey, COUNT(*) as count FROM records GROUP BY survey ORDER BY MAX(time) DESC'
+  ).all();
+
+  const surveys = rows.map(r => ({
+    survey: JSON.parse(r.survey),
+    count: r.count,
+  }));
+
+  res.json(surveys);
+});
+
 // GET /surveyresults?survey=...
 app.get('/surveyresults', (req, res) => {
   const { survey } = req.query;
