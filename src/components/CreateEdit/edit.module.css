@@ -41,12 +41,19 @@
 }
 
 .descriptionTextarea {
-  flex: none;
   width: 100%;
-  min-height: 72px;
+  min-height: 100px;
+  padding: 8px 10px;
   font-family: monospace;
   font-size: 14px;
+  border: 1px solid #ccc;
+  outline: none;
+  box-sizing: border-box;
   resize: vertical;
+}
+
+.descriptionTextarea:focus {
+  border-color: #555;
 }
 
 .qjsonField {
@@ -82,12 +89,20 @@
 }
 
 .qjsonTextarea {
-  flex: none;
   width: 100%;
+  min-height: 220px;
+  padding: 8px 10px;
   font-family: monospace;
   font-size: 12px;
+  border: 1px solid #ccc;
+  outline: none;
+  box-sizing: border-box;
   resize: vertical;
   line-height: 1.5;
+}
+
+.qjsonTextarea:focus {
+  border-color: #555;
 }
 
 .jsonError {

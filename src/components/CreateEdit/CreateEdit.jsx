@@ -158,7 +158,7 @@ export default function CreateEdit({
         <div className={styles.descriptionField}>
           <label className={styles.label}>Description</label>
           <textarea
-            className={`${styles.input} ${styles.descriptionTextarea}`}
+            className={styles.descriptionTextarea}
             value={description}
             onChange={handleDescriptionChange}
             onKeyDown={handleKeyDown}
@@ -174,7 +174,7 @@ export default function CreateEdit({
             </button>
           </div>
           <textarea
-            className={`${styles.input} ${styles.qjsonTextarea}`}
+            className={styles.qjsonTextarea}
             value={jsonText}
             onChange={handleJsonChange}
             spellCheck={false}
