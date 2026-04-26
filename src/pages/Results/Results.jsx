@@ -32,7 +32,7 @@ export default function Results() {
         setFetchError(t("results.fetchError"));
         setLoading(false);
       });
-  }, [surveyKey]);
+  }, [surveyKey, t]);
 
   const surveyUrl = (() => {
     const params = new URLSearchParams(window.location.search);
@@ -41,9 +41,7 @@ export default function Results() {
   })();
 
   async function handleShare() {
-    const url = decodeURIComponent(window.location.href);
-    const text = `${t("toast.shareMessage")}\n${url}`;
-    const copied = await copyText(text);
+    const copied = await copyText(decodeURIComponent(window.location.href));
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
 

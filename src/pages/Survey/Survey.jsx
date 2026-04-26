@@ -43,8 +43,7 @@ export default function Survey() {
     const url = new URL(window.location.href);
     url.searchParams.delete("edit");
     url.searchParams.delete("view");
-    const text = `${t("toast.shareMessage")}\n${decodeURIComponent(url.toString())}`;
-    const copied = await copyText(text);
+    const copied = await copyText(decodeURIComponent(url.toString()));
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
 
