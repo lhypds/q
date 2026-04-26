@@ -89,7 +89,7 @@ export default function Results() {
   return (
     <div className="page">
       <div className={styles.titleRow}>
-        <div className="page-title">{title} — Results</div>
+        <div className="page-title">{title}</div>
 
         <ActionButton tooltip="Share" onClick={handleShare}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
