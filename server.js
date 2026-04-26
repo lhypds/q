@@ -22,7 +22,9 @@ const logStream = fs.createWriteStream(path.join(__dirname, 'server.log'), { fla
 app.use(cors());
 app.use(express.json());
 app.use((req, _res, next) => {
-  const line = `${new Date().toISOString()} ${req.method} ${req.url}\n`;
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  const body = Object.keys(req.body || {}).length ? ' ' + JSON.stringify(req.body) : '';
+  const line = `${new Date().toISOString()} ${ip} ${req.method} ${req.url}${body}\n`;
   logStream.write(line);
   next();
 });
