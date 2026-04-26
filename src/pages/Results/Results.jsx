@@ -40,8 +40,22 @@ export default function Results() {
     return window.location.pathname + "?" + params.toString();
   })();
 
+  const qParam = new URLSearchParams(window.location.search).get("q");
+  const isNumericId = qParam !== null && /^\d+$/.test(qParam);
+
   async function handleShare() {
-    const copied = await copyText(decodeURIComponent(window.location.href));
+    let id = isNumericId ? qParam : null;
+    if (!id) {
+      const res = await fetch("/survey", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ survey: surveyObj }),
+      });
+      const data = await res.json();
+      id = data.id;
+    }
+    const shareUrl = `${window.location.origin}/?q=${id}&view=results`;
+    const copied = await copyText(shareUrl);
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
 
