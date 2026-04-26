@@ -199,6 +199,7 @@ app.post('/generate/qjson', async (req, res) => {
     },
     "2": {
       "title": "Multi-select question title",
+      "description": "Optional question description",
       "multi": true,
       "options": {
         "1": "Option A",
