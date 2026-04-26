@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import styles from "./survey.module.css";
 import { ActionButton, showToast } from "@ui";
-import { Edit } from "./Edit";
+import { CreateEdit } from "./CreateEdit";
 import { SurveyList } from "./SurveyList";
 
 async function copyText(text) {
@@ -44,7 +44,7 @@ export default function Survey() {
   const [selections, setSelections] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [editOpen, setEditOpen] = useState(false);
+  const [createEditOpen, setCreateEditOpen] = useState(false);
   const allAnswered = questions.every((q) => selections[q.key]);
 
   function handleEditSave(newTitle, newSubtitle) {
@@ -108,7 +108,15 @@ export default function Survey() {
 
         <div className={styles.actions}>
           {isHome && (
-            <ActionButton tooltip="Edit" onClick={() => setEditOpen(true)}>
+            <ActionButton tooltip="Create" onClick={() => setCreateEditOpen(true)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
+                <path d="M14 6l3 3" />
+              </svg>
+            </ActionButton>
+          )}
+          {!isHome && (
+            <ActionButton tooltip="Edit" onClick={() => setCreateEditOpen(true)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
                 <path d="M14 6l3 3" />
@@ -129,9 +137,9 @@ export default function Survey() {
 
       {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
 
-      <Edit
-        isOpen={editOpen}
-        onClose={() => setEditOpen(false)}
+      <CreateEdit
+        isOpen={createEditOpen}
+        onClose={() => setCreateEditOpen(false)}
         currentTitle={title}
         currentSubtitle={subtitle}
         onSave={handleEditSave}
