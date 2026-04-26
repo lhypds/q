@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import styles from "./surveyList.module.css";
+import styles from "./list.module.css";
 
 function surveyToUrl(survey) {
   const params = new URLSearchParams(survey);
