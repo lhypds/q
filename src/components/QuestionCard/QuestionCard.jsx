@@ -12,9 +12,7 @@ export default function QuestionCard({ question, selected, onSelect }) {
       {question.description && <div className="card-desc">{question.description}</div>}
       <div className={styles.options}>
         {question.answers.map((a) => {
-          const isChecked = isMulti
-            ? Array.isArray(selected) && selected.includes(a.key)
-            : selected === a.key;
+          const isChecked = isMulti ? Array.isArray(selected) && selected.includes(a.key) : selected === a.key;
           return (
             <label key={a.key} className={`${styles.optionLabel} ${isChecked ? styles.optionLabelSelected : ""}`}>
               <input
