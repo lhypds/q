@@ -91,7 +91,7 @@ export default function Survey() {
       id = data.id;
     }
     const shareUrl = `${window.location.origin}/?q=${id}`;
-    const text = t("survey.shareText", { title, subtitle, shareUrl });
+    const text = t("survey.shareText", { title, subtitle: subtitle ? ` - ${subtitle}` : "", shareUrl });
     const copied = await copyText(text);
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }

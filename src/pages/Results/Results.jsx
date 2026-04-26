@@ -55,7 +55,8 @@ export default function Results() {
       id = data.id;
     }
     const shareUrl = `${window.location.origin}/?q=${id}&view=results`;
-    const copied = await copyText(shareUrl);
+    const text = t("results.shareText", { title, subtitle: subtitle ? ` - ${subtitle}` : "", shareUrl });
+    const copied = await copyText(text);
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
 
