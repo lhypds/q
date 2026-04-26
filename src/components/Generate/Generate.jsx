@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal } from "@ui";
+import { Modal, showToast, hideToast } from "@ui";
 import styles from "./generate.module.css";
 
 export default function Generate({ isOpen, onClose, onComplete }) {
@@ -57,6 +57,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
   async function handleComplete() {
     setLoading(true);
     setError("");
+    showToast("Creating...", null);
     try {
       const res = await fetch("/generate/qjson", {
         method: "POST",
@@ -65,8 +66,10 @@ export default function Generate({ isOpen, onClose, onComplete }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate survey");
+      hideToast();
       onComplete(data.survey);
     } catch (e) {
+      hideToast();
       setError(e.message);
       setLoading(false);
     }
@@ -88,7 +91,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
   const buttonDisabled = loading || (!isGenerated && !inputValue.trim());
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Generate">
+    <Modal isOpen={isOpen} onClose={loading ? undefined : onClose} title="Generate">
       <div className={styles.container}>
         {/* Input */}
         <textarea

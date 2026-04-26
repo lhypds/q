@@ -47,7 +47,7 @@ const Modal = ({ isOpen, onClose, title, children, closeOnOverlay = false }) => 
       <div className={styles.modal}>
         <div className={styles.header}>
           {title && <span className={styles.title}>{title}</span>}
-          <button className={styles.closeButton} onClick={onClose} aria-label="Close">
+          <button className={styles.closeButton} onClick={onClose} disabled={!onClose} aria-label="Close">
             ✕
           </button>
         </div>
