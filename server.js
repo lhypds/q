@@ -34,6 +34,10 @@ app.use((req, _res, next) => {
 const db = new Database(path.join(__dirname, 'db.sqlite'));
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS surveys (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    survey TEXT NOT NULL UNIQUE
+  );
   CREATE TABLE IF NOT EXISTS records (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     time INTEGER NOT NULL,
