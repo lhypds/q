@@ -223,6 +223,7 @@ app.post('/generate/qjson', async (req, res) => {
 }
 Use "multi": true, for questions that allow multiple selections (marked with [multi] in the outline). Omit the "multi" field for single-choice questions. Return only valid JSON, no markdown or explanation.
 Use "has_other_option": true, for questions that have an "Other" option for user free text input.
+If "has_other_option" is true, then no need to add a "Other" option in the options list.
 `,
         },
         { role: 'user', content: `Topic: ${topic}\n\nQuestions outline:\n${prompt}` },
