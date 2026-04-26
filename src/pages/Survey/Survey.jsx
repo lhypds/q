@@ -56,10 +56,16 @@ export default function Survey() {
     return true;
   });
 
-  function handleEditSave(newSurveyObj) {
+  async function handleEditSave(newSurveyObj) {
+    const res = await fetch("/survey", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ survey: newSurveyObj }),
+    });
+    const data = await res.json();
     const url = new URL(window.location.href);
     url.search = "";
-    url.searchParams.set("q", JSON.stringify(newSurveyObj));
+    url.searchParams.set("q", data.id);
     url.searchParams.set("edit", "true");
     window.location.href = url.toString();
   }
