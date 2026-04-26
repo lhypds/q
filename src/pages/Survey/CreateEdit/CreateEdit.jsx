@@ -2,17 +2,71 @@ import { useState } from "react";
 import { Modal } from "../../../ui";
 import styles from "./edit.module.css";
 
-export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, onSave }) {
+function toJson(obj) {
+  return JSON.stringify(obj, null, 2);
+}
+
+export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, surveyObj, onSave }) {
   const [title, setTitle] = useState(currentTitle || "");
   const [subtitle, setSubtitle] = useState(currentSubtitle || "");
+  const [jsonText, setJsonText] = useState(() => toJson(surveyObj || {}));
+  const [jsonError, setJsonError] = useState("");
+
+  function handleTitleChange(e) {
+    const val = e.target.value;
+    setTitle(val);
+    try {
+      const obj = JSON.parse(jsonText);
+      obj.title = val;
+      setJsonText(toJson(obj));
+      setJsonError("");
+    } catch {
+      console.error("Invalid JSON.");
+    }
+  }
+
+  function handleSubtitleChange(e) {
+    const val = e.target.value;
+    setSubtitle(val);
+    try {
+      const obj = JSON.parse(jsonText);
+      if (val) obj.subtitle = val;
+      else delete obj.subtitle;
+      setJsonText(toJson(obj));
+      setJsonError("");
+    } catch {
+      console.error("Invalid JSON.");
+    }
+  }
+
+  function handleJsonChange(e) {
+    const val = e.target.value;
+    setJsonText(val);
+    try {
+      const obj = JSON.parse(val);
+      setTitle(obj.title || "");
+      setSubtitle(obj.subtitle || "");
+      setJsonError("");
+    } catch {
+      setJsonError("Invalid JSON");
+    }
+  }
 
   function handleSave() {
-    onSave(title.trim(), subtitle.trim());
-    onClose();
+    try {
+      const obj = JSON.parse(jsonText);
+      // title/subtitle inputs take final precedence
+      if (title.trim()) obj.title = title.trim();
+      if (subtitle.trim()) obj.subtitle = subtitle.trim();
+      else delete obj.subtitle;
+      onSave(obj);
+      onClose();
+    } catch {
+      setJsonError("Invalid JSON — cannot save");
+    }
   }
 
   function handleKeyDown(e) {
-    if (e.key === "Enter") handleSave();
     if (e.key === "Escape") onClose();
   }
 
@@ -25,7 +79,7 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, o
             className={styles.input}
             type="text"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={handleTitleChange}
             onKeyDown={handleKeyDown}
             autoFocus
           />
@@ -36,10 +90,20 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, o
             className={styles.input}
             type="text"
             value={subtitle}
-            onChange={(e) => setSubtitle(e.target.value)}
+            onChange={handleSubtitleChange}
             onKeyDown={handleKeyDown}
           />
         </div>
+        <div className={styles.jsonField}>
+          <label className={styles.label}>q.JSON</label>
+          <textarea
+            className={`${styles.input} ${styles.textarea}`}
+            value={jsonText}
+            onChange={handleJsonChange}
+            spellCheck={false}
+          />
+        </div>
+        {jsonError && <div className={styles.jsonError}>{jsonError}</div>}
         <div className={styles.actions}>
           <button type="button" className={styles.cancelButton} onClick={onClose}>
             Cancel

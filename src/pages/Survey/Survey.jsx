@@ -16,7 +16,7 @@ async function copyText(text) {
 function parseSurvey(search) {
   const params = new URLSearchParams(search);
   const title = params.get("title");
-  const subtitle = params.get("desc") || "";
+  const subtitle = params.get("subtitle") || "";
   const surveyObj = {};
   for (const [k, v] of params.entries()) {
     surveyObj[k] = v;
@@ -47,11 +47,15 @@ export default function Survey() {
   const [createEditOpen, setCreateEditOpen] = useState(false);
   const allAnswered = questions.every((q) => selections[q.key]);
 
-  function handleEditSave(newTitle, newSubtitle) {
+  function handleEditSave(newSurveyObj) {
     const url = new URL(window.location.href);
-    url.searchParams.set("title", newTitle);
-    if (newSubtitle) url.searchParams.set("desc", newSubtitle);
-    else url.searchParams.delete("desc");
+    // Clear existing search params and rebuild from newSurveyObj
+    url.search = "";
+    for (const [k, v] of Object.entries(newSurveyObj)) {
+      if (v !== null && v !== undefined && v !== "") {
+        url.searchParams.set(k, v);
+      }
+    }
     window.location.href = url.toString();
   }
 
@@ -142,6 +146,7 @@ export default function Survey() {
         onClose={() => setCreateEditOpen(false)}
         currentTitle={title}
         currentSubtitle={subtitle}
+        surveyObj={surveyObj}
         onSave={handleEditSave}
       />
 
