@@ -149,7 +149,7 @@ export default function Survey() {
         </div>
       </div>
 
-      {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
+      {subtitle && <div className={styles.subtitle}>[{subtitle}]</div>}
       {description && <div className={styles.description}>{description}</div>}
 
       <Modal
