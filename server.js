@@ -123,6 +123,7 @@ app.get('/surveyresults', (req, res) => {
     'SELECT * FROM records WHERE survey = ? AND is_deleted = 0 ORDER BY time DESC'
   ).all(survey);
 
+  res.set('Cache-Control', 'no-store');
   res.json(rows.map(r => ({
     ...r,
     result: JSON.parse(r.result),
