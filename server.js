@@ -109,6 +109,7 @@ app.get('/surveys', (_req, res) => {
     count: r.count,
   }));
 
+  res.set('Cache-Control', 'no-store');
   res.json(surveys);
 });
 
