@@ -15,7 +15,7 @@ async function copyText(text) {
 
 function parseSurvey(search) {
   const params = new URLSearchParams(search);
-  const title = params.get("title") || "q";
+  const title = params.get("title");
   const surveyObj = {};
   for (const [k, v] of params.entries()) {
     surveyObj[k] = v;
@@ -38,6 +38,7 @@ function parseSurvey(search) {
 
 export default function Survey() {
   const { title, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
+  const isHome = !title && questions.length === 0;
 
   const [selections, setSelections] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -100,7 +101,7 @@ export default function Survey() {
     <div className="page">
       {/* Title */}
       <div className={styles.titleRow}>
-        <div className="page-title">{title}</div>
+        <div className="page-title">{title || "q"}</div>
 
         <div className={styles.actions}>
           <ActionButton tooltip="Edit" onClick={() => setEditOpen(true)}>
@@ -126,7 +127,7 @@ export default function Survey() {
 
       <div className={styles.content}>
         {/* Survey Form */}
-        {questions.length > 0 && (
+        {!isHome && (
           <form onSubmit={handleSubmit}>
             {questions.map((q) => (
               <div key={q.key} className="card">
@@ -171,7 +172,7 @@ export default function Survey() {
           </form>
         )}
 
-        {questions.length === 0 && (
+        {isHome && (
           <div>
             <SurveyList />
           </div>
