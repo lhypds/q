@@ -28,9 +28,8 @@ export default function Survey() {
 
   async function handleShare() {
     const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    params.delete("view");
-    url.search = params.toString();
+    url.searchParams.delete("edit");
+    url.searchParams.delete("view");
     const copied = await copyText(decodeURIComponent(url.toString()));
     showToast(copied ? "Link copied to clipboard" : "Failed to copy link");
   }
@@ -67,6 +66,8 @@ export default function Survey() {
     doSubmit(email.trim());
   }
 
+  const isEdit = new URLSearchParams(window.location.search).get("edit") === "true";
+
   const resultsUrl = window.location.pathname + window.location.search + (window.location.search ? "&" : "?") + "view=results";
 
   if (submitted) {
@@ -98,18 +99,21 @@ export default function Survey() {
         </a>
 
         <div className={styles.actions}>
-          <ActionButton
-            tooltip="Edit"
-            onClick={() => {
-              setCreateEditKey((k) => k + 1);
-              setCreateEditOpen(true);
-            }}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
-              <path d="M14 6l3 3" />
-            </svg>
-          </ActionButton>
+          {isEdit && (
+            <ActionButton
+              tooltip="Edit"
+              onClick={() => {
+                setCreateEditKey((k) => k + 1);
+                setCreateEditOpen(true);
+              }}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
+                <path d="M14 6l3 3" />
+              </svg>
+            </ActionButton>
+          )}
+
           <ActionButton tooltip="Share" onClick={handleShare}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="18" cy="5" r="3" />

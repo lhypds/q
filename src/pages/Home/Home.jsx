@@ -26,6 +26,7 @@ export default function Home() {
     const url = new URL(window.location.href);
     url.search = "";
     url.searchParams.set("q", JSON.stringify(newSurveyObj));
+    url.searchParams.set("edit", "true");
     window.location.href = url.toString();
   }
 
@@ -34,6 +35,7 @@ export default function Home() {
     const url = new URL(window.location.href);
     url.search = "";
     url.searchParams.set("q", JSON.stringify(surveyObj));
+    url.searchParams.set("edit", "true");
     window.location.href = url.toString();
   }
 
