@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ActionButton, showToast } from "@ui";
 import { CreateEdit } from "@components/CreateEdit";
+import { Generate } from "@components/Generate";
 import { SurveyList } from "./SurveyList";
 import styles from "./home.module.css";
 
@@ -16,6 +17,9 @@ async function copyText(text) {
 export default function Home() {
   const [createEditOpen, setCreateEditOpen] = useState(false);
   const [createEditKey, setCreateEditKey] = useState(0);
+
+  const [generateOpen, setGenerateOpen] = useState(false);
+  const [generateKey, setGenerateKey] = useState(0);
 
   function handleCreateSave(newSurveyObj) {
     const url = new URL(window.location.href);
@@ -42,6 +46,31 @@ export default function Home() {
 
         <div className={styles.actions}>
           <ActionButton
+            tooltip="Generate"
+            onClick={() => {
+              setGenerateKey((k) => k + 1);
+              setGenerateOpen(true);
+            }}
+          >
+            {/* Brain icon SVG */}
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M9 3a3 3 0 0 0-3 3v1.5A2.5 2.5 0 0 0 3 10v4a2.5 2.5 0 0 0 3 2.5V18a3 3 0 0 0 3 3" />
+              <path d="M15 3a3 3 0 0 1 3 3v1.5A2.5 2.5 0 0 1 21 10v4a2.5 2.5 0 0 1-3 2.5V18a3 3 0 0 1-3 3" />
+              <path d="M9 3h6" />
+              <path d="M9 21h6" />
+              <path d="M12 7v10" />
+            </svg>
+          </ActionButton>
+
+          <ActionButton
             tooltip="Create"
             onClick={() => {
               setCreateEditKey((k) => k + 1);
@@ -53,6 +82,7 @@ export default function Home() {
               <path d="M14 6l3 3" />
             </svg>
           </ActionButton>
+
           <ActionButton tooltip="Share" onClick={handleShare}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="18" cy="5" r="3" />
@@ -69,6 +99,19 @@ export default function Home() {
         key={createEditKey}
         isOpen={createEditOpen}
         onClose={() => setCreateEditOpen(false)}
+        surveyObj={{
+          title: "",
+          subtitle: "",
+          description: "",
+        }}
+        onSave={handleCreateSave}
+        mode="create"
+      />
+
+      <Generate
+        key={generateKey}
+        isOpen={generateOpen}
+        onClose={() => setGenerateOpen(false)}
         surveyObj={{
           title: "",
           subtitle: "",

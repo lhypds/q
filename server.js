@@ -29,7 +29,7 @@ db.exec(`
   )
 `);
 
-// POST /surveyresult
+// Record survey result
 app.post('/surveyresult', (req, res) => {
   const { survey, result, email } = req.body;
   if (!survey || !result) {
@@ -58,7 +58,7 @@ app.post('/surveyresult', (req, res) => {
   res.json({ id: info.lastInsertRowid, time, time_h });
 });
 
-// GET /surveys — distinct surveys with response counts
+// Distinct surveys for survey list
 app.get('/surveys', (req, res) => {
   const rows = db.prepare(
     'SELECT survey, COUNT(*) as count FROM records GROUP BY survey ORDER BY MAX(time) DESC'
@@ -72,7 +72,7 @@ app.get('/surveys', (req, res) => {
   res.json(surveys);
 });
 
-// GET /surveyresults?survey=...
+// Get survery results
 app.get('/surveyresults', (req, res) => {
   const { survey } = req.query;
   if (!survey) {
@@ -90,6 +90,9 @@ app.get('/surveyresults', (req, res) => {
     email: r.email || '',
   })));
 });
+
+// Generate q.json from description
+// TODO
 
 // Catch-all: serve React app
 app.get('*', (req, res) => {
