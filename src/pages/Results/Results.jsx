@@ -2,44 +2,11 @@ import { useState, useEffect, useMemo } from "react";
 import styles from "./results.module.css";
 import { ActionButton, showToast } from "@ui";
 import ResultCard from "@components/ResultCard";
-
-async function copyText(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function parseSurvey(search) {
-  const params = new URLSearchParams(search);
-  const dataStr = params.get("data");
-  if (!dataStr) return { title: "q", questions: [], surveyObj: {} };
-  let obj;
-  try {
-    obj = JSON.parse(dataStr);
-  } catch {
-    return { title: "q", questions: [], surveyObj: {} };
-  }
-  const title = obj.title || "q";
-  const questions = [];
-  if (obj.questions) {
-    for (const [qKey, q] of Object.entries(obj.questions)) {
-      const answers = [];
-      if (q.options) {
-        for (const [optKey, optLabel] of Object.entries(q.options)) {
-          answers.push({ key: optKey, label: optLabel });
-        }
-      }
-      questions.push({ key: qKey, text: q.title || "", description: q.description || "", answers });
-    }
-  }
-  return { title, questions, surveyObj: obj };
-}
+import { parseSurvey } from "@utils/urlUtils";
+import { copyText } from "@utils/clipboardUitls";
 
 export default function Results() {
-  const { title, questions, surveyObj } = useMemo(() => {
+  const { title, subtitle, description, questions, surveyObj } = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
     params.delete("view");
     return parseSurvey("?" + params.toString());
@@ -71,7 +38,7 @@ export default function Results() {
   })();
 
   async function handleShare() {
-    const copied = await copyText(window.location.href);
+    const copied = await copyText(decodeURIComponent(window.location.href));
     showToast(copied ? "Link copied to clipboard" : "Failed to copy link");
   }
 
@@ -93,13 +60,17 @@ export default function Results() {
         </ActionButton>
       </div>
 
-      <div className={styles.subtitle}>
-        {loading ? "Loading…" : `${results.length} response${results.length !== 1 ? "s" : ""} collected.`}
-      </div>
+      <div className={styles.subtitle}>{subtitle}</div>
+      <div className={styles.description}>{description}</div>
+
       {fetchError && <p className="error-msg">{fetchError}</p>}
 
       <div className={styles.content}>
         {!loading && questions.map((q) => <ResultCard key={q.key} question={q} results={results} />)}
+      </div>
+
+      <div className={styles.collectionInfo}>
+        {loading ? "Loading…" : `${results.length} response${results.length !== 1 ? "s" : ""} collected.`}
       </div>
 
       <div className="submit-row">

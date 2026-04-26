@@ -25,7 +25,7 @@ export default function Home() {
   }
 
   async function handleShare() {
-    const copied = await copyText(window.location.href);
+    const copied = await copyText(decodeURIComponent(window.location.href));
     showToast(copied ? "Link copied to clipboard" : "Failed to copy link");
   }
 

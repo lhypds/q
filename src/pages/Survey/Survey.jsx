@@ -4,43 +4,8 @@ import { ActionButton, showToast, Modal } from "@ui";
 import { CreateEdit } from "@components/CreateEdit";
 import QuestionCard from "@components/QuestionCard";
 import { normalizeSurvey } from "@utils/surveyUtils";
-
-async function copyText(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function parseSurvey(search) {
-  const params = new URLSearchParams(search);
-  const dataStr = params.get("data");
-  if (!dataStr) return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
-  let obj;
-  try {
-    obj = JSON.parse(dataStr);
-  } catch {
-    return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
-  }
-  const title = obj.title || null;
-  const subtitle = obj.subtitle || "";
-  const description = obj.description || "";
-  const questions = [];
-  if (obj.questions) {
-    for (const [qKey, q] of Object.entries(obj.questions)) {
-      const answers = [];
-      if (q.options) {
-        for (const [optKey, optLabel] of Object.entries(q.options)) {
-          answers.push({ key: optKey, label: optLabel });
-        }
-      }
-      questions.push({ key: qKey, text: q.title || "", description: q.description || "", answers });
-    }
-  }
-  return { title, subtitle, description, questions, surveyObj: obj };
-}
+import { parseSurvey } from "@utils/urlUtils";
+import { copyText } from "@utils/clipboardUitls";
 
 export default function Survey() {
   const { title, subtitle, description, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
@@ -66,7 +31,7 @@ export default function Survey() {
     const params = new URLSearchParams(url.search);
     params.delete("view");
     url.search = params.toString();
-    const copied = await copyText(url.toString());
+    const copied = await copyText(decodeURIComponent(url.toString()));
     showToast(copied ? "Link copied to clipboard" : "Failed to copy link");
   }
 
