@@ -83,11 +83,34 @@
 }
 
 .submitBtn:disabled {
-  background: #e0e0e0;
-  color: #aaa;
-  border-color: #ccc;
-  cursor: not-allowed;
-  opacity: 0.6;
+  background: white;
+  color: black;
+  position: relative;
+  overflow: hidden;
+}
+
+.submitBtn:disabled::before,
+.submitBtn:disabled::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 0.5px),
+    black calc(50% - 0.5px),
+    black calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+
+.submitBtn:disabled::after {
+  background: linear-gradient(
+    to bottom left,
+    transparent calc(50% - 0.5px),
+    black calc(50% - 0.5px),
+    black calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
 }
 
 .submitRowLeft {

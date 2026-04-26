@@ -6,7 +6,7 @@ function toJson(obj) {
   return JSON.stringify(obj, null, 2);
 }
 
-export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, surveyObj, onSave }) {
+export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, surveyObj, onSave, mode }) {
   const [title, setTitle] = useState(currentTitle || "");
   const [subtitle, setSubtitle] = useState(currentSubtitle || "");
   const [jsonText, setJsonText] = useState(() => toJson(surveyObj || {}));
@@ -91,7 +91,7 @@ export default function Edit({ isOpen, onClose, currentTitle, currentSubtitle, s
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Edit">
+    <Modal isOpen={isOpen} onClose={onClose} title={mode === "create" ? "Create" : "Edit"}>
       <div className={styles.container}>
         <div className={styles.field}>
           <label className={styles.label}>Title</label>

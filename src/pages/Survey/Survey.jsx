@@ -216,6 +216,7 @@ export default function Survey() {
         currentSubtitle={subtitle}
         surveyObj={surveyObj}
         onSave={handleEditSave}
+        mode={isHome ? "create" : "edit"}
       />
 
       <div className={styles.content}>
@@ -229,7 +230,6 @@ export default function Survey() {
                     <div className="card-title">{q.text}</div>
                     <span className="badge">{q.key}</span>
                   </div>
-                  <div className="card-desc">Select one option below.</div>
                   <div className={styles.options}>
                     {q.answers.map((a) => (
                       <label
