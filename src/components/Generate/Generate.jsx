@@ -15,16 +15,25 @@ export default function Generate({ isOpen, onClose, onComplete }) {
     if (stage === "input") {
       if (!topic.trim()) return;
       setLoading(true);
+      setPrompt("");
+      setStage("prompt");
       try {
         const res = await fetch("/generate/prompt", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ topic: topic.trim() }),
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Failed to generate prompt");
-        setPrompt(data.prompt);
-        setStage("prompt");
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || "Failed to generate prompt");
+        }
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          setPrompt((prev) => prev + decoder.decode(value, { stream: true }));
+        }
       } catch (e) {
         setError(e.message);
       } finally {
@@ -63,11 +72,11 @@ export default function Generate({ isOpen, onClose, onComplete }) {
 
         {/* Prompt */}
         <textarea
-          className={`${styles.promptTextarea} ${stage === "input" ? styles.promptGrayed : ""}`}
+          className={`${styles.promptTextarea} ${stage === "input" || loading ? styles.promptGrayed : ""}`}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="Your survey questions will appear here..."
-          readOnly={stage === "input"}
+          readOnly={stage === "input" || loading}
         />
 
         {error && <div className={styles.error}>{error}</div>}
