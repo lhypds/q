@@ -11,7 +11,7 @@ export function parseSurveyObj(obj) {
           answers.push({ key: optKey, label: optLabel });
         }
       }
-      questions.push({ key: qKey, text: q.title || "", description: q.description || "", multi: !!q.multi, answers });
+      questions.push({ key: qKey, text: q.title || "", description: q.description || "", multi: !!q.multi, hasOtherOption: !!q.has_other_option, answers });
     }
   }
   return { title, subtitle, description, questions, surveyObj: obj };

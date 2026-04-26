@@ -62,5 +62,8 @@
     "placeholderModify": "您想如何修改调查？",
     "placeholderNew": "您想调查什么？",
     "promptPlaceholder": "调查问题将显示在这里..."
+  },
+  "questionCard": {
+    "otherOption": "其他: "
   }
 }

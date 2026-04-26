@@ -61,3 +61,19 @@
 .optionText {
   font-size: 14px;
 }
+
+.otherInput {
+  flex: 1;
+  border: none;
+  border-bottom: 1px solid black;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  background: transparent;
+  min-width: 0;
+}
+
+.otherInput:disabled {
+  color: #aaa;
+  cursor: default;
+}

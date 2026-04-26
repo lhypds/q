@@ -118,6 +118,7 @@ export default function CreateEdit({
         title: `Question ${n} title`,
         description: "Description for this question...",
         multi: false,
+        has_other_option: false,
         options: { 1: "Option 1", 2: "Option 2" },
       };
       setJsonText(toJson(obj));

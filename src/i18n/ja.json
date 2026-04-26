@@ -62,5 +62,8 @@
     "placeholderModify": "アンケートをどのように修正しますか？",
     "placeholderNew": "何についてアンケートを作成しますか？",
     "promptPlaceholder": "アンケートの質問がここに表示されます..."
+  },
+  "questionCard": {
+    "otherOption": "その他:"
   }
 }

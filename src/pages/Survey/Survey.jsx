@@ -37,6 +37,7 @@ export default function Survey() {
   const { title, subtitle, description, questions, surveyObj } = surveyData;
 
   const [selections, setSelections] = useState({});
+  const [otherInputs, setOtherInputs] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [createEditOpen, setCreateEditOpen] = useState(false);
@@ -46,7 +47,13 @@ export default function Survey() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const allAnswered = questions.every((q) => {
     const v = selections[q.key];
-    return q.multi ? Array.isArray(v) && v.length > 0 : !!v;
+    const baseAnswered = q.multi ? Array.isArray(v) && v.length > 0 : !!v;
+    if (!baseAnswered) return false;
+    if (q.hasOtherOption) {
+      const otherSelected = q.multi ? Array.isArray(v) && v.includes("__other__") : v === "__other__";
+      if (otherSelected && !otherInputs[q.key]?.trim()) return false;
+    }
+    return true;
   });
 
   function handleEditSave(newSurveyObj) {
@@ -87,10 +94,19 @@ export default function Survey() {
     try {
       const normalizedSurvey = normalizeSurvey(surveyObj);
 
+      const result = Object.fromEntries(
+        Object.entries(selections).map(([qKey, val]) => {
+          if (Array.isArray(val)) {
+            return [qKey, val.map((v) => (v === "__other__" ? otherInputs[qKey] || "" : v))];
+          }
+          return [qKey, val === "__other__" ? otherInputs[qKey] || "" : val];
+        }),
+      );
+
       const res = await fetch("/surveyresult", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ survey: normalizedSurvey, result: selections, email: emailValue }),
+        body: JSON.stringify({ survey: normalizedSurvey, result, email: emailValue }),
       });
       if (!res.ok) throw new Error("Server error");
       setSubmitted(true);
@@ -278,6 +294,8 @@ export default function Survey() {
                     return { ...prev, [q.key]: val };
                   })
                 }
+                otherValue={otherInputs[q.key] || ""}
+                onOtherChange={(val) => setOtherInputs((prev) => ({ ...prev, [q.key]: val }))}
               />
             ))}
           </div>

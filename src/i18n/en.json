@@ -62,5 +62,8 @@
     "placeholderModify": "How you want to modify the survey?",
     "placeholderNew": "What would you like to survey?",
     "promptPlaceholder": "Your survey questions will appear here..."
+  },
+  "questionCard": {
+    "otherOption": "Other:"
   }
 }

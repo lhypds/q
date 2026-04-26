@@ -192,6 +192,7 @@ app.post('/generate/qjson', async (req, res) => {
       "title": "Question title",
       "description": "Optional question description",
       "multi": false,
+      "has_other_option": false,
       "options": {
         "1": "Option A",
         "2": "Option B"
@@ -201,6 +202,7 @@ app.post('/generate/qjson', async (req, res) => {
       "title": "Multi-select question title",
       "description": "Optional question description",
       "multi": true,
+      "has_other_option": true,
       "options": {
         "1": "Option A",
         "2": "Option B",
