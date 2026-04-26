@@ -95,6 +95,10 @@ export default function CreateEdit({
         setJsonError("Title is required");
         return;
       }
+      if (!obj.questions || Object.keys(obj.questions).length === 0) {
+        setJsonError("At least one question is required");
+        return;
+      }
       onSave(normalizeSurvey(obj));
       onClose();
     } catch {
