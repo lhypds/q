@@ -3,6 +3,7 @@ import styles from "./survey.module.css";
 import { ActionButton, showToast, Modal } from "@ui";
 import { CreateEdit } from "./CreateEdit";
 import { SurveyList } from "./SurveyList";
+import QuestionCard from "../../components/QuestionCard";
 
 async function copyText(text) {
   try {
@@ -225,29 +226,12 @@ export default function Survey() {
           <form onSubmit={handleSubmit}>
             <div className={styles.questions}>
               {questions.map((q) => (
-                <div key={q.key} className="card">
-                  <div className="card-header">
-                    <div className="card-title">{q.text}</div>
-                    <span className="badge">{q.key}</span>
-                  </div>
-                  <div className={styles.options}>
-                    {q.answers.map((a) => (
-                      <label
-                        key={a.key}
-                        className={`${styles.optionLabel} ${selections[q.key] === a.key ? styles.optionLabelSelected : ""}`}
-                      >
-                        <input
-                          type="radio"
-                          name={q.key}
-                          value={a.key}
-                          checked={selections[q.key] === a.key}
-                          onChange={() => setSelections((prev) => ({ ...prev, [q.key]: a.key }))}
-                        />
-                        <span className={styles.optionText}>{a.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                <QuestionCard
+                  key={q.key}
+                  question={q}
+                  selected={selections[q.key]}
+                  onSelect={(val) => setSelections((prev) => ({ ...prev, [q.key]: val }))}
+                />
               ))}
             </div>
             {error && <p className="error-msg">{error}</p>}
