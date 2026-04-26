@@ -10,6 +10,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@ui': path.resolve(__dirname, 'src/ui'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@pages': path.resolve(__dirname, 'src/pages'),
     },
   },
   server: {

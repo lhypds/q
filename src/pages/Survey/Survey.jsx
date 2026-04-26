@@ -1,9 +1,8 @@
 import { useState, useMemo } from "react";
 import styles from "./survey.module.css";
 import { ActionButton, showToast, Modal } from "@ui";
-import { CreateEdit } from "./CreateEdit";
-import { SurveyList } from "./SurveyList";
-import QuestionCard from "../../components/QuestionCard";
+import { CreateEdit } from "@components/CreateEdit";
+import QuestionCard from "@components/QuestionCard";
 
 async function copyText(text) {
   try {
@@ -40,7 +39,6 @@ function parseSurvey(search) {
 
 export default function Survey() {
   const { title, subtitle, questions, surveyObj } = useMemo(() => parseSurvey(window.location.search), []);
-  const isHome = !title && questions.length === 0;
 
   const [selections, setSelections] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -124,34 +122,18 @@ export default function Survey() {
         <div className="page-title">{title || "q"}</div>
 
         <div className={styles.actions}>
-          {isHome && (
-            <ActionButton
-              tooltip="Create"
-              onClick={() => {
-                setCreateEditKey((k) => k + 1);
-                setCreateEditOpen(true);
-              }}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
-                <path d="M14 6l3 3" />
-              </svg>
-            </ActionButton>
-          )}
-          {!isHome && (
-            <ActionButton
-              tooltip="Edit"
-              onClick={() => {
-                setCreateEditKey((k) => k + 1);
-                setCreateEditOpen(true);
-              }}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
-                <path d="M14 6l3 3" />
-              </svg>
-            </ActionButton>
-          )}
+          <ActionButton
+            tooltip="Edit"
+            onClick={() => {
+              setCreateEditKey((k) => k + 1);
+              setCreateEditOpen(true);
+            }}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 21l3.75-.75L19 8l-3-3L3.75 17.25 3 21z" />
+              <path d="M14 6l3 3" />
+            </svg>
+          </ActionButton>
           <ActionButton tooltip="Share" onClick={handleShare}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="18" cy="5" r="3" />
@@ -217,45 +199,36 @@ export default function Survey() {
         currentSubtitle={subtitle}
         surveyObj={surveyObj}
         onSave={handleEditSave}
-        mode={isHome ? "create" : "edit"}
+        mode="edit"
       />
 
       <div className={styles.content}>
-        {/* Survey Form */}
-        {!isHome && (
-          <form onSubmit={handleSubmit}>
-            <div className={styles.questions}>
-              {questions.map((q) => (
-                <QuestionCard
-                  key={q.key}
-                  question={q}
-                  selected={selections[q.key]}
-                  onSelect={(val) => setSelections((prev) => ({ ...prev, [q.key]: val }))}
-                />
-              ))}
-            </div>
-            {error && <p className="error-msg">{error}</p>}
-            <div className="submit-row">
-              <div className={styles.submitRowLeft}>
-                <button type="submit" className={styles.submitBtn} disabled={!allAnswered}>
-                  Submit
-                </button>
-                <a href={resultsUrl} className="results-link small">
-                  View Results →
-                </a>
-              </div>
-              <a href={"/"} className="results-link small">
-                q
+        <form onSubmit={handleSubmit}>
+          <div className={styles.questions}>
+            {questions.map((q) => (
+              <QuestionCard
+                key={q.key}
+                question={q}
+                selected={selections[q.key]}
+                onSelect={(val) => setSelections((prev) => ({ ...prev, [q.key]: val }))}
+              />
+            ))}
+          </div>
+          {error && <p className="error-msg">{error}</p>}
+          <div className="submit-row">
+            <div className={styles.submitRowLeft}>
+              <button type="submit" className={styles.submitBtn} disabled={!allAnswered}>
+                Submit
+              </button>
+              <a href={resultsUrl} className="results-link small">
+                View Results →
               </a>
             </div>
-          </form>
-        )}
-
-        {isHome && (
-          <div>
-            <SurveyList />
+            <a href={"/"} className="results-link small">
+              q
+            </a>
           </div>
-        )}
+        </form>
       </div>
     </div>
   );

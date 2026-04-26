@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import styles from "./results.module.css";
-import { ActionButton, showToast } from "../../ui";
-import ResultCard from "../../components/ResultCard";
+import { ActionButton, showToast } from "@ui";
+import ResultCard from "@components/ResultCard";
 
 async function copyText(text) {
   try {

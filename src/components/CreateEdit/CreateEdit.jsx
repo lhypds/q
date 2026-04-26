@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal } from "../../../ui";
+import { Modal } from "@ui";
 import styles from "./edit.module.css";
 
 function toJson(obj) {

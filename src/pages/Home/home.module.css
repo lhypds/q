@@ -1,0 +1,15 @@
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.content {
+  margin-top: 16px;
+}
