@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./list.module.css";
 
 function surveyToUrl(survey) {
-  return "/?data=" + encodeURIComponent(JSON.stringify(survey));
+  return "/?q=" + encodeURIComponent(JSON.stringify(survey));
 }
 
 export default function SurveyList() {

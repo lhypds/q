@@ -6,7 +6,7 @@ import { Toast } from "@ui";
 function App() {
   const params = new URLSearchParams(window.location.search);
   const isResults = params.get("view") === "results";
-  const isHome = !params.get("data");
+  const isHome = !params.get("q");
   return (
     <>
       {isResults ? <Results /> : isHome ? <Home /> : <Survey />}

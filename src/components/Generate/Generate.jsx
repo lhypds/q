@@ -11,6 +11,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
 
   async function handleGenerate() {
     setError("");
+
     if (stage === "input") {
       if (!topic.trim()) return;
       setLoading(true);

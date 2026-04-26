@@ -1,6 +1,6 @@
 export function parseSurvey(search) {
   const params = new URLSearchParams(search);
-  const dataStr = params.get("data");
+  const dataStr = params.get("q");
   if (!dataStr) return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
   let obj;
   try {

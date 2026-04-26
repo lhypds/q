@@ -25,7 +25,7 @@ export default function Home() {
   function handleCreateSave(newSurveyObj) {
     const url = new URL(window.location.href);
     url.search = "";
-    url.searchParams.set("data", JSON.stringify(newSurveyObj));
+    url.searchParams.set("q", JSON.stringify(newSurveyObj));
     window.location.href = url.toString();
   }
 
