@@ -12,6 +12,7 @@
     "rewrite": "書き直す",
     "complete": "完成",
     "viewResults": "結果を見る →",
+    "viewSurvey": "← アンケート",
     "addQuestion": "質問を追加"
   },
   "toast": {

@@ -12,6 +12,7 @@
     "rewrite": "重写",
     "complete": "完成",
     "viewResults": "查看结果 →",
+    "viewSurvey": "← 调查问卷",
     "addQuestion": "添加问题"
   },
   "toast": {

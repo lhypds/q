@@ -71,8 +71,8 @@ export default function Results() {
       const data = await res.json();
       id = data.id;
     }
-    const shareUrl = `${window.location.origin}/?q=${id}&view=results`;
-    const text = t("results.shareText", { title, subtitle: subtitle ? `[${subtitle}]\n` : "", shareUrl });
+    const shareUrl = `${window.location.origin}/?q=${id}`;
+    const text = t("survey.shareText", { title, subtitle: subtitle ? `[${subtitle}]\n` : "", shareUrl });
     const copied = await copyText(text);
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
@@ -103,14 +103,18 @@ export default function Results() {
 
       {fetchError && <p className="error-msg">{fetchError}</p>}
 
+      <div className={styles.collectionInfo}>
+        {loading ? t("results.loading") : t("results.collected", { count: results.length })}
+      </div>
+
       <div className={styles.content}>
         {!loading && questions.map((q) => <ResultCard key={q.key} question={q} results={results} />)}
       </div>
 
       <div className="submit-row">
-        <div className={styles.collectionInfo}>
-          {loading ? t("results.loading") : t("results.collected", { count: results.length })}
-        </div>
+        <a href={surveyUrl} className="results-link">
+          {t("button.viewSurvey")}
+        </a>
         <a href={"/"} className="results-link small">
           q
         </a>

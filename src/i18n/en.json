@@ -12,6 +12,7 @@
     "rewrite": "Rewrite",
     "complete": "Complete",
     "viewResults": "View Results →",
+    "viewSurvey": "← Survey",
     "addQuestion": "Add question"
   },
   "toast": {
