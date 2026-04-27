@@ -104,7 +104,7 @@ export default function Results() {
       {fetchError && <p className="error-msg">{fetchError}</p>}
 
       <div className={styles.collectionInfo}>
-        {loading ? t("results.loading") : t("results.collected", { count: results.length })}
+        {loading ? t("results.loading") : t("results.collected", { count: results.length }) + t("common.colon")}
       </div>
 
       <div className={styles.content}>

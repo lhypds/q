@@ -1,4 +1,7 @@
 {
+  "common": {
+    "colon": "."
+  },
   "button": {
     "generate": "Generate",
     "create": "Create",
@@ -37,8 +40,7 @@
     "loading": "Loading…",
     "fetchError": "Failed to load results.",
     "noResponses": "No responses yet.",
-    "collected_one": "{{count}} response collected.",
-    "collected_other": "{{count}} responses collected.",
+    "collected": "{{count}} responses collected",
     "otherResponses": "Other responses",
     "shareText": "Check out the survey results!\n\n=== {{title}} ===\n{{subtitle}}\n👉 {{shareUrl}}"
   },
@@ -68,6 +70,7 @@
   },
   "questionCard": {
     "otherOption": "Other",
-    "yes": "Yes"
+    "yes": "Yes",
+    "no": "No"
   }
 }

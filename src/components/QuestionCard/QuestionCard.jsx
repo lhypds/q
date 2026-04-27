@@ -31,11 +31,28 @@ export default function QuestionCard({ question, selected, onSelect, otherValue,
               </label>
             );
           })}
+
           {question.hasOtherOption && (
             <label className={`${styles.optionLabel} ${isOtherChecked ? styles.optionLabelSelected : ""}`}>
-              <input type="checkbox" name={question.key} value="__other__" checked={isOtherChecked} onChange={() => onSelect("__other__")} />
+              <input
+                type="checkbox"
+                name={question.key}
+                value="__other__"
+                checked={isOtherChecked}
+                onChange={() => onSelect("__other__")}
+              />
+
               <div className={styles.optionText}>{t("questionCard.otherOption")}:</div>
-              <input type="text" className={styles.otherInput} value={otherValue || ""} disabled={!isOtherChecked} onChange={(e) => onOtherChange(e.target.value)} onClick={() => { if (!isOtherChecked) onSelect("__other__"); }} />
+              <input
+                type="text"
+                className={styles.otherInput}
+                value={otherValue || ""}
+                disabled={!isOtherChecked}
+                onChange={(e) => onOtherChange(e.target.value)}
+                onClick={() => {
+                  if (!isOtherChecked) onSelect("__other__");
+                }}
+              />
             </label>
           )}
         </div>
@@ -47,24 +64,35 @@ export default function QuestionCard({ question, selected, onSelect, otherValue,
     return (
       <CardShell question={question}>
         <div className={styles.options}>
-          <textarea
-            className={styles.textArea}
-            value={selected || ""}
-            onChange={(e) => onSelect(e.target.value)}
-          />
+          <textarea className={styles.textArea} value={selected || ""} onChange={(e) => onSelect(e.target.value)} />
         </div>
       </CardShell>
     );
   }
 
   if (question.type === "true_false") {
-    const isChecked = selected === "true";
     return (
       <CardShell question={question}>
         <div className={styles.options}>
-          <label className={`${styles.optionLabel} ${isChecked ? styles.optionLabelSelected : ""}`}>
-            <input type="checkbox" name={question.key} value="true" checked={isChecked} onChange={() => onSelect(isChecked ? "" : "true")} />
+          <label className={`${styles.optionLabel} ${selected === "true" ? styles.optionLabelSelected : ""}`}>
+            <input
+              type="checkbox"
+              name={question.key}
+              value="true"
+              checked={selected === "true"}
+              onChange={() => onSelect(selected === "true" ? "" : "true")}
+            />
             <span className={styles.optionText}>{t("questionCard.yes")}</span>
+          </label>
+          <label className={`${styles.optionLabel} ${selected === "false" ? styles.optionLabelSelected : ""}`}>
+            <input
+              type="checkbox"
+              name={question.key}
+              value="false"
+              checked={selected === "false"}
+              onChange={() => onSelect(selected === "false" ? "" : "false")}
+            />
+            <span className={styles.optionText}>{t("questionCard.no")}</span>
           </label>
         </div>
       </CardShell>
@@ -87,9 +115,24 @@ export default function QuestionCard({ question, selected, onSelect, otherValue,
         })}
         {question.hasOtherOption && (
           <label className={`${styles.optionLabel} ${isOtherChecked ? styles.optionLabelSelected : ""}`}>
-            <input type="radio" name={question.key} value="__other__" checked={isOtherChecked} onChange={() => onSelect("__other__")} />
+            <input
+              type="radio"
+              name={question.key}
+              value="__other__"
+              checked={isOtherChecked}
+              onChange={() => onSelect("__other__")}
+            />
             <div className={styles.optionText}>{t("questionCard.otherOption")}:</div>
-            <input type="text" className={styles.otherInput} value={otherValue || ""} disabled={!isOtherChecked} onChange={(e) => onOtherChange(e.target.value)} onClick={() => { if (!isOtherChecked) onSelect("__other__"); }} />
+            <input
+              type="text"
+              className={styles.otherInput}
+              value={otherValue || ""}
+              disabled={!isOtherChecked}
+              onChange={(e) => onOtherChange(e.target.value)}
+              onClick={() => {
+                if (!isOtherChecked) onSelect("__other__");
+              }}
+            />
           </label>
         )}
       </div>

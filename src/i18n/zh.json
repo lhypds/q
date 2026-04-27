@@ -1,4 +1,7 @@
 {
+  "common": {
+    "colon": "。"
+  },
   "button": {
     "generate": "生成",
     "create": "创建",
@@ -37,15 +40,13 @@
     "loading": "加载中…",
     "fetchError": "加载结果失败。",
     "noResponses": "暂无回答。",
-    "collected_one": "已收集 {{count}} 个回答。",
-    "collected_other": "已收集 {{count}} 个回答。",
+    "collected": "已收集 {{count}} 个回答",
     "otherResponses": "其他回答",
     "shareText": "欢迎围观调查结果！\n\n=== {{title}} ===\n{{subtitle}}\n👉 {{shareUrl}}"
   },
   "home": {
     "noSurveys": "暂无调查。",
     "untitled": "无标题",
-    "response_one": "{{count}} 个回答",
     "response_other": "{{count}} 个回答"
   },
   "createEdit": {
@@ -68,6 +69,7 @@
   },
   "questionCard": {
     "otherOption": "其他",
-    "yes": "是"
+    "yes": "是",
+    "no": "否"
   }
 }
