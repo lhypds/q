@@ -12,6 +12,7 @@ const isNumericId = qParam !== null && /^\d+$/.test(qParam);
 
 export default function Results() {
   const { t } = useTranslation();
+
   const [surveyData, setSurveyData] = useState(() => {
     if (isNumericId) return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
     const params = new URLSearchParams(window.location.search);
@@ -24,12 +25,7 @@ export default function Results() {
     fetch(`/survey?id=${qParam}`)
       .then((r) => r.json())
       .then((data) => {
-        if (data.survey) {
-          setSurveyData(parseSurveyObj(data.survey));
-          const params = new URLSearchParams(window.location.search);
-          params.set("q", JSON.stringify(data.survey));
-          window.history.replaceState(null, "", "?" + params.toString());
-        }
+        if (data.survey) setSurveyData(parseSurveyObj(data.survey));
       });
   }, []);
 

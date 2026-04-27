@@ -25,12 +25,7 @@ export default function Survey() {
     fetch(`/survey?id=${qParam}`)
       .then((r) => r.json())
       .then((data) => {
-        if (data.survey) {
-          setSurveyData(parseSurveyObj(data.survey));
-          const params = new URLSearchParams(window.location.search);
-          params.set("q", JSON.stringify(data.survey));
-          window.history.replaceState(null, "", "?" + params.toString());
-        }
+        if (data.survey) setSurveyData(parseSurveyObj(data.survey));
       });
   }, []);
 
