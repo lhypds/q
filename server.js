@@ -150,9 +150,9 @@ app.post('/generate/prompt', async (req, res) => {
 
   const systemPrompt = modification
     ?
-    'You are a survey designer. Rewrite the given survey questions outline based on the modification request. Produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly.'
+    'You are a survey designer. Rewrite the given survey questions outline based on the modification request. Produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly, but with a rich description.'
     :
-    'You are a survey designer. First, generate the description for the survey. Then, produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly.';
+    'You are a survey designer. First, generate the description for the survey. Then, produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly, but with a rich description.';
 
   const userPrompt = modification
     ? `Topic: ${topic}\n\nCurrent questions:\n${currentPrompt}\n\nModification request: ${modification}`
@@ -193,7 +193,8 @@ app.post('/generate/qjson', async (req, res) => {
       messages: [
         {
           role: 'system',
-          content: `You are a survey JSON generator. Convert the questions outline into this exact JSON format:
+          content: `You are a survey JSON generator. Convert the questions outline into this exact JSON format:  
+
 {
   "title": "Survey title",
   "subtitle": "Optional subtitle",
@@ -222,9 +223,10 @@ app.post('/generate/qjson', async (req, res) => {
     }
   }
 }
-Use "multi": true, for questions that allow multiple selections (marked with [multi] in the outline). Omit the "multi" field for single-choice questions. Return only valid JSON, no markdown or explanation.
-Use "has_other_option": true, for questions that have an "Other" option for user free text input.
-If "has_other_option" is true, then no need to add a "Other" option in the options list.
+
+1. Better to add a "subtitle" and a "description".  
+2. Use "multi": true, for questions that allow multiple selections (marked with [multi] in the outline). Omit the "multi" field for single-choice questions. Return only valid JSON, no markdown or explanation.  
+3. Use "has_other_option": true, for questions that have an "Other" option for user free text input. If "has_other_option" is true, then no need to add a "Other" option in the options list.
 `,
         },
         { role: 'user', content: `Topic: ${topic}\n\nQuestions outline:\n${prompt}` },
