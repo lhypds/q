@@ -21,7 +21,9 @@ export default function SurveyList() {
       .catch(() => setLoading(false));
   }, []);
 
-  if (loading) return null;
+  if (loading) {
+    return <div>{t("common.loading")}</div>;
+  }
 
   return (
     <div className={styles.list}>

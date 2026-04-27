@@ -1,6 +1,7 @@
 {
   "common": {
-    "colon": "。"
+    "colon": "。",
+    "loading": "载入中..."
   },
   "button": {
     "generate": "生成",

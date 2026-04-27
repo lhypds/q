@@ -1,6 +1,7 @@
 {
   "common": {
-    "colon": "."
+    "colon": ".",
+    "loading": "Loading..."
   },
   "button": {
     "generate": "Generate",

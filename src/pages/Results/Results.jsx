@@ -73,6 +73,10 @@ export default function Results() {
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
 
+  if (loading) {
+    return <div className="page">{t("common.loading")}</div>;
+  }
+
   return (
     <div className="page">
       <div className={styles.titleRow}>

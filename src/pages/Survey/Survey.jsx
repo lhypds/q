@@ -20,13 +20,17 @@ export default function Survey() {
       : parseSurvey(window.location.search),
   );
 
+  const [loading, setLoading] = useState(isNumericId);
+
   useEffect(() => {
     if (!isNumericId) return;
     fetch(`/survey?id=${qParam}`)
       .then((r) => r.json())
       .then((data) => {
         if (data.survey) setSurveyData(parseSurveyObj(data.survey));
-      });
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   const { title, subtitle, description, questions, surveyObj } = surveyData;
@@ -40,6 +44,7 @@ export default function Survey() {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const allAnswered = questions.every((q) => {
     const v = selections[q.key];
     if (q.type === "text") return true;
@@ -161,6 +166,10 @@ export default function Survey() {
     params.delete("view");
     return window.location.pathname + "?" + params.toString();
   })();
+
+  if (loading) {
+    return <div className="page">{t("common.loading")}</div>;
+  }
 
   return (
     <div className="page">
