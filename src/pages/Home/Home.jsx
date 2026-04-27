@@ -4,7 +4,7 @@ import { ActionButton, showToast } from "@ui";
 import { CreateEdit } from "@components/CreateEdit";
 import { Generate } from "@components/Generate";
 import { SurveyList } from "./SurveyList";
-import LanguageSwitcher from "@components/LanguageSwitcher/LanguageSwitcher";
+import { LanguageSwitcher } from "@components/LanguageSwitcher";
 import styles from "./home.module.css";
 
 async function copyText(text) {

@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { useState, useRef, useEffect } from "react";
 import styles from "./lang.module.css";
 
 const LANGS = [
@@ -10,15 +11,28 @@ const LANGS = [
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
   const current = LANGS.find((l) => l.code === i18n.language) || LANGS[0];
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    function handleOutside(e) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("pointerdown", handleOutside);
+    return () => document.removeEventListener("pointerdown", handleOutside);
+  }, []);
 
   function switchLang(code) {
     i18n.changeLanguage(code);
     localStorage.setItem("lang", code);
+    setOpen(false);
   }
 
   return (
-    <div className={styles.wrapper}>
-      <button type="button" className={styles.trigger}>
+    <div ref={wrapperRef} className={styles.wrapper} data-open={open}>
+      <button type="button" className={styles.trigger} onClick={() => setOpen((v) => !v)}>
         {current.label}
       </button>
       <div className={styles.dropdown}>

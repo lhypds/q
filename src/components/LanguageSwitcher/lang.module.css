@@ -35,7 +35,8 @@
   flex-direction: column;
 }
 
-.wrapper:hover .dropdown {
+.wrapper:hover .dropdown,
+.wrapper[data-open="true"] .dropdown {
   display: flex;
 }
 

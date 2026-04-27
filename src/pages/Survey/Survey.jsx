@@ -4,7 +4,7 @@ import styles from "./survey.module.css";
 import { ActionButton, showToast, Modal } from "@ui";
 import { CreateEdit } from "@components/CreateEdit";
 import QuestionCard from "@components/QuestionCard";
-import LanguageSwitcher from "@components/LanguageSwitcher/LanguageSwitcher";
+import { LanguageSwitcher } from "@components/LanguageSwitcher";
 import { normalizeSurvey } from "@utils/surveyUtils";
 import { parseSurvey, parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
@@ -180,8 +180,6 @@ export default function Survey() {
         </a>
 
         <div className={styles.actions}>
-          <LanguageSwitcher />
-
           {isEdit && (
             <ActionButton
               tooltip={t("button.edit")}
@@ -218,6 +216,8 @@ export default function Survey() {
               </svg>
             </ActionButton>
           )}
+
+          <LanguageSwitcher />
         </div>
       </div>
 

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./results.module.css";
 import { ActionButton, showToast } from "@ui";
 import ResultCard from "@components/ResultCard";
-import LanguageSwitcher from "@components/LanguageSwitcher/LanguageSwitcher";
+import { LanguageSwitcher } from "@components/LanguageSwitcher";
 import { parseSurvey, parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 
@@ -85,7 +85,6 @@ export default function Results() {
         </a>
 
         <div className={styles.actions}>
-          <LanguageSwitcher />
           <ActionButton tooltip={t("button.share")} onClick={handleShare}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="18" cy="5" r="3" />
@@ -95,6 +94,8 @@ export default function Results() {
               <path d="M15.41 6.51L8.59 10.49" />
             </svg>
           </ActionButton>
+
+          <LanguageSwitcher />
         </div>
       </div>
 
