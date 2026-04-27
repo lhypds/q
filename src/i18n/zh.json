@@ -67,6 +67,7 @@
     "promptPlaceholder": "调查问题将自动生成在这里..."
   },
   "questionCard": {
-    "otherOption": "其他"
+    "otherOption": "其他",
+    "yes": "是"
   }
 }

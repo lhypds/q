@@ -67,6 +67,7 @@
     "promptPlaceholder": "Your survey questions will be generated here..."
   },
   "questionCard": {
-    "otherOption": "Other"
+    "otherOption": "Other",
+    "yes": "Yes"
   }
 }

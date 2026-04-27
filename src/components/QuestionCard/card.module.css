@@ -77,3 +77,16 @@
   color: #aaa;
   cursor: default;
 }
+
+.textArea {
+  width: 100%;
+  min-height: 80px;
+  border: 1px solid black;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 8px;
+  box-sizing: border-box;
+  resize: vertical;
+  background: transparent;
+}
