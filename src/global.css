@@ -39,15 +39,23 @@ body {
   padding: 20px 24px;
 }
 
+@media (max-width: 640px) {
+  .card {
+    padding: 12px 14px;
+  }
+}
+
 .card-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 4px;
 }
 
 .card-title {
   font-size: 16px;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 .card-desc {
@@ -56,16 +64,12 @@ body {
   color: var(--text-muted);
 }
 
-/* Badge */
 .badge {
+  height: 20px;
   font-size: 11px;
   background: #f0f0f5;
-  color: #555;
-  padding: 2px 7px;
-  font-family: var(--mono);
-  white-space: nowrap;
-  flex-shrink: 0;
-  margin-top: 2px;
+  padding: 4px 7px;
+  text-align: center;
 }
 
 /* Submit row — shared */
