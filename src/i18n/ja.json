@@ -30,7 +30,7 @@
     "emailPlaceholder": "your@email.com",
     "answerAll": "送信前にすべての質問に回答してください。",
     "submitFailed": "送信に失敗しました。もう一度お試しください。",
-    "shareText": "アンケートへのご参加をお待ちしています、{{title}}{{subtitle}}\n{{shareUrl}}"
+    "shareText": "アンケートへのご参加と結果もぜひご覧ください！\n\n=== {{title}} ===\n{{subtitle}}\n👉 {{shareUrl}}"
   },
   "results": {
     "loading": "読み込み中…",
@@ -39,7 +39,7 @@
     "collected_one": "{{count}} 件の回答が収集されました。",
     "collected_other": "{{count}} 件の回答が収集されました。",
     "otherResponses": "その他の回答",
-    "shareText": "アンケート結果をご覧ください、{{title}}{{subtitle}}\n{{shareUrl}}"
+    "shareText": "アンケート結果をご覧ください！\n\n=== {{title}} ===\n{{subtitle}}\n👉 {{shareUrl}}"
   },
   "home": {
     "noSurveys": "アンケートなし。",

@@ -72,7 +72,7 @@ export default function Results() {
       id = data.id;
     }
     const shareUrl = `${window.location.origin}/?q=${id}&view=results`;
-    const text = t("results.shareText", { title, subtitle: subtitle ? ` - ${subtitle}` : "", shareUrl });
+    const text = t("results.shareText", { title, subtitle: subtitle ? `[${subtitle}]\n` : "", shareUrl });
     const copied = await copyText(text);
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }

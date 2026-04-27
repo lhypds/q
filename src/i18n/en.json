@@ -30,7 +30,7 @@
     "emailPlaceholder": "your@email.com",
     "answerAll": "Please answer all questions before submitting.",
     "submitFailed": "Failed to submit. Please try again.",
-    "shareText": "Welcome to the survey, {{title}}{{subtitle}}\n{{shareUrl}}"
+    "shareText": "Join the survey & check the results!\n\n=== {{title}} ===\n{{subtitle}}\n👉 {{shareUrl}}"
   },
   "results": {
     "loading": "Loading…",
@@ -39,7 +39,7 @@
     "collected_one": "{{count}} response collected.",
     "collected_other": "{{count}} responses collected.",
     "otherResponses": "Other responses",
-    "shareText": "Check survey results, {{title}}{{subtitle}}\n{{shareUrl}}"
+    "shareText": "Check out the survey results!\n\n=== {{title}} ===\n{{subtitle}}\n👉 {{shareUrl}}"
   },
   "home": {
     "noSurveys": "Noq.",

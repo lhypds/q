@@ -30,7 +30,7 @@
     "emailPlaceholder": "your@email.com",
     "answerAll": "请在提交前回答所有问题。",
     "submitFailed": "提交失败，请重试。",
-    "shareText": "欢迎参与调查，{{title}}{{subtitle}}\n{{shareUrl}}"
+    "shareText": "欢迎参与调查！欢迎围观调查结果！\n\n=== {{title}} ===\n{{subtitle}}\n👉 {{shareUrl}}"
   },
   "results": {
     "loading": "加载中…",
@@ -39,7 +39,7 @@
     "collected_one": "已收集 {{count}} 个回答。",
     "collected_other": "已收集 {{count}} 个回答。",
     "otherResponses": "其他回答",
-    "shareText": "查看调查结果，{{title}}{{subtitle}}\n{{shareUrl}}"
+    "shareText": "欢迎围观调查结果！\n\n=== {{title}} ===\n{{subtitle}}\n👉 {{shareUrl}}"
   },
   "home": {
     "noSurveys": "暂无调查。",
