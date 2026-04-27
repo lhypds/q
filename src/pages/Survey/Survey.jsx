@@ -138,7 +138,13 @@ export default function Survey() {
 
   const isEdit = new URLSearchParams(window.location.search).get("edit") === "true";
 
-  const resultsUrl = window.location.pathname + window.location.search + (window.location.search ? "&" : "?") + "view=results";
+  const resultsUrl = (() => {
+    const params = new URLSearchParams(window.location.search);
+    if (isNumericId) params.set("q", qParam);
+    params.set("view", "results");
+    params.delete("edit");
+    return window.location.pathname + "?" + params.toString();
+  })();
 
   if (submitted) {
     return (
