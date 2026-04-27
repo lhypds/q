@@ -100,11 +100,16 @@ app.post('/surveyresult', (req, res) => {
 
 // Distinct surveys for survey list
 app.get('/surveys', (_req, res) => {
-  const rows = db.prepare(
-    'SELECT survey, COUNT(*) as count FROM records WHERE is_deleted = 0 GROUP BY survey ORDER BY MAX(time) DESC'
-  ).all();
+  const rows = db.prepare(`
+    SELECT s.id, s.survey, COUNT(r.id) as count
+    FROM surveys s
+    LEFT JOIN records r ON r.survey = s.survey AND r.is_deleted = 0
+    GROUP BY s.id
+    ORDER BY MAX(r.time) DESC
+  `).all();
 
   const surveys = rows.map(r => ({
+    id: r.id,
     survey: JSON.parse(r.survey),
     count: r.count,
   }));

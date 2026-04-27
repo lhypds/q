@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./list.module.css";
 
-function surveyToUrl(survey) {
-  return "/?q=" + encodeURIComponent(JSON.stringify(survey));
+function surveyToUrl(id) {
+  return "/?q=" + id;
 }
 
 export default function SurveyList() {
@@ -26,15 +26,13 @@ export default function SurveyList() {
   return (
     <div className={styles.list}>
       {surveys.length > 0 ? (
-        surveys.map((item, i) => (
-          <a key={i} href={surveyToUrl(item.survey)} className={styles.item}>
+        surveys.map((survey, i) => (
+          <a key={i} href={surveyToUrl(survey.id)} className={styles.item}>
             <div className={styles.info}>
-              <span className={styles.title}>{item.survey.title || t("home.untitled")}</span>
-              {item.survey.subtitle && <span className={styles.subtitle}>[{item.survey.subtitle}]</span>}
+              <span className={styles.title}>{survey.survey.title || t("home.untitled")}</span>
+              {survey.survey.subtitle && <span className={styles.subtitle}>[{survey.survey.subtitle}]</span>}
             </div>
-            <span className={styles.count}>
-              {t("home.response", { count: item.count })}
-            </span>
+            <span className={styles.count}>{t("home.response", { count: survey.count })}</span>
           </a>
         ))
       ) : (
