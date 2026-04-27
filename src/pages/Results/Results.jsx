@@ -34,6 +34,7 @@ export default function Results() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
+
   useEffect(() => {
     if (!qParam) return;
     fetch(`/surveyresults?id=${qParam}`)

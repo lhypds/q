@@ -1,7 +1,7 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import styles from "./resultCard.module.css";
+import styles from "./card.module.css";
 
 const COLORS = [
   "#b3d4fc", // soft blue
