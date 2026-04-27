@@ -46,7 +46,7 @@ export default function ResultCard({ question, results }) {
     ...(otherTexts.length > 0 ? [{ name: t("questionCard.otherOption"), value: otherTexts.length }] : []),
   ];
   // For multi-select, total = respondents who answered; for single, total = sum of votes
-  const total = question.multi
+  const total = question.type === "multi"
     ? results.filter((r) => {
         const c = r.result[question.key];
         return Array.isArray(c) ? c.length > 0 : !!c;

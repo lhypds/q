@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 export default function QuestionCard({ question, selected, onSelect, otherValue, onOtherChange }) {
   const { t } = useTranslation();
-  const isMulti = question.multi;
+  const isMulti = question.type === "multi";
   const isOtherChecked = isMulti ? Array.isArray(selected) && selected.includes("__other__") : selected === "__other__";
 
   return (

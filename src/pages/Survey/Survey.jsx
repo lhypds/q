@@ -47,10 +47,10 @@ export default function Survey() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const allAnswered = questions.every((q) => {
     const v = selections[q.key];
-    const baseAnswered = q.multi ? Array.isArray(v) && v.length > 0 : !!v;
+    const baseAnswered = q.type === "multi" ? Array.isArray(v) && v.length > 0 : !!v;
     if (!baseAnswered) return false;
     if (q.hasOtherOption) {
-      const otherSelected = q.multi ? Array.isArray(v) && v.includes("__other__") : v === "__other__";
+      const otherSelected = q.type === "multi" ? Array.isArray(v) && v.includes("__other__") : v === "__other__";
       if (otherSelected && !otherInputs[q.key]?.trim()) return false;
     }
     return true;
@@ -298,7 +298,7 @@ export default function Survey() {
                 selected={selections[q.key]}
                 onSelect={(val) =>
                   setSelections((prev) => {
-                    if (q.multi) {
+                    if (q.type === "multi") {
                       const cur = Array.isArray(prev[q.key]) ? prev[q.key] : [];
                       const updated = cur.includes(val) ? cur.filter((v) => v !== val) : [...cur, val];
                       return { ...prev, [q.key]: updated };

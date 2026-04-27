@@ -193,17 +193,17 @@ app.post('/generate/qjson', async (req, res) => {
       messages: [
         {
           role: 'system',
-          content: `You are a survey JSON generator. Convert the questions outline into this exact JSON format:  
+          content: `You are a survey JSON generator. Convert the questions outline into this exact JSON format (example):  
 
 {
-  "title": "Survey title",
-  "subtitle": "Optional subtitle",
-  "description": "Optional description",
+  "title": "Simple Title",
+  "subtitle": "Simple subtitle",
+  "description": "Simple description.",
   "questions": {
     "1": {
-      "title": "Question title",
-      "description": "Optional question description",
-      "multi": false,
+      "title": "Simple Title",
+      "description": "Simple description.",
+      "type": "single",
       "has_other_option": false,
       "options": {
         "1": "Option A",
@@ -211,22 +211,42 @@ app.post('/generate/qjson', async (req, res) => {
       }
     },
     "2": {
-      "title": "Multi-select question title",
-      "description": "Optional question description",
-      "multi": true,
+      "title": "Simple Title",
+      "description": "Simple description.",
+      "type": "multi",
       "has_other_option": true,
       "options": {
         "1": "Option A",
         "2": "Option B",
         "3": "Option C"
       }
+    },
+    "3": {
+      "title": "Simple Title",
+      "description": "Simple description.",
+      "type": "text",
+      "has_other_option": false ,
+      "options": {}
+    },
+    "4": {
+      "title": "Simple Title",
+      "description": "Simple description.",
+      "type": "true_false",
+      "has_other_option": false ,
+      "options": {}
     }
   }
 }
 
+Follow rules:  
 1. Better to add a "subtitle" and a "description".  
-2. Use "multi": true, for questions that allow multiple selections (marked with [multi] in the outline). Omit the "multi" field for single-choice questions. Return only valid JSON, no markdown or explanation.  
-3. Use "has_other_option": true, for questions that have an "Other" option for user free text input. If "has_other_option" is true, then no need to add a "Other" option in the options list.
+2. Use "type": "multi" for questions that allow multiple selections (marked with [multi] in the outline).
+3. Use "type": "single" for single-choice questions.
+4. Use "type": "true_false" for True/False questions.
+5. Use "type": "text" for Open-ended or Short-answer questions.  
+3. Use "has_other_option": true, for questions that have an "Other" option for user free text input. If "has_other_option" is true, then no need to add a "Other" option in the options list.  
+
+Return only valid JSON, no markdown or explanation.  
 `,
         },
         { role: 'user', content: `Topic: ${topic}\n\nQuestions outline:\n${prompt}` },

@@ -117,7 +117,7 @@ export default function CreateEdit({
       obj.questions[String(n)] = {
         title: `Question ${n} title`,
         description: "Description for this question...",
-        multi: false,
+        type: "single",
         has_other_option: false,
         options: { 1: "Option 1", 2: "Option 2" },
       };
