@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./resultCard.module.css";
@@ -54,7 +54,6 @@ export default function ResultCard({ question, results }) {
                   formatter={(value, name) => [`${value} (${total ? Math.round((value / total) * 100) : 0}%)`, name]}
                   contentStyle={{ fontSize: "12px", padding: "2px 8px" }}
                 />
-                <Legend wrapperStyle={{ fontSize: "12px" }} />
               </PieChart>
             </ResponsiveContainer>
             <div className={styles.legendCounts}>
@@ -156,7 +155,6 @@ export default function ResultCard({ question, results }) {
                     formatter={(value, name) => [`${value} (${total ? Math.round((value / total) * 100) : 0}%)`, name]}
                     contentStyle={{ fontSize: "12px", padding: "2px 8px" }}
                   />
-                  <Legend wrapperStyle={{ fontSize: "12px" }} />
                 </PieChart>
               </ResponsiveContainer>
               <div className={styles.legendCounts}>
