@@ -60,7 +60,16 @@ export default function Generate({ isOpen, onClose, onComplete }) {
   async function handleComplete() {
     setLoading(true);
     setError("");
-    showToast(t("toast.creating"), null, "center");
+
+    const dots = [".", "..", "..."];
+    let dotIndex = 0;
+    const base = t("toast.creating");
+    showToast(base + dots[0], null, "center");
+    const interval = setInterval(() => {
+      dotIndex = (dotIndex + 1) % dots.length;
+      showToast(base + dots[dotIndex], null, "center");
+    }, 500);
+    
     try {
       const res = await fetch("/generate/qjson", {
         method: "POST",
@@ -69,9 +78,11 @@ export default function Generate({ isOpen, onClose, onComplete }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate survey");
+      clearInterval(interval);
       hideToast();
       onComplete(normalizeSurvey(data.survey));
     } catch (e) {
+      clearInterval(interval);
       hideToast();
       setError(e.message);
       setLoading(false);

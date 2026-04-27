@@ -21,7 +21,7 @@
   "toast": {
     "linkCopied": "リンクをコピーしました",
     "failedCopy": "リンクのコピーに失敗しました",
-    "creating": "作成中...",
+    "creating": "作成中",
     "shareMessage": "ようこそ、q - アンケート生成・作成ツールへ"
   },
   "survey": {
