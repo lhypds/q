@@ -139,6 +139,7 @@ app.delete('/survey', (req, res) => {
   if (!survey) return res.status(400).json({ error: 'Missing survey' });
   const surveyJson = JSON.stringify(survey);
   db.prepare('UPDATE records SET is_deleted = 1 WHERE survey = ?').run(surveyJson);
+  db.prepare('DELETE FROM surveys WHERE survey = ?').run(surveyJson);
   res.json({ ok: true });
 });
 

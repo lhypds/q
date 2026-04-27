@@ -48,7 +48,7 @@
     "response_other": "{{count}} 件の回答"
   },
   "createEdit": {
-    "createTitle": "作成",
+    "createTitle": "手作業で作成",
     "editTitle": "編集",
     "titleLabel": "タイトル",
     "subtitleLabel": "サブタイトル",
@@ -60,10 +60,10 @@
     "invalidJsonAddQ": "JSONが無効です — 質問を追加する前に修正してください"
   },
   "generate": {
-    "title": "生成",
+    "title": "自動生成",
     "placeholderModify": "アンケートをどのように修正しますか？",
     "placeholderNew": "何についてアンケートを作成しますか？",
-    "promptPlaceholder": "アンケートの質問がここに表示されます..."
+    "promptPlaceholder": "アンケートの質問がここに生成されます..."
   },
   "questionCard": {
     "otherOption": "その他"

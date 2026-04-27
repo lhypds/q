@@ -48,7 +48,7 @@
     "response_other": "{{count}} responses"
   },
   "createEdit": {
-    "createTitle": "Create",
+    "createTitle": "Create Manually",
     "editTitle": "Edit",
     "titleLabel": "Title",
     "subtitleLabel": "Subtitle",
@@ -63,7 +63,7 @@
     "title": "Generate",
     "placeholderModify": "How you want to modify the survey?",
     "placeholderNew": "What would you like to survey?",
-    "promptPlaceholder": "Your survey questions will appear here..."
+    "promptPlaceholder": "Your survey questions will be generated here..."
   },
   "questionCard": {
     "otherOption": "Other"

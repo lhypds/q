@@ -24,7 +24,7 @@
     "thankYou": "谢谢！",
     "responseRecorded": "您的回答已记录。",
     "deleteTitle": "删除调查",
-    "deleteConfirm": "删除此调查的所有回答？此操作无法撤销。",
+    "deleteConfirm": "删除此调查？此操作无法撤销。",
     "submitTitle": "提交",
     "emailHint": "输入您的电子邮件以接收回答副本（可选）。",
     "emailPlaceholder": "your@email.com",
@@ -48,7 +48,7 @@
     "response_other": "{{count}} 个回答"
   },
   "createEdit": {
-    "createTitle": "创建",
+    "createTitle": "手动创建",
     "editTitle": "编辑",
     "titleLabel": "标题",
     "subtitleLabel": "副标题",
@@ -60,10 +60,10 @@
     "invalidJsonAddQ": "JSON 格式无效 — 添加问题前请修复"
   },
   "generate": {
-    "title": "生成",
+    "title": "自动生成",
     "placeholderModify": "您想如何修改调查？",
     "placeholderNew": "您想调查什么？",
-    "promptPlaceholder": "调查问题将显示在这里..."
+    "promptPlaceholder": "调查问题将自动生成在这里..."
   },
   "questionCard": {
     "otherOption": "其他"
