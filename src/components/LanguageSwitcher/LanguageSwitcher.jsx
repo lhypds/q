@@ -3,8 +3,8 @@ import styles from "./lang.module.css";
 
 const LANGS = [
   { code: "en", label: "EN" },
-  { code: "zh", label: "中" },
-  { code: "ja", label: "日" },
+  { code: "zh", label: "ZH" },
+  { code: "ja", label: "JA" },
 ];
 
 export default function LanguageSwitcher() {
