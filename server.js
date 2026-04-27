@@ -118,16 +118,17 @@ app.get('/surveys', (_req, res) => {
   res.json(surveys);
 });
 
-// Get survery results
+// Get survey results by survey id
 app.get('/surveyresults', (req, res) => {
-  const { survey } = req.query;
-  if (!survey) {
-    return res.status(400).json({ error: 'Missing survey param' });
-  }
+  const { id } = req.query;
+  if (!id) return res.status(400).json({ error: 'Missing id param' });
+
+  const surveyRow = db.prepare('SELECT survey FROM surveys WHERE id = ?').get(id);
+  if (!surveyRow) return res.status(404).json({ error: 'Survey not found' });
 
   const rows = db.prepare(
     'SELECT * FROM records WHERE survey = ? AND is_deleted = 0 ORDER BY time DESC'
-  ).all(survey);
+  ).all(surveyRow.survey);
 
   res.set('Cache-Control', 'no-store');
   res.json(rows.map(r => ({

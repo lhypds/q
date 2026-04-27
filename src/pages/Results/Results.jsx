@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./results.module.css";
 import { ActionButton, showToast } from "@ui";
@@ -34,10 +34,9 @@ export default function Results() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
-  const surveyKey = useMemo(() => JSON.stringify(surveyObj), [surveyObj]);
-
   useEffect(() => {
-    fetch(`/surveyresults?survey=${encodeURIComponent(surveyKey)}`)
+    if (!qParam) return;
+    fetch(`/surveyresults?id=${qParam}`)
       .then((r) => r.json())
       .then((data) => {
         if (Array.isArray(data)) setResults(data);
@@ -48,7 +47,7 @@ export default function Results() {
         setFetchError(t("results.fetchError"));
         setLoading(false);
       });
-  }, [surveyKey, t]);
+  }, [t]);
 
   const surveyUrl = (() => {
     const params = new URLSearchParams(window.location.search);
