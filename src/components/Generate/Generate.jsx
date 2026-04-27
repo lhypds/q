@@ -105,7 +105,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
   const buttonDisabled = loading || (!isGenerated && !inputValue.trim());
 
   return (
-    <Modal isOpen={isOpen} onClose={loading ? undefined : onClose} title={t("generate.title")}>
+    <Modal isOpen={isOpen} onClose={loading ? undefined : onClose} title={t("generate.title")} className={styles.modal}>
       <div className={styles.container}>
         {/* Input */}
         <textarea

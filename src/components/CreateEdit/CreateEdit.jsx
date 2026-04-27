@@ -133,7 +133,12 @@ export default function CreateEdit({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={mode === "create" ? t("createEdit.createTitle") : t("createEdit.editTitle")}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={mode === "create" ? t("createEdit.createTitle") : t("createEdit.editTitle")}
+      className={styles.modal}
+    >
       <div className={styles.container}>
         {/* Title */}
         <div className={styles.field}>

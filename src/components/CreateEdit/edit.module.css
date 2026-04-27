@@ -1,3 +1,9 @@
+.modal {
+  max-width: 580px;
+  width: 92%;
+  max-height: 92vh;
+}
+
 .container {
   display: flex;
   flex-direction: column;

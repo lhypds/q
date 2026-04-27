@@ -1,3 +1,8 @@
+.modal {
+  max-width: 580px;
+  width: 92%;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -23,7 +28,7 @@
 
 .promptTextarea {
   width: 100%;
-  min-height: 220px;
+  min-height: 420px;
   padding: 10px;
   font-size: 13px;
   font-family: inherit;
