@@ -47,6 +47,7 @@ export default function Survey() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const allAnswered = questions.every((q) => {
     const v = selections[q.key];
+    if (q.type === "text") return true;
     const baseAnswered = q.type === "multi" ? Array.isArray(v) && v.length > 0 : !!v;
     if (!baseAnswered) return false;
     if (q.hasOtherOption) {
