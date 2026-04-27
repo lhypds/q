@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, showToast, hideToast } from "@ui";
 import styles from "./generate.module.css";
@@ -12,6 +12,13 @@ export default function Generate({ isOpen, onClose, onComplete }) {
   const [currentTopic, setCurrentTopic] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const promptRef = useRef(null);
+
+  useEffect(() => {
+    if (promptRef.current) {
+      promptRef.current.scrollTop = promptRef.current.scrollHeight;
+    }
+  }, [prompt]);
 
   async function generatePrompt(topic, modification, currentPrompt) {
     setLoading(true);
@@ -119,6 +126,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
 
         {/* Prompt */}
         <textarea
+          ref={promptRef}
           className={`${styles.promptTextarea} ${!isGenerated || loading ? styles.promptGrayed : ""}`}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
