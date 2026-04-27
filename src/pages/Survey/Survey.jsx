@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./survey.module.css";
-import { ActionButton, showToast, hideToast, Modal } from "@ui";
+import { ActionButton, showToast, Modal } from "@ui";
 import { CreateEdit } from "@components/CreateEdit";
 import QuestionCard from "@components/QuestionCard";
 import LanguageSwitcher from "@components/LanguageSwitcher/LanguageSwitcher";
@@ -20,20 +20,12 @@ export default function Survey() {
       : parseSurvey(window.location.search),
   );
 
-  const [loading, setLoading] = useState(isNumericId);
-
-  useEffect(() => {
-    if (loading) showToast(t("toast.loading"), null, "center");
-    else hideToast();
-  }, [loading, t]);
-
   useEffect(() => {
     if (!isNumericId) return;
     fetch(`/survey?id=${qParam}`)
       .then((r) => r.json())
       .then((data) => {
         if (data.survey) setSurveyData(parseSurveyObj(data.survey));
-        setLoading(false);
       });
   }, []);
 

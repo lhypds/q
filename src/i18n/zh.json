@@ -22,7 +22,6 @@
     "linkCopied": "链接已复制到剪贴板",
     "failedCopy": "复制链接失败",
     "creating": "创建中",
-    "loading": "加载中...",
     "shareMessage": "欢迎使用，q - 调查问卷生成器"
   },
   "survey": {

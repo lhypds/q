@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { showToast, hideToast } from "@ui";
 import styles from "./list.module.css";
 
 function surveyToUrl(id) {
@@ -21,11 +20,6 @@ export default function SurveyList() {
       })
       .catch(() => setLoading(false));
   }, []);
-
-  useEffect(() => {
-    if (loading) showToast(t("toast.loading"), null, "center");
-    else hideToast();
-  }, [loading, t]);
 
   if (loading) return null;
 

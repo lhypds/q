@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./results.module.css";
-import { ActionButton, showToast, hideToast } from "@ui";
+import { ActionButton, showToast } from "@ui";
 import ResultCard from "@components/ResultCard";
 import LanguageSwitcher from "@components/LanguageSwitcher/LanguageSwitcher";
 import { parseSurvey, parseSurveyObj } from "@utils/urlUtils";
@@ -34,12 +34,6 @@ export default function Results() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
-
-  useEffect(() => {
-    if (loading) showToast(t("toast.loading"), null, "center");
-    else hideToast();
-  }, [loading, t]);
-
   useEffect(() => {
     if (!qParam) return;
     fetch(`/surveyresults?id=${qParam}`)
@@ -105,7 +99,7 @@ export default function Results() {
       {fetchError && <p className="error-msg">{fetchError}</p>}
 
       <div className={styles.collectionInfo}>
-        {!loading && t("results.collected", { count: results.length }) + t("common.colon")}
+        {loading ? t("results.loading") : t("results.collected", { count: results.length }) + t("common.colon")}
       </div>
 
       <div className={styles.content}>
