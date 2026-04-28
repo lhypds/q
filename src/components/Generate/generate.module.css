@@ -10,14 +10,14 @@
 }
 
 .inputTextarea {
-  min-height: 80px;
+  min-height: 120px;
   font-size: 14px;
   line-height: 1.5;
 }
 
 .promptTextarea {
-  min-height: 420px;
-  font-size: 13px;
+  min-height: 400px;
+  font-size: 14px;
   line-height: 1.6;
 }
 

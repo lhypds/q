@@ -52,7 +52,7 @@
     "response_other": "{{count}} responses"
   },
   "createEdit": {
-    "createTitle": "Create Manually",
+    "createTitle": "Create",
     "editTitle": "Edit",
     "titleLabel": "Title",
     "subtitleLabel": "Subtitle",

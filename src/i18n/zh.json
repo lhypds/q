@@ -51,7 +51,7 @@
     "response_other": "{{count}} 个回答"
   },
   "createEdit": {
-    "createTitle": "手动创建",
+    "createTitle": "创建调查",
     "editTitle": "编辑",
     "titleLabel": "标题",
     "subtitleLabel": "副标题",
@@ -63,7 +63,7 @@
     "invalidJsonAddQ": "JSON 格式无效 — 添加问题前请修复"
   },
   "generate": {
-    "title": "自动生成",
+    "title": "生成调查",
     "placeholderModify": "您想如何修改调查？",
     "placeholderNew": "您想调查什么？",
     "promptPlaceholder": "调查问题将自动生成在这里，亦可手动编辑..."
