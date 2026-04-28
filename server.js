@@ -70,7 +70,7 @@ app.post('/survey', (req, res) => {
 });
 
 // Record survey result
-app.post('/surveyresult', (req, res) => {
+app.post('/record', (req, res) => {
   const { survey, result, email } = req.body;
   if (!survey || !result) {
     return res.status(400).json({ error: 'Missing survey or result' });
@@ -118,8 +118,8 @@ app.get('/surveys', (_req, res) => {
   res.json(surveys);
 });
 
-// Get survey results by survey id
-app.get('/surveyresults', (req, res) => {
+// Get survey result records by survey id
+app.get('/records', (req, res) => {
   const { id } = req.query;
   if (!id) return res.status(400).json({ error: 'Missing id param' });
 

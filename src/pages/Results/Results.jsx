@@ -37,7 +37,7 @@ export default function Results() {
 
   useEffect(() => {
     if (!qParam) return;
-    fetch(`/surveyresults?id=${qParam}`)
+    fetch(`/records?id=${qParam}`)
       .then((r) => r.json())
       .then((data) => {
         if (Array.isArray(data)) setResults(data);

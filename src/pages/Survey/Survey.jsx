@@ -110,7 +110,7 @@ export default function Survey() {
         }),
       );
 
-      const res = await fetch("/surveyresult", {
+      const res = await fetch("/record", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ survey: normalizedSurvey, result, email: emailValue }),
