@@ -157,7 +157,7 @@ app.post('/generate/prompt', async (req, res) => {
     ?
     'You are a survey designer. AI generated a survey based on the previous input. Now, user want to modify it. So, rewrite the given survey based on the modification request. But only return the rewritten survey without any explanation.'
     :
-    'You are a survey designer. First, generate the description for the survey. Then, produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly, but with a rich description.';
+    'You are a survey designer. First, generate the description for the survey. Then, produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly, but with a rich description. Only return the survey (include descriptions) but without any explanation.';
 
   const userPrompt = modification
     ? `Survey:\n\n${currentPrompt}\n\nModification request:\n\n${modification}\n\n`
