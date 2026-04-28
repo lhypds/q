@@ -108,6 +108,13 @@ export default function Survey() {
         body: JSON.stringify({ survey_id: qParam, result, email: emailValue }),
       });
       if (!res.ok) throw new Error("Server error");
+
+      // Update URL with record id
+      const data = await res.json();
+      const params = new URLSearchParams(window.location.search);
+      params.set("r", data.id);
+      window.history.replaceState(null, "", "?" + params.toString());
+
       setSubmitted(true);
     } catch (err) {
       setError(t("survey.submitFailed") + " " + err.message);
