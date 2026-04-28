@@ -156,7 +156,7 @@ app.post('/generate/prompt', async (req, res) => {
 
   const systemPrompt = modification
     ?
-    'You are a survey designer. Rewrite the given survey questions outline based on the modification request. Produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly, but with a rich description.'
+    'You are a survey designer. Rewrite the given survey questions outline based on the modification request. Generate the description for the survey. Produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly, but with a rich description.'
     :
     'You are a survey designer. First, generate the description for the survey. Then, produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly, but with a rich description.';
 
