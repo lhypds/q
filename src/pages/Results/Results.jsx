@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./results.module.css";
 import { ActionButton, showToast } from "@ui";
 import ResultCard from "@components/ResultCard";
+import AssessmentResults from "@components/AssessmentResults/AssessmentResults";
 import { LanguageSwitcher } from "@components/LanguageSwitcher";
 import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
@@ -21,6 +22,7 @@ export default function Results() {
     questions: [],
     surveyObj: {},
   });
+  const [analysis, setAnalysis] = useState(null);
 
   useEffect(() => {
     if (!isNumericId) return;
@@ -28,6 +30,7 @@ export default function Results() {
       .then((r) => r.json())
       .then((data) => {
         if (data.survey) setSurveyData(parseSurveyObj(data.survey));
+        if (data.analysis) setAnalysis(data.analysis);
       });
   }, []);
 
@@ -102,7 +105,11 @@ export default function Results() {
       </div>
 
       <div className={styles.content}>
-        {!loading && questions.map((q) => <ResultCard key={q.key} question={q} results={results} />)}
+        {!loading && surveyData.type === "assessment_scale" ? (
+          <AssessmentResults records={results} analysis={analysis} />
+        ) : (
+          !loading && questions.map((q) => <ResultCard key={q.key} question={q} results={results} />)
+        )}
       </div>
 
       <div className="submit-row">

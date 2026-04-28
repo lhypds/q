@@ -60,9 +60,9 @@ db.exec(`
 app.get('/survey', (req, res) => {
   const { id } = req.query;
   if (!id) return res.status(400).json({ error: 'Missing id' });
-  const row = db.prepare('SELECT survey FROM surveys WHERE id = ? AND is_deleted = 0').get(id);
+  const row = db.prepare('SELECT survey, analysis FROM surveys WHERE id = ? AND is_deleted = 0').get(id);
   if (!row) return res.status(404).json({ error: 'Not found' });
-  res.json({ survey: JSON.parse(row.survey) });
+  res.json({ survey: JSON.parse(row.survey), analysis: row.analysis ? JSON.parse(row.analysis) : null });
 });
 
 // Distinct surveys for survey list
