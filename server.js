@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // Log API requests
-const API_PATHS = ['/survey', '/surveys', '/record', '/records', '/generate/prompt', '/generate/qjson'];
+const API_PATHS = ['/survey', '/surveys', '/record', '/records', '/generate/prompt', '/generate/qjson', '/generate/ajson'];
 app.use((req, _res, next) => {
   if (API_PATHS.some(p => req.url === p || req.url.startsWith(p + '?'))) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -281,6 +281,89 @@ Explanation & requirements:
     });
     const survey = JSON.parse(completion.choices[0].message.content);
     res.json({ survey });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/generate/ajson', async (req, res) => {
+  const { survey_id } = req.body;
+  if (!survey_id) return res.status(400).json({ error: 'Missing survey_id' });
+
+  const row = db.prepare('SELECT survey FROM surveys WHERE id = ? AND is_deleted = 0').get(survey_id);
+  if (!row) return res.status(404).json({ error: 'Survey not found' });
+
+  const prompt = row.prompt || '';
+  const survey = JSON.parse(row.survey);
+
+  try {
+    const systemPrompt = `You are a survey scoring JSON generator for scale-based psychological questionnaires.
+
+Given a survey JSON, generate a scoring JSON in this exact format:
+
+{
+  "scoring_method": "sum",
+  "dimensions": {
+    "anxiety": {
+      "label": "Anxiety",
+      "question_ids": ["1", "3"],
+      "results": [
+        { "min": 0,  "max": 6,  "label": "Low",      "description": "Minimal anxiety indicators." },
+        { "min": 7,  "max": 12, "label": "Moderate",  "description": "Some anxiety present." },
+        { "min": 13, "max": 18, "label": "High",      "description": "Significant anxiety present." }
+      ]
+    },
+    "depression": {
+      "label": "Depression",
+      "question_ids": ["2", "4"],
+      "results": [
+        { "min": 0,  "max": 5,  "label": "Low",  "description": "Minimal depressive indicators." },
+        { "min": 6,  "max": 10, "label": "High",  "description": "Notable depressive indicators." }
+      ]
+    }
+  },
+  "questions": {
+    "1": { "weight": 1, "dimension": "anxiety",    "options": { "1": 3, "2": 2, "3": 1, "4": 0 } },
+    "2": { "weight": 1, "dimension": "depression", "options": { "1": 0, "2": 1, "3": 2, "4": 3 } },
+    "3": { "weight": 1, "dimension": "anxiety",    "options": { "true": 1, "false": 0 } },
+    "4": { "weight": 0, "dimension": null,          "options": {} }
+  }
+}
+
+Rules:
+* "scoring_method" must be "sum".
+* Always use the "dimensions" structure — even for a single-dimension survey, create one dimension entry (e.g. "overall").
+* Decide how many dimensions based on the survey content: if all questions measure one construct use one dimension; if questions cluster into distinct sub-scales create one dimension per sub-scale.
+* Each dimension has:
+  - "label": a human-readable name.
+  - "question_ids": array of question keys that belong to this dimension.
+  - "results": 3–5 non-overlapping ranges covering the full achievable score for that dimension.
+* For each question:
+  - "weight": 1 for scored questions, 0 for open-text (type "text").
+  - "dimension": the dimension key this question belongs to, or null if unscored (weight 0).
+  - "options": map option keys to numeric scores.
+    - type "text" → "options": {}
+    - type "true_false" → keys "true" and "false"
+    - type "single" / "multi" → same option keys as in the survey JSON
+* Score direction: higher score = more of the trait being measured.
+* Result ranges must be non-overlapping and cover the full achievable score range for that dimension.
+* Labels and descriptions must be meaningful and tailored to the survey topic.`;
+
+    const userPrompt = prompt ?
+      `Here is the original prompt used to generate the survey:\n\n${prompt}\n\nSurvey JSON:\n${JSON.stringify(survey, null, 2)}`
+      :
+      `Survey JSON:\n${JSON.stringify(survey, null, 2)}`;
+
+    const completion = await openai.chat.completions.create({
+      model: MODEL,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      response_format: { type: 'json_object' },
+    });
+    const ajson = JSON.parse(completion.choices[0].message.content);
+    res.json({ ajson });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
