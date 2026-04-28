@@ -88,17 +88,18 @@ app.get('/surveys', (_req, res) => {
 
 // Upsert survey, return id
 app.post('/survey', (req, res) => {
-  const { prompt = '', survey } = req.body;
+  const { prompt = '', survey, analysis } = req.body;
   if (!survey) return res.status(400).json({ error: 'Missing survey' });
   const surveyJson = JSON.stringify(survey);
+  const analysisJson = analysis ? JSON.stringify(analysis) : null;
   const existing = db.prepare('SELECT id, is_deleted FROM surveys WHERE survey = ?').get(surveyJson);
   if (existing) {
     if (existing.is_deleted) {
-      db.prepare('UPDATE surveys SET is_deleted = 0, prompt = ? WHERE id = ?').run(prompt, existing.id);
+      db.prepare('UPDATE surveys SET is_deleted = 0, prompt = ?, analysis = ? WHERE id = ?').run(prompt, analysisJson, existing.id);
     }
     return res.json({ id: existing.id });
   }
-  const info = db.prepare('INSERT INTO surveys (prompt, survey) VALUES (?, ?)').run(prompt, surveyJson);
+  const info = db.prepare('INSERT INTO surveys (prompt, survey, analysis) VALUES (?, ?, ?)').run(prompt, surveyJson, analysisJson);
   res.json({ id: info.lastInsertRowid });
 });
 
