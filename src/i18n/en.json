@@ -40,6 +40,7 @@
   "results": {
     "loading": "Loading…",
     "fetchError": "Failed to load results.",
+    "noRecord": "No record found.",
     "noResponses": "No responses yet.",
     "collected": "{{count}} responses collected",
     "otherResponses": "Other responses",
