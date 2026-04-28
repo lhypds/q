@@ -80,7 +80,7 @@ export default function Survey() {
     await fetch("/survey", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ survey_id: qParam }),
+      body: JSON.stringify({ id: qParam }),
     });
     window.location.href = "/";
   }
