@@ -42,11 +42,21 @@ export default function ScaleResults({ record, analysis }) {
                 const isMatch = i === matchIdx;
                 const levelColor = LEVEL_COLORS[i % LEVEL_COLORS.length];
                 return (
-                  <div key={i} className={styles.level} style={isMatch ? { background: `${levelColor}33`, borderRadius: 6, padding: "6px 8px" } : {}}>
+                  <div
+                    key={i}
+                    className={`${styles.level} ${isMatch ? styles.levelMatch : ""}`}
+                    style={isMatch ? { background: `${levelColor}33` } : {}}
+                  >
                     <div className={styles.levelHeader}>
                       <span className={styles.levelDot} style={{ background: isMatch ? levelColor : "#ddd" }} />
-                      <span className={styles.levelLabel} style={isMatch ? { fontWeight: 700 } : { color: "#aaa" }}>{r.label}</span>
-                      {isMatch && <span style={{ fontSize: 12, color: "#555" }}>{r.min}–{r.max}</span>}
+                      <span className={`${styles.levelLabel} ${isMatch ? styles.levelLabelMatch : styles.levelLabelInactive}`}>
+                        {r.label}
+                      </span>
+                      {isMatch && (
+                        <span className={styles.levelRange}>
+                          {r.min}–{r.max}
+                        </span>
+                      )}
                     </div>
                     {isMatch && r.description && <div className={styles.levelDesc}>{r.description}</div>}
                   </div>

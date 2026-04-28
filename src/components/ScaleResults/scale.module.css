@@ -36,14 +36,22 @@
   font-weight: 500;
 }
 
-.levelCount {
-  font-weight: 600;
+.levelMatch {
+  border-radius: 6px;
+  padding: 6px 8px;
 }
 
-.levelPct {
-  color: #888;
+.levelLabelMatch {
+  font-weight: 700;
+}
+
+.levelLabelInactive {
+  color: #aaa;
+}
+
+.levelRange {
   font-size: 12px;
-  margin-left: 4px;
+  color: #555;
 }
 
 .levelDesc {
@@ -51,18 +59,4 @@
   color: #555;
   padding-left: 18px;
   line-height: 1.4;
-}
-
-.barTrack {
-  height: 6px;
-  background: #f0f0f0;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.barFill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.3s ease;
-  min-width: 2px;
 }
