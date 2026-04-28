@@ -7,7 +7,6 @@ import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 
 const qParam = new URLSearchParams(window.location.search).get("q");
-const isNumericId = qParam !== null && /^\d+$/.test(qParam);
 
 export default function Survey() {
   const { t } = useTranslation();
@@ -16,7 +15,6 @@ export default function Survey() {
   const [surveyData, setSurveyData] = useState({ title: null, subtitle: "", description: "", questions: [], surveyObj: {} });
 
   useEffect(() => {
-    if (!isNumericId) return;
     fetch(`/survey?id=${qParam}`)
       .then((r) => r.json())
       .then((data) => {
@@ -140,7 +138,7 @@ export default function Survey() {
 
   const resultsUrl = (() => {
     const params = new URLSearchParams(window.location.search);
-    if (isNumericId) params.set("q", qParam);
+    params.set("q", qParam);
     params.set("view", "results");
     params.delete("edit");
     return window.location.pathname + "?" + params.toString();

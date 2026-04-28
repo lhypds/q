@@ -8,7 +8,6 @@ import { copyText } from "@utils/clipboardUitls";
 
 const qParam = new URLSearchParams(window.location.search).get("q");
 const rParam = new URLSearchParams(window.location.search).get("r");
-const isNumericId = qParam !== null && /^\d+$/.test(qParam);
 
 export default function Results() {
   const { t } = useTranslation();
@@ -24,7 +23,6 @@ export default function Results() {
   const [analysis, setAnalysis] = useState(null);
 
   useEffect(() => {
-    if (!isNumericId) return;
     fetch(`/survey?id=${qParam}`)
       .then((r) => r.json())
       .then((data) => {
