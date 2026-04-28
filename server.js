@@ -217,6 +217,7 @@ app.post('/generate/qjson', async (req, res) => {
   "title": "Sample Title",
   "subtitle": "Sample subtitle",
   "description": "Sample description.",
+  "type": "common",
   "questions": {
     "1": {
       "title": "Sample Title",
@@ -259,6 +260,9 @@ app.post('/generate/qjson', async (req, res) => {
 
 Explanation & requirements:  
 * Better to add a "subtitle" and a "description".  
+* The root-level "type" field must be "common" or "assessment_scale".
+  Use "assessment_scale" when the survey is a psychological or behavioral scale where each question has scored options and the total score maps to a result level (e.g. stress tests, personality inventories, health screeners, risk assessments).
+  Use "common" for all other surveys (feedback forms, polls, quizzes, satisfaction surveys, event registrations, etc.).
 * The "type" of each question can be "single", "multi", "true_false", or "text".
   Use "type": "multi" for questions that allow multiple selections (marked with [multi] in the outline).  
   Use "type": "single" for single-choice questions.  
