@@ -29,7 +29,6 @@ app.use((req, _res, next) => {
   next();
 });
 
-
 // Init SQLite
 const db = new Database(path.join(__dirname, 'db.sqlite'));
 
@@ -37,7 +36,8 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS surveys (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     prompt TEXT NOT NULL DEFAULT '',
-    survey TEXT NOT NULL UNIQUE
+    survey TEXT NOT NULL UNIQUE,
+    is_deleted INTEGER NOT NULL DEFAULT 0
   );
   CREATE TABLE IF NOT EXISTS records (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,19 +50,34 @@ db.exec(`
   )
 `);
 
-// Migration: add prompt column if missing
-const cols = db.prepare("PRAGMA table_info(surveys)").all();
-if (!cols.some(c => c.name === 'prompt')) {
-  db.exec("ALTER TABLE surveys ADD COLUMN prompt TEXT NOT NULL DEFAULT ''");
-}
-
 // Get survey by id
 app.get('/survey', (req, res) => {
   const { id } = req.query;
   if (!id) return res.status(400).json({ error: 'Missing id' });
-  const row = db.prepare('SELECT survey FROM surveys WHERE id = ?').get(id);
+  const row = db.prepare('SELECT survey FROM surveys WHERE id = ? AND is_deleted = 0').get(id);
   if (!row) return res.status(404).json({ error: 'Not found' });
   res.json({ survey: JSON.parse(row.survey) });
+});
+
+// Distinct surveys for survey list
+app.get('/surveys', (_req, res) => {
+  const rows = db.prepare(`
+    SELECT s.id, s.survey, COUNT(r.id) as count
+    FROM surveys s
+    LEFT JOIN records r ON r.survey = s.survey AND r.is_deleted = 0
+    WHERE s.is_deleted = 0
+    GROUP BY s.id
+    ORDER BY MAX(r.time) DESC
+  `).all();
+
+  const surveys = rows.map(r => ({
+    id: r.id,
+    survey: JSON.parse(r.survey),
+    count: r.count,
+  }));
+
+  res.set('Cache-Control', 'no-store');
+  res.json(surveys);
 });
 
 // Upsert survey, return id
@@ -70,10 +85,34 @@ app.post('/survey', (req, res) => {
   const { prompt = '', survey } = req.body;
   if (!survey) return res.status(400).json({ error: 'Missing survey' });
   const surveyJson = JSON.stringify(survey);
-  const existing = db.prepare('SELECT id FROM surveys WHERE survey = ?').get(surveyJson);
-  if (existing) return res.json({ id: existing.id });
+  const existing = db.prepare('SELECT id, is_deleted FROM surveys WHERE survey = ?').get(surveyJson);
+  if (existing) {
+    if (existing.is_deleted) {
+      db.prepare('UPDATE surveys SET is_deleted = 0, prompt = ? WHERE id = ?').run(prompt, existing.id);
+    }
+    return res.json({ id: existing.id });
+  }
   const info = db.prepare('INSERT INTO surveys (prompt, survey) VALUES (?, ?)').run(prompt, surveyJson);
   res.json({ id: info.lastInsertRowid });
+});
+
+// Soft delete all records for a survey
+app.delete('/survey', (req, res) => {
+  const { id, survey } = req.body;
+  let surveyJson;
+  if (id) {
+    const row = db.prepare('SELECT survey FROM surveys WHERE id = ? AND is_deleted = 0').get(id);
+    if (!row) return res.status(404).json({ error: 'Survey not found' });
+    surveyJson = row.survey;
+    db.prepare('UPDATE surveys SET is_deleted = 1 WHERE id = ?').run(id);
+  } else if (survey) {
+    surveyJson = JSON.stringify(survey);
+    db.prepare('UPDATE surveys SET is_deleted = 1 WHERE survey = ?').run(surveyJson);
+  } else {
+    return res.status(400).json({ error: 'Missing id or survey' });
+  }
+  db.prepare('UPDATE records SET is_deleted = 1 WHERE survey = ?').run(surveyJson);
+  res.json({ ok: true });
 });
 
 // Record survey result
@@ -105,32 +144,12 @@ app.post('/record', (req, res) => {
   res.json({ id: info.lastInsertRowid, time, time_h });
 });
 
-// Distinct surveys for survey list
-app.get('/surveys', (_req, res) => {
-  const rows = db.prepare(`
-    SELECT s.id, s.survey, COUNT(r.id) as count
-    FROM surveys s
-    LEFT JOIN records r ON r.survey = s.survey AND r.is_deleted = 0
-    GROUP BY s.id
-    ORDER BY MAX(r.time) DESC
-  `).all();
-
-  const surveys = rows.map(r => ({
-    id: r.id,
-    survey: JSON.parse(r.survey),
-    count: r.count,
-  }));
-
-  res.set('Cache-Control', 'no-store');
-  res.json(surveys);
-});
-
 // Get survey result records by survey id
 app.get('/records', (req, res) => {
   const { id } = req.query;
   if (!id) return res.status(400).json({ error: 'Missing id param' });
 
-  const surveyRow = db.prepare('SELECT survey FROM surveys WHERE id = ?').get(id);
+  const surveyRow = db.prepare('SELECT survey FROM surveys WHERE id = ? AND is_deleted = 0').get(id);
   if (!surveyRow) return res.status(404).json({ error: 'Survey not found' });
 
   const rows = db.prepare(
@@ -144,25 +163,6 @@ app.get('/records', (req, res) => {
     survey: JSON.parse(r.survey),
     email: r.email || '',
   })));
-});
-
-// Soft delete all records for a survey
-app.delete('/survey', (req, res) => {
-  const { id, survey } = req.body;
-  let surveyJson;
-  if (id) {
-    const row = db.prepare('SELECT survey FROM surveys WHERE id = ?').get(id);
-    if (!row) return res.status(404).json({ error: 'Survey not found' });
-    surveyJson = row.survey;
-    db.prepare('DELETE FROM surveys WHERE id = ?').run(id);
-  } else if (survey) {
-    surveyJson = JSON.stringify(survey);
-    db.prepare('DELETE FROM surveys WHERE survey = ?').run(surveyJson);
-  } else {
-    return res.status(400).json({ error: 'Missing id or survey' });
-  }
-  db.prepare('UPDATE records SET is_deleted = 1 WHERE survey = ?').run(surveyJson);
-  res.json({ ok: true });
 });
 
 // Generate survey questions outline from topic

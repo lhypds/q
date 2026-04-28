@@ -6,7 +6,7 @@ import { CreateEdit } from "@components/CreateEdit";
 import QuestionCard from "@components/QuestionCard";
 import { LanguageSwitcher } from "@components/LanguageSwitcher";
 import { normalizeSurvey } from "@utils/surveyUtils";
-import { parseSurvey, parseSurveyObj } from "@utils/urlUtils";
+import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 
 const qParam = new URLSearchParams(window.location.search).get("q");
@@ -14,13 +14,9 @@ const isNumericId = qParam !== null && /^\d+$/.test(qParam);
 
 export default function Survey() {
   const { t } = useTranslation();
-  const [surveyData, setSurveyData] = useState(() =>
-    isNumericId
-      ? { title: null, subtitle: "", description: "", questions: [], surveyObj: {} }
-      : parseSurvey(window.location.search),
-  );
+  const [loading, setLoading] = useState(true);
 
-  const [loading, setLoading] = useState(isNumericId);
+  const [surveyData, setSurveyData] = useState({ title: null, subtitle: "", description: "", questions: [], surveyObj: {} });
 
   useEffect(() => {
     if (!isNumericId) return;
