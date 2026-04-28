@@ -42,6 +42,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     prompt TEXT NOT NULL DEFAULT '',
     survey TEXT NOT NULL UNIQUE,
+    analysis TEXT,
     is_deleted INTEGER NOT NULL DEFAULT 0
   );
   CREATE TABLE IF NOT EXISTS records (
@@ -69,7 +70,7 @@ app.get('/surveys', (_req, res) => {
   const rows = db.prepare(`
     SELECT s.id, s.survey, COUNT(r.id) as count
     FROM surveys s
-    LEFT JOIN records r ON r.survey = s.survey AND r.is_deleted = 0
+    LEFT JOIN records r ON r.survey_id = s.id AND r.is_deleted = 0
     WHERE s.is_deleted = 0
     GROUP BY s.id
     ORDER BY MAX(r.time) DESC

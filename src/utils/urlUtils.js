@@ -16,18 +16,18 @@ export function parseSurveyObj(obj) {
       questions.push({ key: qKey, text: q.title || "", description: q.description || "", type, hasOtherOption: !!q.has_other_option, answers });
     }
   }
-  return { title, subtitle, description, questions, surveyObj: obj };
+  return { title, subtitle, description, type: obj.type || "common", questions, surveyObj: obj };
 }
 
 export function parseSurvey(search) {
   const params = new URLSearchParams(search);
   const dataStr = params.get("q");
-  if (!dataStr) return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
+  if (!dataStr) return { title: null, subtitle: "", description: "", type: "common", questions: [], surveyObj: {} };
   let obj;
   try {
     obj = JSON.parse(dataStr);
   } catch {
-    return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
+    return { title: null, subtitle: "", description: "", type: "common", questions: [], surveyObj: {} };
   }
   return parseSurveyObj(obj);
 }

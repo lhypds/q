@@ -20,7 +20,7 @@ export default function Home() {
   const { t } = useTranslation();
   const [createEditOpen, setCreateEditOpen] = useState(false);
   const [createEditKey, setCreateEditKey] = useState(0);
-  const [createEditSurveyObj, setCreateEditSurveyObj] = useState({ title: "", subtitle: "", description: "" });
+  const [createEditSurveyObj, setCreateEditSurveyObj] = useState({ title: "", subtitle: "", description: "", type: "common" });
 
   const [generateOpen, setGenerateOpen] = useState(false);
   const [generateKey, setGenerateKey] = useState(0);
@@ -101,7 +101,7 @@ export default function Home() {
           <ActionButton
             tooltip={t("button.create")}
             onClick={() => {
-              setCreateEditSurveyObj({ title: "", subtitle: "", description: "" });
+              setCreateEditSurveyObj({ title: "", subtitle: "", description: "", type: "common" });
               setCreateEditKey((k) => k + 1);
               setCreateEditOpen(true);
             }}

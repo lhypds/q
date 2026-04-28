@@ -4,6 +4,7 @@ export function normalizeSurvey(survey) {
   if (obj.title !== undefined) normalized.title = obj.title;
   if (obj.subtitle !== undefined) normalized.subtitle = obj.subtitle;
   if (obj.description !== undefined) normalized.description = obj.description;
+  if (obj.type !== undefined) normalized.type = obj.type;
   if (obj.questions && typeof obj.questions === 'object') {
     const sortedQKeys = Object.keys(obj.questions).sort((a, b) => Number(a) - Number(b));
     normalized.questions = {};
