@@ -69,7 +69,7 @@ export default function Survey() {
     const res = await fetch("/survey", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt: surveyObj.prompt, survey: newSurveyObj }),
+      body: JSON.stringify({ survey: newSurveyObj }),
     });
 
     // Redirect to new survey
