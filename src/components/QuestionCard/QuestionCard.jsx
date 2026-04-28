@@ -1,5 +1,6 @@
 import styles from "./card.module.css";
 import { useTranslation } from "react-i18next";
+import { TextArea } from "@ui";
 
 function CardShell({ question, children }) {
   return (
@@ -64,7 +65,7 @@ export default function QuestionCard({ question, selected, onSelect, otherValue,
     return (
       <CardShell question={question}>
         <div className={styles.options}>
-          <textarea className={styles.textArea} value={selected || ""} onChange={(e) => onSelect(e.target.value)} />
+          <TextArea className={styles.textArea} value={selected || ""} onChange={(e) => onSelect(e.target.value)} />
         </div>
       </CardShell>
     );

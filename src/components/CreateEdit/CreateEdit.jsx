@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal } from "@ui";
+import { Modal, TextArea } from "@ui";
 import { normalizeSurvey } from "@utils/surveyUtils";
 import styles from "./edit.module.css";
 
@@ -168,11 +168,12 @@ export default function CreateEdit({
         {/* Description */}
         <div className={styles.descriptionField}>
           <label className={styles.label}>{t("createEdit.descriptionLabel")}</label>
-          <textarea
+          <TextArea
             className={styles.descriptionTextarea}
             value={description}
             onChange={handleDescriptionChange}
             onKeyDown={handleKeyDown}
+            minHeight={100}
           />
         </div>
 
@@ -184,7 +185,7 @@ export default function CreateEdit({
               +q
             </button>
           </div>
-          <textarea className={styles.qjsonTextarea} value={jsonText} onChange={handleJsonChange} spellCheck={false} />
+          <TextArea className={styles.qjsonTextarea} value={jsonText} onChange={handleJsonChange} spellCheck={false} minHeight={220} />
         </div>
 
         {jsonError && <div className={styles.jsonError}>{jsonError}</div>}
