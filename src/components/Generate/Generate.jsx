@@ -84,8 +84,6 @@ export default function Generate({ isOpen, onClose, onComplete }) {
       const data = await res.json();
       const survey = normalizeSurvey(data.survey);
       if (!res.ok) throw new Error(data.error || "Failed to generate survey");
-      clearInterval(interval);
-      hideToast();
 
       // If the generated survey type is not "common", generate analysis (ajson)
       let analysis = null;
@@ -98,8 +96,11 @@ export default function Generate({ isOpen, onClose, onComplete }) {
 
         const data = await res.json();
         analysis = normalizeAnalysis(data.analysis);
+        if (!res.ok) throw new Error(data.error || "Failed to generate analysis");
       }
 
+      clearInterval(interval);
+      hideToast();
       onComplete(prompt, survey, analysis);
     } catch (e) {
       clearInterval(interval);
