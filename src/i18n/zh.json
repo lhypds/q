@@ -66,7 +66,7 @@
     "title": "自动生成",
     "placeholderModify": "您想如何修改调查？",
     "placeholderNew": "您想调查什么？",
-    "promptPlaceholder": "调查问题将自动生成在这里..."
+    "promptPlaceholder": "调查问题将自动生成在这里，亦可手动编辑..."
   },
   "questionCard": {
     "otherOption": "其他",

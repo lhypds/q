@@ -67,7 +67,7 @@
     "title": "Generate",
     "placeholderModify": "How you want to modify the survey?",
     "placeholderNew": "What would you like to survey?",
-    "promptPlaceholder": "Your survey questions will be generated here..."
+    "promptPlaceholder": "Your survey questions will be generated here, and can also be edited..."
   },
   "questionCard": {
     "otherOption": "Other",

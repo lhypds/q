@@ -192,14 +192,10 @@ app.post('/generate/prompt', async (req, res) => {
 // Generate q.json structure from topic and questions outline
 app.post('/generate/qjson', async (req, res) => {
   const { topic, prompt } = req.body;
-  if (!topic || !prompt) return res.status(400).json({ error: 'Missing topic or prompt' });
+  if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
   try {
-    const completion = await openai.chat.completions.create({
-      model: MODEL,
-      messages: [
-        {
-          role: 'system',
-          content: `You are a survey JSON generator. Convert the questions outline into this exact JSON format (example):  
+
+    const systemPrompt = `You are a survey JSON generator. Convert the questions outline into this exact JSON format (example):  
 
 {
   "title": "Simple Title",
@@ -253,9 +249,18 @@ Follow rules:
 3. Use "has_other_option": true, for questions that have an "Other" option for user free text input. If "has_other_option" is true, then no need to add a "Other" option in the options list.  
 
 Return only valid JSON, no markdown or explanation.  
-`,
+`;
+
+    const userPrompt = topic ? `Topic: ${topic}\n\nQuestions outline:\n${prompt}` : `Questions outline:\n${prompt}`;
+
+    const completion = await openai.chat.completions.create({
+      model: MODEL,
+      messages: [
+        {
+          role: 'system',
+          content: systemPrompt,
         },
-        { role: 'user', content: `Topic: ${topic}\n\nQuestions outline:\n${prompt}` },
+        { role: 'user', content: userPrompt },
       ],
       response_format: { type: 'json_object' },
     });

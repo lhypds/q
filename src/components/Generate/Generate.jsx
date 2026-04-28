@@ -8,7 +8,6 @@ export default function Generate({ isOpen, onClose, onComplete }) {
   const { t } = useTranslation();
   const [inputValue, setInputValue] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [stage, setStage] = useState("input"); // "input" | "generated"
   const [currentTopic, setCurrentTopic] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -53,7 +52,6 @@ export default function Generate({ isOpen, onClose, onComplete }) {
     if (!topic) return;
     setCurrentTopic(topic);
     await generatePrompt(topic);
-    setStage("generated");
     setInputValue("");
   }
 
@@ -96,17 +94,17 @@ export default function Generate({ isOpen, onClose, onComplete }) {
     }
   }
 
+  const isGenerated = prompt.length > 0;
+
   function handleButtonClick() {
-    if (stage === "generated" && !inputValue.trim()) {
+    if (isGenerated && !inputValue.trim()) {
       handleComplete();
-    } else if (stage === "generated") {
+    } else if (isGenerated) {
       handleRewrite();
     } else {
       handleGenerate();
     }
   }
-
-  const isGenerated = stage === "generated";
   const hasModification = isGenerated && inputValue.trim().length > 0;
   const buttonLabel = !isGenerated ? t("button.generate") : hasModification ? t("button.rewrite") : t("button.complete");
   const buttonDisabled = loading || (!isGenerated && !inputValue.trim());
@@ -132,7 +130,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder={t("generate.promptPlaceholder")}
-          readOnly={!isGenerated || loading}
+          readOnly={loading}
           minHeight={420}
         />
 
