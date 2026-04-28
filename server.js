@@ -151,18 +151,17 @@ app.delete('/survey', (req, res) => {
 
 // Generate survey questions outline from topic
 app.post('/generate/prompt', async (req, res) => {
-  const { topic, modification, currentPrompt } = req.body;
-  if (!topic) return res.status(400).json({ error: 'Missing topic' });
+  const { topic, currentPrompt, modification } = req.body;
 
   const systemPrompt = modification
     ?
-    'You are a survey designer. Rewrite the given survey questions outline based on the modification request. Generate the description for the survey. Produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly, but with a rich description.'
+    'Rewrite the given survey based on the modification request.'
     :
     'You are a survey designer. First, generate the description for the survey. Then, produce a concise numbered list of survey questions with answer options. Some questions may allow multiple selections — mark those with "[multi]" after the question number. Add some descriptions for each question as needed. Be clear and friendly, but with a rich description.';
 
   const userPrompt = modification
-    ? `Topic: ${topic}\n\nCurrent questions:\n${currentPrompt}\n\nModification request: ${modification}`
-    : `Create survey questions about: ${topic}`;
+    ? `Survey:\n\n${currentPrompt}\n\nModification request:\n\n${modification}\n\n`
+    : `Create survey about:\n\n${topic}`;
 
   const messages = [
     {

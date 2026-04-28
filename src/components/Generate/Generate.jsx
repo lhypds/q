@@ -19,7 +19,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
     }
   }, [prompt]);
 
-  async function generatePrompt(topic, modification, currentPrompt) {
+  async function generatePrompt(topic, currentPrompt, modification) {
     setLoading(true);
     setPrompt("");
     setError("");
@@ -27,7 +27,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
       const res = await fetch("/generate/prompt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, ...(modification ? { modification, currentPrompt } : {}) }),
+        body: JSON.stringify({ ...(modification ? { currentPrompt, modification } : { topic }) }),
       });
       if (!res.ok) {
         const data = await res.json();
@@ -51,14 +51,14 @@ export default function Generate({ isOpen, onClose, onComplete }) {
     const topic = inputValue.trim();
     if (!topic) return;
     setCurrentTopic(topic);
-    await generatePrompt(topic);
+    await generatePrompt(topic, null, null);
     setInputValue("");
   }
 
   async function handleRewrite() {
     const modification = inputValue.trim();
     if (!modification) return;
-    await generatePrompt(currentTopic, modification, prompt);
+    await generatePrompt(null, prompt, modification);
     setInputValue("");
   }
 
