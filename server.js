@@ -148,11 +148,20 @@ app.get('/records', (req, res) => {
 
 // Soft delete all records for a survey
 app.delete('/survey', (req, res) => {
-  const { survey } = req.body;
-  if (!survey) return res.status(400).json({ error: 'Missing survey' });
-  const surveyJson = JSON.stringify(survey);
+  const { id, survey } = req.body;
+  let surveyJson;
+  if (id) {
+    const row = db.prepare('SELECT survey FROM surveys WHERE id = ?').get(id);
+    if (!row) return res.status(404).json({ error: 'Survey not found' });
+    surveyJson = row.survey;
+    db.prepare('DELETE FROM surveys WHERE id = ?').run(id);
+  } else if (survey) {
+    surveyJson = JSON.stringify(survey);
+    db.prepare('DELETE FROM surveys WHERE survey = ?').run(surveyJson);
+  } else {
+    return res.status(400).json({ error: 'Missing id or survey' });
+  }
   db.prepare('UPDATE records SET is_deleted = 1 WHERE survey = ?').run(surveyJson);
-  db.prepare('DELETE FROM surveys WHERE survey = ?').run(surveyJson);
   res.json({ ok: true });
 });
 

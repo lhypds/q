@@ -58,11 +58,21 @@ export default function Survey() {
   });
 
   async function handleEditSave(newSurveyObj) {
+    // Delete old survey
+    await fetch("/survey", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: qParam }),
+    });
+
+    // Create new survey
     const res = await fetch("/survey", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ survey: newSurveyObj }),
+      body: JSON.stringify({ prompt: surveyObj.prompt, survey: newSurveyObj }),
     });
+
+    // Redirect to new survey
     const data = await res.json();
     const url = new URL(window.location.href);
     url.search = "";
