@@ -56,7 +56,7 @@ export default function Home() {
 
   async function handleShare() {
     const url = decodeURIComponent(window.location.href);
-    const text = `${t("toast.shareMessage")}\n\n👉 ${url}`;
+    const text = `${t("toast.shareMessage")}\n\n${url}`;
     const copied = await copyText(text);
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }

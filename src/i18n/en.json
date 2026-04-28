@@ -23,7 +23,7 @@
     "linkCopied": "Link copied to clipboard",
     "failedCopy": "Failed to copy link",
     "creating": "Creating",
-    "shareMessage": "Welcome to q"
+    "shareMessage": "q"
   },
   "survey": {
     "thankYou": "Thank you!",
@@ -35,7 +35,7 @@
     "emailPlaceholder": "your@email.com",
     "answerAll": "Please answer all questions before submitting.",
     "submitFailed": "Failed to submit. Please try again.",
-    "shareText": "Join the survey & check the results!\n\n=== {{title}} ===\n{{subtitle}}\n👉 {{shareUrl}}"
+    "shareText": "Join the survey & check the results!\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}"
   },
   "results": {
     "loading": "Loading…",
@@ -43,7 +43,7 @@
     "noResponses": "No responses yet.",
     "collected": "{{count}} responses collected",
     "otherResponses": "Other responses",
-    "shareText": "Check out the survey results!\n\n=== {{title}} ===\n{{subtitle}}\n👉 {{shareUrl}}"
+    "shareText": "Check out the survey results!\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}"
   },
   "home": {
     "noSurveys": "Noq.",
