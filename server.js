@@ -36,6 +36,7 @@ const db = new Database(path.join(__dirname, 'db.sqlite'));
 db.exec(`
   CREATE TABLE IF NOT EXISTS surveys (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    prompt TEXT NOT NULL DEFAULT '',
     survey TEXT NOT NULL UNIQUE
   );
   CREATE TABLE IF NOT EXISTS records (
@@ -49,6 +50,12 @@ db.exec(`
   )
 `);
 
+// Migration: add prompt column if missing
+const cols = db.prepare("PRAGMA table_info(surveys)").all();
+if (!cols.some(c => c.name === 'prompt')) {
+  db.exec("ALTER TABLE surveys ADD COLUMN prompt TEXT NOT NULL DEFAULT ''");
+}
+
 // Get survey by id
 app.get('/survey', (req, res) => {
   const { id } = req.query;
@@ -60,12 +67,12 @@ app.get('/survey', (req, res) => {
 
 // Upsert survey, return id
 app.post('/survey', (req, res) => {
-  const { survey } = req.body;
+  const { prompt = '', survey } = req.body;
   if (!survey) return res.status(400).json({ error: 'Missing survey' });
   const surveyJson = JSON.stringify(survey);
   const existing = db.prepare('SELECT id FROM surveys WHERE survey = ?').get(surveyJson);
   if (existing) return res.json({ id: existing.id });
-  const info = db.prepare('INSERT INTO surveys (survey) VALUES (?)').run(surveyJson);
+  const info = db.prepare('INSERT INTO surveys (prompt, survey) VALUES (?, ?)').run(prompt, surveyJson);
   res.json({ id: info.lastInsertRowid });
 });
 

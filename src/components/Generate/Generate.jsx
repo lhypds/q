@@ -85,7 +85,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
       if (!res.ok) throw new Error(data.error || "Failed to generate survey");
       clearInterval(interval);
       hideToast();
-      onComplete(normalizeSurvey(data.survey));
+      onComplete(prompt, normalizeSurvey(data.survey));
     } catch (e) {
       clearInterval(interval);
       hideToast();

@@ -39,12 +39,12 @@ export default function Home() {
     window.location.href = url.toString();
   }
 
-  async function handleGenerateComplete(generatedSurveyObj) {
+  async function handleGenerateComplete(prompt, generatedSurveyObj) {
     setGenerateOpen(false);
     const res = await fetch("/survey", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ survey: generatedSurveyObj }),
+      body: JSON.stringify({ prompt, survey: generatedSurveyObj }),
     });
     const data = await res.json();
     const url = new URL(window.location.href);

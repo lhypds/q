@@ -29,7 +29,7 @@ export default function Results() {
       });
   }, []);
 
-  const { title, subtitle, description, questions, surveyObj } = surveyData;
+  const { title, subtitle, description, questions } = surveyData;
 
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,16 +57,7 @@ export default function Results() {
   })();
 
   async function handleShare() {
-    let id = isNumericId ? qParam : null;
-    if (!id) {
-      const res = await fetch("/survey", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ survey: surveyObj }),
-      });
-      const data = await res.json();
-      id = data.id;
-    }
+    let id = qParam;
     const shareUrl = `${window.location.origin}/?q=${id}`;
     const text = t("survey.shareText", { title, subtitle: subtitle ? `[${subtitle}]\n` : "", shareUrl });
     const copied = await copyText(text);
