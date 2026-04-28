@@ -57,7 +57,6 @@ export default function Survey() {
           }
           setSelections(newSelections);
           setOtherInputs(newOtherInputs);
-          setSubmitted(true);
         }
       })
       .catch(() => {})
