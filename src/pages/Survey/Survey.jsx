@@ -5,7 +5,6 @@ import { ActionButton, showToast, Modal } from "@ui";
 import { CreateEdit } from "@components/CreateEdit";
 import QuestionCard from "@components/QuestionCard";
 import { LanguageSwitcher } from "@components/LanguageSwitcher";
-import { normalizeSurvey } from "@utils/surveyUtils";
 import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 
@@ -96,8 +95,6 @@ export default function Survey() {
 
   async function doSubmit(emailValue) {
     try {
-      const normalizedSurvey = normalizeSurvey(surveyObj);
-
       const result = Object.fromEntries(
         Object.entries(selections).map(([qKey, val]) => {
           if (Array.isArray(val)) {
@@ -110,7 +107,7 @@ export default function Survey() {
       const res = await fetch("/record", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ survey: normalizedSurvey, result, email: emailValue }),
+        body: JSON.stringify({ survey_id: qParam, result, email: emailValue }),
       });
       if (!res.ok) throw new Error("Server error");
       setSubmitted(true);

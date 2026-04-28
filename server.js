@@ -48,7 +48,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     time INTEGER NOT NULL,
     time_h TEXT NOT NULL,
-    survey TEXT NOT NULL,
+    survey_id INTEGER NOT NULL,
     result TEXT NOT NULL,
     email TEXT NOT NULL DEFAULT '',
     is_deleted INTEGER NOT NULL DEFAULT 0
@@ -122,8 +122,8 @@ app.delete('/survey', (req, res) => {
 
 // Record survey result
 app.post('/record', (req, res) => {
-  const { survey, result, email } = req.body;
-  if (!survey || !result) {
+  const { survey_id, result, email } = req.body;
+  if (!survey_id || !result) {
     return res.status(400).json({ error: 'Missing survey or result' });
   }
 
@@ -137,35 +137,30 @@ app.post('/record', (req, res) => {
     .sort((a, b) => Number(a) - Number(b))
     .reduce((acc, k) => { acc[k] = resultObj[k]; return acc; }, {});
 
-  const surveyJson = JSON.stringify(survey);
   const resultJson = JSON.stringify(normalizedResult);
   const emailVal = typeof email === 'string' ? email.trim() : '';
 
   const stmt = db.prepare(
-    'INSERT INTO records (time, time_h, survey, result, email) VALUES (?, ?, ?, ?, ?)'
+    'INSERT INTO records (time, time_h, survey_id, result, email) VALUES (?, ?, ?, ?, ?)'
   );
-  const info = stmt.run(time, time_h, surveyJson, resultJson, emailVal);
+  const info = stmt.run(time, time_h, survey_id, resultJson, emailVal);
 
   res.json({ id: info.lastInsertRowid, time, time_h });
 });
 
 // Get survey result records by survey id
 app.get('/records', (req, res) => {
-  const { id } = req.query;
-  if (!id) return res.status(400).json({ error: 'Missing id param' });
-
-  const surveyRow = db.prepare('SELECT survey FROM surveys WHERE id = ? AND is_deleted = 0').get(id);
-  if (!surveyRow) return res.status(404).json({ error: 'Survey not found' });
+  const { survey_id } = req.query;
+  if (!survey_id) return res.status(400).json({ error: 'Missing survey_id param' });
 
   const rows = db.prepare(
-    'SELECT * FROM records WHERE survey = ? AND is_deleted = 0 ORDER BY time DESC'
-  ).all(surveyRow.survey);
+    'SELECT * FROM records WHERE survey_id = ? AND is_deleted = 0 ORDER BY time DESC'
+  ).all(survey_id);
 
   res.set('Cache-Control', 'no-store');
   res.json(rows.map(r => ({
     ...r,
     result: JSON.parse(r.result),
-    survey: JSON.parse(r.survey),
     email: r.email || '',
   })));
 });
