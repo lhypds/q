@@ -145,6 +145,18 @@ app.post('/record', (req, res) => {
   res.json({ id: info.lastInsertRowid, time, time_h });
 });
 
+// Get a single record by id
+app.get('/record', (req, res) => {
+  const { id } = req.query;
+  if (!id) return res.status(400).json({ error: 'Missing id param' });
+
+  const row = db.prepare('SELECT * FROM records WHERE id = ? AND is_deleted = 0').get(id);
+  if (!row) return res.status(404).json({ error: 'Record not found' });
+
+  res.set('Cache-Control', 'no-store');
+  res.json({ ...row, result: JSON.parse(row.result), email: row.email || '' });
+});
+
 // Get survey result records by survey id
 app.get('/records', (req, res) => {
   const { survey_id } = req.query;

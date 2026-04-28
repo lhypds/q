@@ -7,6 +7,7 @@ import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 
 const qParam = new URLSearchParams(window.location.search).get("q");
+const rParam = new URLSearchParams(window.location.search).get("r");
 const isNumericId = qParam !== null && /^\d+$/.test(qParam);
 
 export default function Results() {
@@ -35,22 +36,37 @@ export default function Results() {
   const { title, subtitle, description, questions } = surveyData;
 
   const [records, setRecords] = useState([]);
+  const [singleRecord, setSingleRecord] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
     if (!qParam) return;
-    fetch(`/records?survey_id=${qParam}`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data)) setRecords(data);
-        else setFetchError(data.error || t("results.fetchError"));
-        setLoading(false);
-      })
-      .catch(() => {
-        setFetchError(t("results.fetchError"));
-        setLoading(false);
-      });
+    if (rParam) {
+      fetch(`/record?id=${rParam}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.error) setFetchError(data.error);
+          else setSingleRecord(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setFetchError(t("results.fetchError"));
+          setLoading(false);
+        });
+    } else {
+      fetch(`/records?survey_id=${qParam}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (Array.isArray(data)) setRecords(data);
+          else setFetchError(data.error || t("results.fetchError"));
+          setLoading(false);
+        })
+        .catch(() => {
+          setFetchError(t("results.fetchError"));
+          setLoading(false);
+        });
+    }
   }, [t]);
 
   const surveyUrl = (() => {
@@ -99,7 +115,7 @@ export default function Results() {
 
         {fetchError && <p className="error-msg">{fetchError}</p>}
 
-        <div className={styles.content}>{!loading && <ScaleResults records={records} analysis={analysis} />}</div>
+        <div className={styles.content}>{!loading && <ScaleResults record={singleRecord} analysis={analysis} />}</div>
 
         <div className="submit-row">
           <a href={surveyUrl} className="results-link">
