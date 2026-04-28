@@ -21,11 +21,16 @@ const logStream = fs.createWriteStream(path.join(__dirname, 'server.log'), { fla
 
 app.use(cors());
 app.use(express.json());
+
+// Log API requests
+const API_PATHS = ['/survey', '/surveys', '/record', '/records', '/generate/prompt', '/generate/qjson'];
 app.use((req, _res, next) => {
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  const body = Object.keys(req.body || {}).length ? ' ' + JSON.stringify(req.body) : '';
-  const line = `${new Date().toISOString()} ${ip} ${req.method} ${req.url}${body}\n`;
-  logStream.write(line);
+  if (API_PATHS.some(p => req.url === p || req.url.startsWith(p + '?'))) {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const body = Object.keys(req.body || {}).length ? ' ' + JSON.stringify(req.body) : '';
+    const line = `${new Date().toISOString()} ${ip} ${req.method} ${req.url}${body}\n`;
+    logStream.write(line);
+  }
   next();
 });
 
