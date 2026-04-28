@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, showToast, hideToast } from "@ui";
+import { Modal, showToast, hideToast, TextArea } from "@ui";
 import styles from "./generate.module.css";
 import { normalizeSurvey } from "@utils/surveyUtils";
 
@@ -115,23 +115,25 @@ export default function Generate({ isOpen, onClose, onComplete }) {
     <Modal isOpen={isOpen} onClose={loading ? undefined : onClose} title={t("generate.title")} className={styles.modal}>
       <div className={styles.container}>
         {/* Input */}
-        <textarea
+        <TextArea
           className={styles.inputTextarea}
           placeholder={isGenerated ? t("generate.placeholderModify") : t("generate.placeholderNew")}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           disabled={loading}
           autoFocus
+          minHeight={80}
         />
 
         {/* Prompt */}
-        <textarea
+        <TextArea
           ref={promptRef}
           className={`${styles.promptTextarea} ${!isGenerated || loading ? styles.promptGrayed : ""}`}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder={t("generate.promptPlaceholder")}
           readOnly={!isGenerated || loading}
+          minHeight={420}
         />
 
         {error && <div className={styles.error}>{error}</div>}
