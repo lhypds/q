@@ -45,6 +45,7 @@ export default function ScaleResults({ record, analysis }) {
               <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12 }} />
               <Radar dataKey="score" stroke="#6366f1" fill="#6366f1" fillOpacity={0.25} />
               <Tooltip
+                isAnimationActive={false}
                 content={({ payload }) => {
                   if (!payload?.length) return null;
                   const { subject, score } = payload[0].payload;
