@@ -4,7 +4,7 @@ import styles from "./results.module.css";
 import { ActionButton, showToast } from "@ui";
 import ResultCard from "@components/ResultCard";
 import { LanguageSwitcher } from "@components/LanguageSwitcher";
-import { parseSurvey, parseSurveyObj } from "@utils/urlUtils";
+import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 
 const qParam = new URLSearchParams(window.location.search).get("q");
@@ -13,11 +13,13 @@ const isNumericId = qParam !== null && /^\d+$/.test(qParam);
 export default function Results() {
   const { t } = useTranslation();
 
-  const [surveyData, setSurveyData] = useState(() => {
-    if (isNumericId) return { title: null, subtitle: "", description: "", questions: [], surveyObj: {} };
-    const params = new URLSearchParams(window.location.search);
-    params.delete("view");
-    return parseSurvey("?" + params.toString());
+  const [surveyData, setSurveyData] = useState({
+    title: null,
+    subtitle: "",
+    description: "",
+    type: "common",
+    questions: [],
+    surveyObj: {},
   });
 
   useEffect(() => {
