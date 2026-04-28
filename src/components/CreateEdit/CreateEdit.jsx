@@ -106,7 +106,7 @@ export default function CreateEdit({
     }
   }
 
-  function handleAddQuestion() {
+  function handleAddQuestion(type) {
     try {
       const obj = JSON.parse(jsonText);
       if (!obj.questions) obj.questions = {};
@@ -114,13 +114,14 @@ export default function CreateEdit({
         .map(Number)
         .filter((n) => !isNaN(n));
       const n = nums.length > 0 ? Math.max(...nums) + 1 : 1;
-      obj.questions[String(n)] = {
-        title: `Question ${n} title`,
-        description: "Description for this question...",
-        type: "single",
-        has_other_option: false,
-        options: { 1: "Option 1", 2: "Option 2" },
+      const base = { title: `Question ${n} title`, description: "Description for this question..." };
+      const byType = {
+        single:     { ...base, type: "single",     has_other_option: false, options: { 1: "Option 1", 2: "Option 2" } },
+        multi:      { ...base, type: "multi",       has_other_option: false, options: { 1: "Option 1", 2: "Option 2" } },
+        text:       { ...base, type: "text" },
+        true_false: { ...base, type: "true_false" },
       };
+      obj.questions[String(n)] = byType[type];
       setJsonText(toJson(obj));
       setJsonError("");
     } catch {
@@ -181,11 +182,22 @@ export default function CreateEdit({
         <div className={styles.qjsonField}>
           <div className={styles.qjsonFieldLabelRow}>
             <label className={styles.label}>q.json</label>
-            <button type="button" className={styles.addQuestionBtn} onClick={handleAddQuestion} title={t("button.addQuestion")}>
-              +q
-            </button>
+
+            <div className={styles.addQuestionBtns}>
+              {["single", "multi", "text", "true_false"].map((type) => (
+                <button key={type} type="button" className={styles.addQuestionBtn} onClick={() => handleAddQuestion(type)}>
+                  +{type.replace("_", "")}
+                </button>
+              ))}</div>
           </div>
-          <TextArea className={styles.qjsonTextarea} value={jsonText} onChange={handleJsonChange} spellCheck={false} minHeight={220} />
+
+          <TextArea
+            className={styles.qjsonTextarea}
+            value={jsonText}
+            onChange={handleJsonChange}
+            spellCheck={false}
+            minHeight={220}
+          />
         </div>
 
         {jsonError && <div className={styles.jsonError}>{jsonError}</div>}
