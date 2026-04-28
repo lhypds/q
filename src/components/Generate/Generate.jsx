@@ -76,27 +76,26 @@ export default function Generate({ isOpen, onClose, onComplete }) {
     }, 500);
 
     try {
-      const res = await fetch("/generate/qjson", {
+      const qjsonRes = await fetch("/generate/qjson", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic: currentTopic, prompt }),
       });
-      const data = await res.json();
-      const survey = normalizeSurvey(data.survey);
-      if (!res.ok) throw new Error(data.error || "Failed to generate survey");
+      const qjsonData = await qjsonRes.json();
+      if (!qjsonRes.ok) throw new Error(qjsonData.error || "Failed to generate survey");
+      const survey = normalizeSurvey(qjsonData.survey);
 
       // If the generated survey type is not "common", generate analysis (ajson)
       let analysis = null;
       if (survey.type !== "common") {
-        const res = await fetch("/generate/ajson", {
+        const ajsonRes = await fetch("/generate/ajson", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt, survey }),
         });
-
-        const data = await res.json();
-        analysis = normalizeAnalysis(data.analysis);
-        if (!res.ok) throw new Error(data.error || "Failed to generate analysis");
+        const ajsonData = await ajsonRes.json();
+        if (!ajsonRes.ok) throw new Error(ajsonData.error || "Failed to generate analysis");
+        analysis = normalizeAnalysis(ajsonData.analysis);
       }
 
       clearInterval(interval);
