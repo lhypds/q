@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, showToast } from "@ui";
-import { CreateEdit } from "@components/CreateEdit";
-import { Generate } from "@components/Generate";
+import { CreateEdit, Generate, LanguageSwitcher } from "@components";
 import { SurveyList } from "./SurveyList";
-import { LanguageSwitcher } from "@components/LanguageSwitcher";
 import styles from "./home.module.css";
 
 async function copyText(text) {

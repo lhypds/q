@@ -1,1 +1,1 @@
-export { default } from "./ScaleResults";
+export { default as ScaleResults } from "./ScaleResults";

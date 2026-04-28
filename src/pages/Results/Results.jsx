@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./results.module.css";
 import { ActionButton, showToast } from "@ui";
-import ResultCard from "@components/ResultCard";
-import { ScaleResults } from "@components/ScaleResults";
-import { LanguageSwitcher } from "@components/LanguageSwitcher";
+import { ScaleResults, ResultCard, LanguageSwitcher } from "@components";
 import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 

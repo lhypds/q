@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./survey.module.css";
 import { ActionButton, showToast, Modal } from "@ui";
-import { CreateEdit } from "@components/CreateEdit";
-import QuestionCard from "@components/QuestionCard";
-import { LanguageSwitcher } from "@components/LanguageSwitcher";
+import { CreateEdit, QuestionCard, LanguageSwitcher } from "@components";
 import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 
