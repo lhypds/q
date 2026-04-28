@@ -198,23 +198,25 @@ app.post('/generate/qjson', async (req, res) => {
     const systemPrompt = `You are a survey JSON generator. Convert the questions outline into this exact JSON format (example):  
 
 {
-  "title": "Simple Title",
-  "subtitle": "Simple subtitle",
-  "description": "Simple description.",
+  "title": "Sample Title",
+  "subtitle": "Sample subtitle",
+  "description": "Sample description.",
+  "type": "questionnaire",
   "questions": {
     "1": {
-      "title": "Simple Title",
-      "description": "Simple description.",
+      "title": "Sample Title",
+      "description": "Sample description.",
       "type": "single",
       "has_other_option": false,
       "options": {
         "1": "Option A",
-        "2": "Option B"
+        "2": "Option B",
+        "3": "Option C"
       }
     },
     "2": {
-      "title": "Simple Title",
-      "description": "Simple description.",
+      "title": "Sample Title",
+      "description": "Sample description.",
       "type": "multi",
       "has_other_option": true,
       "options": {
@@ -224,15 +226,15 @@ app.post('/generate/qjson', async (req, res) => {
       }
     },
     "3": {
-      "title": "Simple Title",
-      "description": "Simple description.",
+      "title": "Sample Title",
+      "description": "Sample description.",
       "type": "text",
       "has_other_option": false ,
       "options": {}
     },
     "4": {
-      "title": "Simple Title",
-      "description": "Simple description.",
+      "title": "Sample Title",
+      "description": "Sample description.",
       "type": "true_false",
       "has_other_option": false ,
       "options": {}
@@ -240,15 +242,16 @@ app.post('/generate/qjson', async (req, res) => {
   }
 }
 
-Follow rules:  
-1. Better to add a "subtitle" and a "description".  
-2. Use "type": "multi" for questions that allow multiple selections (marked with [multi] in the outline).
-3. Use "type": "single" for single-choice questions.
-4. Use "type": "true_false" for True/False questions.
-5. Use "type": "text" for Open-ended or Short-answer questions.  
-3. Use "has_other_option": true, for questions that have an "Other" option for user free text input. If "has_other_option" is true, then no need to add a "Other" option in the options list.  
-
-Return only valid JSON, no markdown or explanation.  
+Explanation & requirements:  
+* Better to add a "subtitle" and a "description".  
+* The "type" of the survey can be "questionnaire", or "scale".  
+  "scale" for like "psychometric scales"
+* The "type" of each question can be "single", "multi", "true_false", or "text".
+  Use "type": "multi" for questions that allow multiple selections (marked with [multi] in the outline).  
+  Use "type": "single" for single-choice questions.  
+  Use "type": "true_false" for True/False questions.  
+  Use "type": "text" for Open-ended or Short-answer questions.  
+* Use "has_other_option": true, for questions that have an "Other" option for user free text input. If "has_other_option" is true, then no need to add a "Other" option in the options list.  
 `;
 
     const userPrompt = topic ? `Topic: ${topic}\n\nQuestions outline:\n${prompt}` : `Questions outline:\n${prompt}`;
