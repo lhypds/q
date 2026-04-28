@@ -7,28 +7,65 @@ import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 
 const qParam = new URLSearchParams(window.location.search).get("q");
+const rParam = new URLSearchParams(window.location.search).get("r");
 
 export default function Survey() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
 
   const [surveyData, setSurveyData] = useState({ title: null, subtitle: "", description: "", questions: [], surveyObj: {} });
+  const [submitted, setSubmitted] = useState(false);
+  const [selections, setSelections] = useState({});
+  const [otherInputs, setOtherInputs] = useState({});
 
   useEffect(() => {
-    fetch(`/survey?id=${qParam}`)
+    const surveyFetch = fetch(`/survey?id=${qParam}`)
       .then((r) => r.json())
-      .then((data) => {
-        if (data.survey) setSurveyData(parseSurveyObj(data.survey));
-        setLoading(false);
+      .then((data) => (data.survey ? parseSurveyObj(data.survey) : null));
+
+    const recordFetch = rParam
+      ? fetch(`/record?id=${rParam}`)
+          .then((r) => r.json())
+          .catch(() => null)
+      : Promise.resolve(null);
+
+    Promise.all([surveyFetch, recordFetch])
+      .then(([survey, record]) => {
+        if (survey) setSurveyData(survey);
+
+        // Load record selections if available
+        if (record?.result && survey) {
+          const newSelections = {};
+          const newOtherInputs = {};
+          for (const [qKey, val] of Object.entries(record.result)) {
+            const question = survey.questions.find((q) => q.key === qKey);
+            const knownKeys = new Set(question?.answers.map((a) => a.key) ?? []);
+            if (question?.type === "multi" && Array.isArray(val)) {
+              newSelections[qKey] = val.map((v) => {
+                if (question.hasOtherOption && !knownKeys.has(v)) {
+                  newOtherInputs[qKey] = v;
+                  return "__other__";
+                }
+                return v;
+              });
+            } else if (question?.hasOtherOption && typeof val === "string" && val !== "" && !knownKeys.has(val)) {
+              newSelections[qKey] = "__other__";
+              newOtherInputs[qKey] = val;
+            } else {
+              newSelections[qKey] = val;
+            }
+          }
+          setSelections(newSelections);
+          setOtherInputs(newOtherInputs);
+          setSubmitted(true);
+        }
       })
-      .catch(() => setLoading(false));
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const { title, subtitle, description, questions, surveyObj } = surveyData;
 
-  const [selections, setSelections] = useState({});
-  const [otherInputs, setOtherInputs] = useState({});
-  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [createEditOpen, setCreateEditOpen] = useState(false);
   const [createEditKey, setCreateEditKey] = useState(0);
