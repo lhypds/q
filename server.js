@@ -201,7 +201,6 @@ app.post('/generate/qjson', async (req, res) => {
   "title": "Sample Title",
   "subtitle": "Sample subtitle",
   "description": "Sample description.",
-  "type": "questionnaire",
   "questions": {
     "1": {
       "title": "Sample Title",
@@ -244,8 +243,6 @@ app.post('/generate/qjson', async (req, res) => {
 
 Explanation & requirements:  
 * Better to add a "subtitle" and a "description".  
-* The "type" of the survey can be "questionnaire", or "scale".  
-  "scale" for like "psychometric scales"
 * The "type" of each question can be "single", "multi", "true_false", or "text".
   Use "type": "multi" for questions that allow multiple selections (marked with [multi] in the outline).  
   Use "type": "single" for single-choice questions.  
