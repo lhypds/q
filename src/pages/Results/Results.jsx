@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./results.module.css";
 import { ActionButton, showToast } from "@ui";
 import ResultCard from "@components/ResultCard";
-import AssessmentResults from "@components/AssessmentResults/AssessmentResults";
+import { ScaleResults } from "@components/ScaleResults";
 import { LanguageSwitcher } from "@components/LanguageSwitcher";
 import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
@@ -106,7 +106,7 @@ export default function Results() {
 
       <div className={styles.content}>
         {!loading && surveyData.type === "assessment_scale" ? (
-          <AssessmentResults records={results} analysis={analysis} />
+          <ScaleResults records={results} analysis={analysis} />
         ) : (
           !loading && questions.map((q) => <ResultCard key={q.key} question={q} results={results} />)
         )}

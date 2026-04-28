@@ -1,4 +1,4 @@
-import styles from "./assessmentResults.module.css";
+import styles from "./scale.module.css";
 
 const LEVEL_COLORS = ["#aee9c7", "#ffd6a0", "#ffb6c9", "#b3d4fc", "#cbb7fa", "#a0e8fa", "#fff3a0"];
 
