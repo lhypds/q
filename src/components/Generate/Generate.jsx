@@ -76,7 +76,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
       dotIndex = (dotIndex + 1) % dots.length;
       showToast(base + dots[dotIndex], null, "center");
     }, 500);
-    
+
     try {
       const res = await fetch("/generate/qjson", {
         method: "POST",
@@ -128,7 +128,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
         {/* Prompt */}
         <TextArea
           ref={promptRef}
-          className={`${styles.promptTextarea} ${!isGenerated || loading ? styles.promptGrayed : ""}`}
+          className={`${styles.promptTextarea}`}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder={t("generate.promptPlaceholder")}

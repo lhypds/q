@@ -21,16 +21,6 @@
   line-height: 1.6;
 }
 
-.promptGrayed {
-  background: #f5f5f5;
-  color: #aaa;
-  cursor: default;
-}
-
-.promptGrayed:focus {
-  border-color: #ccc;
-}
-
 .error {
   font-size: 12px;
   color: #c00;
