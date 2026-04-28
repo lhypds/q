@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, showToast, hideToast, TextArea } from "@ui";
 import styles from "./generate.module.css";
-import { normalizeSurvey } from "@utils/surveyUtils";
+import { normalizeSurvey, normalizeAnalysis } from "@utils/surveyUtils";
 
 export default function Generate({ isOpen, onClose, onComplete }) {
   const { t } = useTranslation();
@@ -82,10 +82,25 @@ export default function Generate({ isOpen, onClose, onComplete }) {
         body: JSON.stringify({ topic: currentTopic, prompt }),
       });
       const data = await res.json();
+      const survey = normalizeSurvey(data.survey);
       if (!res.ok) throw new Error(data.error || "Failed to generate survey");
       clearInterval(interval);
       hideToast();
-      onComplete(prompt, normalizeSurvey(data.survey));
+
+      // If the generated survey type is not "common", generate analysis (ajson)
+      let analysis = null;
+      if (survey.type !== "common") {
+        const res = await fetch("/generate/ajson", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt, survey }),
+        });
+
+        const data = await res.json();
+        analysis = normalizeAnalysis(data.analysis);
+      }
+
+      onComplete(prompt, survey, analysis);
     } catch (e) {
       clearInterval(interval);
       hideToast();

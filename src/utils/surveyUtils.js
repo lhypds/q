@@ -1,3 +1,58 @@
+export function normalizeAnalysis(analysis) {
+  const obj = typeof analysis === 'string' ? JSON.parse(analysis) : analysis;
+  const normalized = { scoring_method: 'sum' };
+
+  // Normalize dimensions
+  normalized.dimensions = {};
+  if (obj.dimensions && typeof obj.dimensions === 'object') {
+    for (const [dimKey, dim] of Object.entries(obj.dimensions)) {
+      if (!dim || typeof dim !== 'object') continue;
+      const normDim = {};
+      normDim.label = typeof dim.label === 'string' ? dim.label : dimKey;
+      normDim.question_ids = Array.isArray(dim.question_ids)
+        ? dim.question_ids.map(String)
+        : [];
+      normDim.results = Array.isArray(dim.results)
+        ? dim.results
+          .filter(r => r && typeof r === 'object' && typeof r.min === 'number' && typeof r.max === 'number')
+          .map(r => ({
+            min: r.min,
+            max: r.max,
+            label: typeof r.label === 'string' ? r.label : '',
+            description: typeof r.description === 'string' ? r.description : '',
+          }))
+        : [];
+      normalized.dimensions[dimKey] = normDim;
+    }
+  }
+
+  const dimensionKeys = new Set(Object.keys(normalized.dimensions));
+
+  // Normalize questions
+  normalized.questions = {};
+  if (obj.questions && typeof obj.questions === 'object') {
+    const sortedQKeys = Object.keys(obj.questions).sort((a, b) => Number(a) - Number(b));
+    for (const qKey of sortedQKeys) {
+      const q = obj.questions[qKey];
+      if (!q || typeof q !== 'object') continue;
+      const weight = q.weight === 0 ? 0 : 1;
+      const dimension = typeof q.dimension === 'string' && dimensionKeys.has(q.dimension)
+        ? q.dimension
+        : null;
+      const options = {};
+      if (q.options && typeof q.options === 'object') {
+        for (const [optKey, val] of Object.entries(q.options)) {
+          const num = Number(val);
+          if (!Number.isNaN(num)) options[optKey] = num;
+        }
+      }
+      normalized.questions[qKey] = { weight, dimension, options };
+    }
+  }
+
+  return normalized;
+}
+
 export function normalizeSurvey(survey) {
   const obj = typeof survey === 'string' ? JSON.parse(survey) : survey;
   const normalized = {};

@@ -288,14 +288,8 @@ Explanation & requirements:
 });
 
 app.post('/generate/ajson', async (req, res) => {
-  const { survey_id } = req.body;
-  if (!survey_id) return res.status(400).json({ error: 'Missing survey_id' });
-
-  const row = db.prepare('SELECT survey FROM surveys WHERE id = ? AND is_deleted = 0').get(survey_id);
-  if (!row) return res.status(404).json({ error: 'Survey not found' });
-
-  const prompt = row.prompt || '';
-  const survey = JSON.parse(row.survey);
+  const { prompt, survey } = req.body;
+  if (!survey) return res.status(400).json({ error: 'Missing survey' });
 
   try {
     const systemPrompt = `You are a survey scoring JSON generator for scale-based psychological questionnaires.
@@ -363,8 +357,8 @@ Rules:
       ],
       response_format: { type: 'json_object' },
     });
-    const ajson = JSON.parse(completion.choices[0].message.content);
-    res.json({ ajson });
+    const analysis = JSON.parse(completion.choices[0].message.content);
+    res.json({ analysis });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
