@@ -15,15 +15,21 @@ export default function AnalysisCard({ surveyId, recordId }) {
 
     (async () => {
       try {
-        const [surveyRes, recordRes] = await Promise.all([
-          fetch(`/survey?id=${surveyId}`),
-          fetch(`/record?id=${recordId}`),
-        ]);
+        const [surveyRes, recordRes] = await Promise.all([fetch(`/survey?id=${surveyId}`), fetch(`/record?id=${recordId}`)]);
+
         if (!surveyRes.ok) throw new Error(`Failed to load survey (${surveyRes.status})`);
         if (!recordRes.ok) throw new Error(`Failed to load record (${recordRes.status})`);
+
         const { prompt, survey, scoring } = await surveyRes.json();
         const record = await recordRes.json();
         if (cancelled) return;
+
+        if (record.analysis) {
+          setText(record.analysis);
+          setDone(true);
+          return;
+        }
+
         const scoringResult = scoring ? computeScoringResult(record, scoring) : null;
 
         const res = await fetch("/generate/analysis", {
@@ -37,6 +43,8 @@ export default function AnalysisCard({ surveyId, recordId }) {
         }
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
+
+        let accumulated = "";
         while (true) {
           const { done: rDone, value } = await reader.read();
           if (rDone) break;
@@ -44,9 +52,20 @@ export default function AnalysisCard({ surveyId, recordId }) {
             reader.cancel();
             return;
           }
-          setText((prev) => prev + decoder.decode(value, { stream: true }));
+          const chunk = decoder.decode(value, { stream: true });
+          accumulated += chunk;
+          setText((prev) => prev + chunk);
         }
-        if (!cancelled) setDone(true);
+        if (cancelled) return;
+
+        setDone(true);
+        if (accumulated) {
+          fetch("/record", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: recordId, analysis: accumulated }),
+          }).catch((err) => console.error("[AnalysisCard] save failed", err));
+        }
       } catch (e) {
         console.error("[AnalysisCard]", e);
         if (!cancelled) setError(e.message);

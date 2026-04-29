@@ -52,6 +52,7 @@ db.exec(`
     survey_id INTEGER NOT NULL,
     result TEXT NOT NULL,
     email TEXT NOT NULL DEFAULT '',
+    analysis TEXT NOT NULL DEFAULT '',
     is_deleted INTEGER NOT NULL DEFAULT 0
   )
 `);
@@ -155,6 +156,15 @@ app.get('/record', (req, res) => {
 
   res.set('Cache-Control', 'no-store');
   res.json({ ...row, result: JSON.parse(row.result), email: row.email || '' });
+});
+
+// Update a record's analysis text
+app.patch('/record', (req, res) => {
+  const { id, analysis } = req.body;
+  if (!id || typeof analysis !== 'string') return res.status(400).json({ error: 'Missing id or analysis' });
+  const info = db.prepare('UPDATE records SET analysis = ? WHERE id = ? AND is_deleted = 0').run(analysis, id);
+  if (info.changes === 0) return res.status(404).json({ error: 'Record not found' });
+  res.json({ ok: true });
 });
 
 // Get survey result records by survey id
