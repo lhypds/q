@@ -85,21 +85,21 @@ export default function CreateEdit({
 
   function handleSave() {
     try {
-      const obj = JSON.parse(jsonText);
-      if (title.trim()) obj.title = title.trim();
-      if (subtitle.trim()) obj.subtitle = subtitle.trim();
-      else delete obj.subtitle;
-      if (description.trim()) obj.description = description.trim();
-      else delete obj.description;
-      if (!obj.title || !obj.title.trim()) {
+      const qjson = JSON.parse(jsonText);
+      if (title.trim()) qjson.title = title.trim();
+      if (subtitle.trim()) qjson.subtitle = subtitle.trim();
+      else delete qjson.subtitle;
+      if (description.trim()) qjson.description = description.trim();
+      else delete qjson.description;
+      if (!qjson.title || !qjson.title.trim()) {
         setJsonError(t("createEdit.titleRequired"));
         return;
       }
-      if (!obj.questions || Object.keys(obj.questions).length === 0) {
+      if (!qjson.questions || Object.keys(qjson.questions).length === 0) {
         setJsonError(t("createEdit.questionRequired"));
         return;
       }
-      onSave(normalizeQjson(obj));
+      onSave(normalizeQjson(qjson));
       onClose();
     } catch {
       setJsonError(t("createEdit.invalidJsonSave"));

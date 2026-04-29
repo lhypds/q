@@ -85,7 +85,7 @@ export default function Survey() {
     return true;
   });
 
-  async function handleEditSave(newSurveyObj) {
+  async function handleEditSave(newQjson) {
     // If no records exist yet, update survey in place
     const records = await fetch(`/records?survey_id=${qParam}`)
       .then((r) => (r.ok ? r.json() : []))
@@ -95,13 +95,18 @@ export default function Survey() {
       const patchRes = await fetch("/survey", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: qParam, survey: newSurveyObj }),
+        body: JSON.stringify({ id: qParam, survey: newQjson }),
       });
       if (patchRes.ok) {
         window.location.reload();
         return;
       }
     }
+
+    // Fetch old survey (prompt, survey, scoring)
+    const oldSurvey = await fetch(`/survey?id=${qParam}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null);
 
     // Delete old survey
     await fetch("/survey", {
@@ -110,11 +115,11 @@ export default function Survey() {
       body: JSON.stringify({ id: qParam }),
     });
 
-    // Create new survey
+    // Create new survey (preserve prompt and scoring)
     const res = await fetch("/survey", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ survey: newSurveyObj }),
+      body: JSON.stringify({ prompt: oldSurvey.prompt || "", survey: newQjson, scoring: oldSurvey.scoring || "" }),
     });
 
     // Redirect to new survey
