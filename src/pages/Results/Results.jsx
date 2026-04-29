@@ -22,14 +22,14 @@ export default function Results() {
     questions: [],
     surveyObj: {},
   });
-  const [analysis, setAnalysis] = useState(null);
+  const [scoring, setScoring] = useState(null);
 
   useEffect(() => {
     fetch(`/survey?id=${qParam}`)
       .then((r) => r.json())
       .then((data) => {
         if (data.survey) setSurveyData(parseSurveyObj(data.survey));
-        if (data.analysis) setAnalysis(data.analysis);
+        if (data.scoring) setScoring(data.scoring);
       });
   }, []);
 
@@ -123,7 +123,7 @@ export default function Results() {
       <div className={styles.content}>
         {isScale ? (
           singleRecord ? (
-            <ScaleResults record={singleRecord} analysis={analysis} />
+            <ScaleResults record={singleRecord} scoring={scoring} />
           ) : (
             <div>{t("results.noRecord")}</div>
           )

@@ -22,10 +22,10 @@ function computeScore(record, dimKey, dim, qConfig) {
   return { score, matchIdx };
 }
 
-export default function ScaleResults({ record, analysis }) {
-  if (!analysis?.dimensions || !record) return null;
+export default function ScaleResults({ record, scoring }) {
+  if (!scoring?.dimensions || !record) return null;
 
-  const { dimensions, questions: qConfig } = analysis;
+  const { dimensions, questions: qConfig } = scoring;
 
   const dimEntries = Object.entries(dimensions);
 

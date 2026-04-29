@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // Log API requests
-const API_PATHS = ['/survey', '/surveys', '/record', '/records', '/generate/prompt', '/generate/qjson', '/generate/ajson'];
+const API_PATHS = ['/survey', '/surveys', '/record', '/records', '/generate/prompt', '/generate/qjson', '/generate/sjson'];
 app.use((req, _res, next) => {
   if (API_PATHS.some(p => req.url === p || req.url.startsWith(p + '?'))) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -42,7 +42,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     prompt TEXT NOT NULL DEFAULT '',
     survey TEXT NOT NULL UNIQUE,
-    analysis TEXT DEFAULT '',
+    scoring TEXT DEFAULT '',
     is_deleted INTEGER NOT NULL DEFAULT 0
   );
   CREATE TABLE IF NOT EXISTS records (
@@ -60,9 +60,9 @@ db.exec(`
 app.get('/survey', (req, res) => {
   const { id } = req.query;
   if (!id) return res.status(400).json({ error: 'Missing id' });
-  const row = db.prepare('SELECT survey, analysis FROM surveys WHERE id = ? AND is_deleted = 0').get(id);
+  const row = db.prepare('SELECT survey, scoring FROM surveys WHERE id = ? AND is_deleted = 0').get(id);
   if (!row) return res.status(404).json({ error: 'Not found' });
-  res.json({ survey: JSON.parse(row.survey), analysis: row.analysis ? JSON.parse(row.analysis) : null });
+  res.json({ survey: JSON.parse(row.survey), scoring: row.scoring ? JSON.parse(row.scoring) : "" });
 });
 
 // Distinct surveys for survey list
@@ -88,18 +88,18 @@ app.get('/surveys', (_req, res) => {
 
 // Upsert survey, return id
 app.post('/survey', (req, res) => {
-  const { prompt = '', survey, analysis } = req.body;
+  const { prompt = '', survey, scoring } = req.body;
   if (!survey) return res.status(400).json({ error: 'Missing survey' });
   const surveyJson = JSON.stringify(survey);
-  const analysisJson = analysis ? JSON.stringify(analysis) : "";
+  const scoringJson = scoring ? JSON.stringify(scoring) : "";
   const existing = db.prepare('SELECT id, is_deleted FROM surveys WHERE survey = ?').get(surveyJson);
   if (existing) {
     if (existing.is_deleted) {
-      db.prepare('UPDATE surveys SET is_deleted = 0, prompt = ?, analysis = ? WHERE id = ?').run(prompt, analysisJson, existing.id);
+      db.prepare('UPDATE surveys SET is_deleted = 0, prompt = ?, scoring = ? WHERE id = ?').run(prompt, scoringJson, existing.id);
     }
     return res.json({ id: existing.id });
   }
-  const info = db.prepare('INSERT INTO surveys (prompt, survey, analysis) VALUES (?, ?, ?)').run(prompt, surveyJson, analysisJson);
+  const info = db.prepare('INSERT INTO surveys (prompt, survey, scoring) VALUES (?, ?, ?)').run(prompt, surveyJson, scoringJson);
   res.json({ id: info.lastInsertRowid });
 });
 
@@ -299,7 +299,7 @@ Explanation & requirements:
   }
 });
 
-app.post('/generate/ajson', async (req, res) => {
+app.post('/generate/sjson', async (req, res) => {
   const { prompt, survey } = req.body;
   if (!survey) return res.status(400).json({ error: 'Missing survey' });
 
@@ -369,8 +369,8 @@ Rules:
       ],
       response_format: { type: 'json_object' },
     });
-    const analysis = JSON.parse(completion.choices[0].message.content);
-    res.json({ analysis });
+    const scoring = JSON.parse(completion.choices[0].message.content);
+    res.json({ scoring });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

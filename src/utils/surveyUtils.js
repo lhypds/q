@@ -1,5 +1,5 @@
-export function normalizeAnalysis(analysis) {
-  const obj = typeof analysis === 'string' ? JSON.parse(analysis) : analysis;
+export function normalizeSjson(scoring) {
+  const obj = typeof scoring === 'string' ? JSON.parse(scoring) : scoring;
   const normalized = { scoring_method: 'sum' };
 
   // Normalize dimensions
@@ -53,7 +53,7 @@ export function normalizeAnalysis(analysis) {
   return normalized;
 }
 
-export function normalizeSurvey(survey) {
+export function normalizeQjson(survey) {
   const obj = typeof survey === 'string' ? JSON.parse(survey) : survey;
   const normalized = {};
   if (obj.title !== undefined) normalized.title = obj.title;

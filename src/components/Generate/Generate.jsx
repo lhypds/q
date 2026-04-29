@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, showToast, hideToast, TextArea } from "@ui";
 import styles from "./generate.module.css";
-import { normalizeSurvey, normalizeAnalysis } from "@utils/surveyUtils";
+import { normalizeSurvey, normalizeScoring } from "@utils/surveyUtils";
 
 export default function Generate({ isOpen, onClose, onComplete }) {
   const { t } = useTranslation();
@@ -85,22 +85,22 @@ export default function Generate({ isOpen, onClose, onComplete }) {
       if (!qjsonRes.ok) throw new Error(qjsonData.error || "Failed to generate survey");
       const survey = normalizeSurvey(qjsonData.survey);
 
-      // If the generated survey type is not "common", generate analysis (ajson)
-      let analysis = "";
+      // If the generated survey type is not "common", generate scoring (sjson)
+      let scoring = "";
       if (survey.type !== "common") {
-        const ajsonRes = await fetch("/generate/ajson", {
+        const sjsonRes = await fetch("/generate/sjson", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt, survey }),
         });
-        const ajsonData = await ajsonRes.json();
-        if (!ajsonRes.ok) throw new Error(ajsonData.error || "Failed to generate analysis");
-        analysis = normalizeAnalysis(ajsonData.analysis);
+        const sjsonData = await sjsonRes.json();
+        if (!sjsonRes.ok) throw new Error(sjsonData.error || "Failed to generate scoring");
+        scoring = normalizeScoring(sjsonData.scoring);
       }
 
       clearInterval(interval);
       hideToast();
-      onComplete(prompt, survey, analysis);
+      onComplete(prompt, survey, scoring);
     } catch (e) {
       clearInterval(interval);
       hideToast();
