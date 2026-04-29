@@ -25,57 +25,57 @@ export default function Results() {
   });
   const [scoring, setScoring] = useState(null);
 
-  useEffect(() => {
-    fetch(`/survey?id=${qParam}`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.survey) setSurveyData(parseSurveyObj(data.survey));
-        if (data.scoring) setScoring(data.scoring);
-      });
-  }, []);
-
-  const { title, subtitle, description, questions } = surveyData;
-
   const [records, setRecords] = useState([]);
   const [singleRecord, setSingleRecord] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
-    if (!qParam) return;
-    if (rParam) {
-      // Single record
-      fetch(`/record?id=${rParam}`)
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.error) {
-            setFetchError(data.error);
-          } else if (String(data.survey_id) !== String(qParam)) {
-            setFetchError(t("results.fetchError"));
-          } else {
-            setSingleRecord(data);
-          }
-          setLoading(false);
-        })
-        .catch(() => {
-          setFetchError(t("results.fetchError"));
-          setLoading(false);
-        });
-    } else {
-      // Common survey records
-      fetch(`/records?survey_id=${qParam}`)
-        .then((r) => r.json())
-        .then((data) => {
-          if (Array.isArray(data)) setRecords(data);
-          else setFetchError(data.error || t("results.fetchError"));
-          setLoading(false);
-        })
-        .catch(() => {
-          setFetchError(t("results.fetchError"));
-          setLoading(false);
-        });
-    }
+    fetch(`/survey?id=${qParam}`)
+      .then((r) => r.json())
+      .then((data) => {
+        const surveyData_ = parseSurveyObj(data.survey);
+        if (data.survey) setSurveyData(surveyData_);
+        if (data.scoring) setScoring(data.scoring);
+
+        const survey = surveyData_.surveyObj;
+
+        if (survey.type !== "common" && rParam) {
+          // Single record
+          fetch(`/record?id=${rParam}`)
+            .then((r) => r.json())
+            .then((data) => {
+              if (data.error) {
+                setFetchError(data.error);
+              } else if (String(data.survey_id) !== String(qParam)) {
+                setFetchError(t("results.fetchError"));
+              } else {
+                setSingleRecord(data);
+              }
+              setLoading(false);
+            })
+            .catch(() => {
+              setFetchError(t("results.fetchError"));
+              setLoading(false);
+            });
+        } else {
+          // Common survey records
+          fetch(`/records?survey_id=${qParam}`)
+            .then((r) => r.json())
+            .then((data) => {
+              if (Array.isArray(data)) setRecords(data);
+              else setFetchError(data.error || t("results.fetchError"));
+              setLoading(false);
+            })
+            .catch(() => {
+              setFetchError(t("results.fetchError"));
+              setLoading(false);
+            });
+        }
+      });
   }, [t]);
+
+  const { title, subtitle, description, questions } = surveyData;
 
   const surveyUrl = (() => {
     const params = new URLSearchParams(window.location.search);
