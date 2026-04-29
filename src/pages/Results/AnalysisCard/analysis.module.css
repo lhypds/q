@@ -16,11 +16,6 @@
   animation: blink 1s steps(1) infinite;
 }
 
-.placeholder {
-  color: #888;
-  animation: blink 1.2s steps(1) infinite;
-}
-
 @keyframes blink {
   50% {
     opacity: 0;

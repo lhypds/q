@@ -112,8 +112,8 @@ export default function AnalysisCard({ surveyId, recordId }) {
         <div className="error-msg">{error}</div>
       ) : (
         <div className={styles.body}>
-          {text || (!done && <span className={styles.placeholder}>…</span>)}
-          {text && !done && <span className={styles.cursor} />}
+          {text}
+          {!done && <span className={styles.cursor} />}
         </div>
       )}
     </div>
