@@ -119,9 +119,10 @@ export default function Results() {
       )}
 
       <div className={styles.content}>
-        // 1. Common
+        {/* 1. Common */}
         {surveyData.type === "common" && questions.map((q) => <ResultCard key={q.key} question={q} results={records} />)}
-        // 2. Assessment scale
+
+        {/* 2. Assessment scale */}
         {surveyData.type === "assessment_scale" &&
           (singleRecord ? <ScaleResults record={singleRecord} scoring={scoring} /> : <div>{t("results.noRecord")}</div>)}
       </div>
