@@ -43,11 +43,17 @@ export default function Results() {
   useEffect(() => {
     if (!qParam) return;
     if (rParam) {
+      // Single record
       fetch(`/record?id=${rParam}`)
         .then((r) => r.json())
         .then((data) => {
-          if (data.error) setFetchError(data.error);
-          else setSingleRecord(data);
+          if (data.error) {
+            setFetchError(data.error);
+          } else if (String(data.survey_id) !== String(qParam)) {
+            setFetchError(t("results.fetchError"));
+          } else {
+            setSingleRecord(data);
+          }
           setLoading(false);
         })
         .catch(() => {
@@ -55,6 +61,7 @@ export default function Results() {
           setLoading(false);
         });
     } else {
+      // Common survey records
       fetch(`/records?survey_id=${qParam}`)
         .then((r) => r.json())
         .then((data) => {
