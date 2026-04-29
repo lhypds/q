@@ -35,7 +35,8 @@
     "emailPlaceholder": "your@email.com",
     "answerAll": "Please answer all questions before submitting.",
     "submitFailed": "Failed to submit. Please try again.",
-    "shareText": "Join the survey & check the results!\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}"
+    "shareText": "Join the survey!\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}",
+    "shareTextResponse": "Check out my survey response!\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}"
   },
   "results": {
     "loading": "Loading…",

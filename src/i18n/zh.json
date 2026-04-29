@@ -35,7 +35,8 @@
     "emailPlaceholder": "your@email.com",
     "answerAll": "请在提交前回答所有问题。",
     "submitFailed": "提交失败，请重试。",
-    "shareText": "欢迎参与调查！欢迎围观调查结果！\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}"
+    "shareText": "欢迎参与调查！\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}",
+    "shareTextResponse": "这是我的回答！\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}"
   },
   "results": {
     "loading": "加载中…",

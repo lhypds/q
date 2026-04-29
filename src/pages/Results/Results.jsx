@@ -85,8 +85,12 @@ export default function Results() {
 
   async function handleShare() {
     let id = qParam;
-    const shareUrl = `${window.location.origin}/?q=${id}`;
-    const text = t("survey.shareText", { title, subtitle: subtitle ? `[${subtitle}]\n` : "", shareUrl });
+    let shareUrl = `${window.location.origin}/?q=${id}`;
+    if (rParam) {
+      shareUrl += `&r=${rParam}`;
+    }
+    shareUrl += `&view=true`;
+    const text = t("results.shareText", { title, subtitle: subtitle ? `[${subtitle}]\n` : "", shareUrl });
     const copied = await copyText(text);
     showToast(copied ? t("toast.linkCopied") : t("toast.failedCopy"));
   }
