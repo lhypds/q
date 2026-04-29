@@ -100,7 +100,7 @@ export default function QuestionCard({ question, selected, onSelect, otherValue,
     );
   }
 
-  // single
+  // Single
   const isOtherChecked = selected === "__other__";
   return (
     <CardShell question={question}>

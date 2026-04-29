@@ -7,6 +7,7 @@ import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
 import { ScaleResults } from "./ScaleResults";
 import { ResultCard } from "./ResultCard";
+import { AnalysisCard } from "./AnalysisCard";
 
 const qParam = new URLSearchParams(window.location.search).get("q");
 const rParam = new URLSearchParams(window.location.search).get("r");
@@ -136,6 +137,10 @@ export default function Results() {
           ) : (
             <div>{t("results.noRecord")}</div>
           ))}
+
+        {/* 3. AI analysis */}
+        {surveyData.type === "ai_analysis" &&
+          (singleRecord ? <AnalysisCard surveyId={qParam} recordId={rParam} /> : <div>{t("results.noRecord")}</div>)}
       </div>
 
       <div className="submit-row">

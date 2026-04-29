@@ -32,15 +32,41 @@ export default function AnalysisCard({ surveyId, recordId }) {
 
         const scoringResult = scoring ? computeScoringResult(record, scoring) : null;
 
+        let userPrompt = "";
+
+        if (surveyRes.type === "assessment_scale") {
+          userPrompt = [
+            prompt ? `Survey design prompt:\n${prompt}` : null,
+            `Survey JSON:\n${JSON.stringify(survey, null, 2)}`,
+            scoring ? `Scoring JSON:\n${JSON.stringify(scoring, null, 2)}` : null,
+            scoringResult ? `Scoring result:\n${JSON.stringify(scoringResult, null, 2)}` : null,
+            `Record:\n${JSON.stringify(record, null, 2)}`,
+          ]
+            .filter(Boolean)
+            .join("\n\n");
+        }
+
+        if (surveyRes.type === "ai_analysis") {
+          userPrompt = [
+            prompt ? `Survey design prompt:\n${prompt}` : null,
+            `Survey JSON:\n${JSON.stringify(survey, null, 2)}`,
+            `Record:\n${JSON.stringify(record, null, 2)}`,
+          ]
+            .filter(Boolean)
+            .join("\n\n");
+        }
+
         const res = await fetch("/generate/analysis", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt, survey, scoring, scoringResult, record, lang: i18n.language }),
+          body: JSON.stringify({ userPrompt, lang: i18n.language }),
         });
+
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
           throw new Error(data.error || `Failed to generate analysis (${res.status})`);
         }
+
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
 

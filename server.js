@@ -276,17 +276,18 @@ app.post('/generate/qjson', async (req, res) => {
   }
 }
 
-Explanation & requirements:  
-* Better to add a "subtitle" and a "description".  
-* The root-level "type" field must be "common" or "assessment_scale".
+Explanation & requirements:
+* Better to add a "subtitle" and a "description".
+* The root-level "type" field must be "common" or "assessment_scale" or "ai_analysis".
   Use "assessment_scale" when the survey is a psychological or behavioral scale where each question has scored options and the total score maps to a result level (e.g. stress tests, personality inventories, health screeners, risk assessments).
+  Use "ai_analysis" when the survey is specifically designed for generating personalized AI analysis reports based on the respondent's answers (e.g. open-ended questions for mental health journaling, detailed feedback forms, or any survey where the main value is in the qualitative analysis rather than quantitative scoring).
   Use "common" for all other surveys (feedback forms, polls, quizzes, satisfaction surveys, event registrations, etc.).
 * The "type" of each question can be "single", "multi", "true_false", or "text".
-  Use "type": "multi" for questions that allow multiple selections (marked with [multi] in the outline).  
-  Use "type": "single" for single-choice questions.  
-  Use "type": "true_false" for True/False questions.  
-  Use "type": "text" for Open-ended or Short-answer questions.  
-* Use "has_other_option": true, for questions that have an "Other" option for user free text input. If "has_other_option" is true, then no need to add a "Other" option in the options list.  
+  Use "type": "multi" for questions that allow multiple selections (marked with [multi] in the outline).
+  Use "type": "single" for single-choice questions.
+  Use "type": "true_false" for True/False questions.
+  Use "type": "text" for Open-ended or Short-answer questions.
+* Use "has_other_option": true, for questions that have an "Other" option for user free text input. If "has_other_option" is true, then no need to add a "Other" option in the options list.
 `;
 
     const userPrompt = topic ? `Topic: ${topic}\n\nQuestions outline:\n${prompt}` : `Questions outline:\n${prompt}`;
@@ -325,7 +326,7 @@ Given a survey JSON, generate a scoring JSON in this exact format:
       "label": "Anxiety",
       "question_ids": ["1", "3"],
       "results": [
-        { "min": 0,  "max": 6,  "label": "Low",      "description": "Minimal anxiety indicators." },
+        { "min": 0,  "max": 6,  "label": "Low",       "description": "Minimal anxiety indicators." },
         { "min": 7,  "max": 12, "label": "Moderate",  "description": "Some anxiety present." },
         { "min": 13, "max": 18, "label": "High",      "description": "Significant anxiety present." }
       ]
@@ -334,7 +335,7 @@ Given a survey JSON, generate a scoring JSON in this exact format:
       "label": "Depression",
       "question_ids": ["2", "4"],
       "results": [
-        { "min": 0,  "max": 5,  "label": "Low",  "description": "Minimal depressive indicators." },
+        { "min": 0,  "max": 5,  "label": "Low",   "description": "Minimal depressive indicators." },
         { "min": 6,  "max": 10, "label": "High",  "description": "Notable depressive indicators." }
       ]
     }
@@ -343,7 +344,7 @@ Given a survey JSON, generate a scoring JSON in this exact format:
     "1": { "weight": 1, "dimension": "anxiety",    "options": { "1": 3, "2": 2, "3": 1, "4": 0 } },
     "2": { "weight": 1, "dimension": "depression", "options": { "1": 0, "2": 1, "3": 2, "4": 3 } },
     "3": { "weight": 1, "dimension": "anxiety",    "options": { "true": 1, "false": 0 } },
-    "4": { "weight": 0, "dimension": null,          "options": {} }
+    "4": { "weight": 0, "dimension": null,         "options": {} }
   }
 }
 
@@ -388,19 +389,12 @@ Rules:
 
 // Generate AI analysis report for an assessment scale record (streaming text)
 app.post('/generate/analysis', async (req, res) => {
-  const { prompt, survey, scoring, scoringResult, record, lang } = req.body;
-  if (!survey || !record) return res.status(400).json({ error: 'Missing survey or record' });
+  const { userPrompt, lang } = req.body;
+  if (!userPrompt) return res.status(400).json({ error: 'Missing userPrompt' });
 
   const langName = { en: 'English', zh: 'Chinese', ja: 'Japanese' }[lang] || 'English';
 
   const systemPrompt = `You are a thoughtful assessment-scale analyst. Given an assessment-scale survey and one respondent's answers and computed scores, write a personalized analysis report for the respondent.
-
-Use the user prompt blocks as follows:
-* "Survey design prompt" — the original brief used to design the survey; use it to understand the survey's intent.
-* "Survey" — the survey structure (questions and options).
-* "Scoring" — the scoring rubric (dimensions, weights, score-to-level ranges).
-* "Scoring result" — the per-dimension scores and matched levels already computed for this respondent.
-* "Record" — the respondent's raw answers, keyed by question id.
 
 Report requirements:
 * Write in ${langName}.
@@ -411,14 +405,6 @@ Report requirements:
 * Output plain text only. Do NOT use any Markdown — no #, *, _, \`, -, >, or similar formatting characters. Use blank lines to separate paragraphs and sections.
 * Do not invent dimensions or scores that are not in the input. Do not give medical diagnoses.
 * Keep the whole report concise — aim for under 400 words.`;
-
-  const userPrompt = [
-    prompt ? `Survey design prompt:\n${prompt}` : null,
-    `Survey JSON:\n${JSON.stringify(survey, null, 2)}`,
-    scoring ? `Scoring JSON:\n${JSON.stringify(scoring, null, 2)}` : null,
-    scoringResult ? `Scoring result:\n${JSON.stringify(scoringResult, null, 2)}` : null,
-    `Record:\n${JSON.stringify(record, null, 2)}`,
-  ].filter(Boolean).join('\n\n');
 
   try {
     const stream = await openai.chat.completions.create({
