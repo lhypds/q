@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./survey.module.css";
 import { ActionButton, showToast, Modal } from "@ui";
-import { CreateEdit, QuestionCard, LanguageSwitcher } from "@components";
+import { CreateEdit, LanguageSwitcher } from "@components";
 import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
+import { QuestionCard } from "./QuestionCard";
 
 const qParam = new URLSearchParams(window.location.search).get("q");
 const rParam = new URLSearchParams(window.location.search).get("r");

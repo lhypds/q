@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./results.module.css";
 import { ActionButton, showToast } from "@ui";
-import { ScaleResults, ResultCard, LanguageSwitcher } from "@components";
+import { LanguageSwitcher } from "@components";
 import { parseSurveyObj } from "@utils/urlUtils";
 import { copyText } from "@utils/clipboardUitls";
+import { ScaleResults } from "./ScaleResults";
+import { ResultCard } from "./ResultCard";
 
 const qParam = new URLSearchParams(window.location.search).get("q");
 const rParam = new URLSearchParams(window.location.search).get("r");

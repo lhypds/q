@@ -42,7 +42,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     prompt TEXT NOT NULL DEFAULT '',
     survey TEXT NOT NULL UNIQUE,
-    analysis TEXT,
+    analysis TEXT DEFAULT '',
     is_deleted INTEGER NOT NULL DEFAULT 0
   );
   CREATE TABLE IF NOT EXISTS records (
@@ -91,7 +91,7 @@ app.post('/survey', (req, res) => {
   const { prompt = '', survey, analysis } = req.body;
   if (!survey) return res.status(400).json({ error: 'Missing survey' });
   const surveyJson = JSON.stringify(survey);
-  const analysisJson = analysis ? JSON.stringify(analysis) : null;
+  const analysisJson = analysis ? JSON.stringify(analysis) : "";
   const existing = db.prepare('SELECT id, is_deleted FROM surveys WHERE survey = ?').get(surveyJson);
   if (existing) {
     if (existing.is_deleted) {

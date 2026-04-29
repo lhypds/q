@@ -86,7 +86,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
       const survey = normalizeSurvey(qjsonData.survey);
 
       // If the generated survey type is not "common", generate analysis (ajson)
-      let analysis = null;
+      let analysis = "";
       if (survey.type !== "common") {
         const ajsonRes = await fetch("/generate/ajson", {
           method: "POST",
