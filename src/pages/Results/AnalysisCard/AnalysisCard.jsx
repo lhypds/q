@@ -34,7 +34,7 @@ export default function AnalysisCard({ surveyId, recordId }) {
 
         let userPrompt = "";
 
-        if (surveyRes.type === "assessment_scale") {
+        if (survey.type === "assessment_scale") {
           userPrompt = [
             prompt ? `Survey design prompt:\n${prompt}` : null,
             `Survey JSON:\n${JSON.stringify(survey, null, 2)}`,
@@ -46,7 +46,7 @@ export default function AnalysisCard({ surveyId, recordId }) {
             .join("\n\n");
         }
 
-        if (surveyRes.type === "ai_analysis") {
+        if (survey.type === "ai_analysis") {
           userPrompt = [
             prompt ? `Survey design prompt:\n${prompt}` : null,
             `Survey JSON:\n${JSON.stringify(survey, null, 2)}`,
