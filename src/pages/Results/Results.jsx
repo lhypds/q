@@ -87,8 +87,6 @@ export default function Results() {
     return <div className="page">{t("common.loading")}</div>;
   }
 
-  const isScale = surveyData.type === "assessment_scale";
-
   return (
     <div className="page">
       <div className={styles.titleRow}>
@@ -116,20 +114,16 @@ export default function Results() {
 
       {fetchError && <p className="error-msg">{fetchError}</p>}
 
-      {!isScale && (
+      {surveyData.type === "common" && (
         <div className={styles.collectionInfo}>{t("results.collected", { count: records.length }) + t("common.colon")}</div>
       )}
 
       <div className={styles.content}>
-        {isScale ? (
-          singleRecord ? (
-            <ScaleResults record={singleRecord} scoring={scoring} />
-          ) : (
-            <div>{t("results.noRecord")}</div>
-          )
-        ) : (
-          questions.map((q) => <ResultCard key={q.key} question={q} results={records} />)
-        )}
+        // 1. Common
+        {surveyData.type === "common" && questions.map((q) => <ResultCard key={q.key} question={q} results={records} />)}
+        // 2. Assessment scale
+        {surveyData.type === "assessment_scale" &&
+          (singleRecord ? <ScaleResults record={singleRecord} scoring={scoring} /> : <div>{t("results.noRecord")}</div>)}
       </div>
 
       <div className="submit-row">
