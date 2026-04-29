@@ -43,6 +43,7 @@
     "noRecord": "記録が見つかりません。",
     "noResponses": "まだ回答がありません。",
     "collected": "{{count}} 件の回答が収集されました",
+    "analysisTitle": "分析レポート",
     "otherResponses": "その他の回答",
     "shareText": "アンケート結果をご覧ください！\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}"
   },

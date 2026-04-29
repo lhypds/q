@@ -124,7 +124,11 @@ export default function Results() {
 
         {/* 2. Assessment scale */}
         {surveyData.type === "assessment_scale" &&
-          (singleRecord ? <ScaleResults record={singleRecord} scoring={scoring} /> : <div>{t("results.noRecord")}</div>)}
+          (singleRecord ? (
+            <ScaleResults record={singleRecord} scoring={scoring} surveyId={qParam} recordId={rParam} />
+          ) : (
+            <div>{t("results.noRecord")}</div>
+          ))}
       </div>
 
       <div className="submit-row">

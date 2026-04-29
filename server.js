@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // Log API requests
-const API_PATHS = ['/survey', '/surveys', '/record', '/records', '/generate/prompt', '/generate/qjson', '/generate/sjson'];
+const API_PATHS = ['/survey', '/surveys', '/record', '/records', '/generate/prompt', '/generate/qjson', '/generate/sjson', '/generate/analysis'];
 app.use((req, _res, next) => {
   if (API_PATHS.some(p => req.url === p || req.url.startsWith(p + '?'))) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -60,9 +60,9 @@ db.exec(`
 app.get('/survey', (req, res) => {
   const { id } = req.query;
   if (!id) return res.status(400).json({ error: 'Missing id' });
-  const row = db.prepare('SELECT survey, scoring FROM surveys WHERE id = ? AND is_deleted = 0').get(id);
+  const row = db.prepare('SELECT prompt, survey, scoring FROM surveys WHERE id = ? AND is_deleted = 0').get(id);
   if (!row) return res.status(404).json({ error: 'Not found' });
-  res.json({ survey: JSON.parse(row.survey), scoring: row.scoring ? JSON.parse(row.scoring) : "" });
+  res.json({ prompt: row.prompt || '', survey: JSON.parse(row.survey), scoring: row.scoring ? JSON.parse(row.scoring) : "" });
 });
 
 // Distinct surveys for survey list
@@ -371,6 +371,60 @@ Rules:
     });
     const scoring = JSON.parse(completion.choices[0].message.content);
     res.json({ scoring });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Generate AI analysis report for an assessment scale record (streaming text)
+app.post('/generate/analysis', async (req, res) => {
+  const { prompt, survey, scoring, scoringResult, record, lang } = req.body;
+  if (!survey || !record) return res.status(400).json({ error: 'Missing survey or record' });
+
+  const langName = { en: 'English', zh: 'Chinese', ja: 'Japanese' }[lang] || 'English';
+
+  const systemPrompt = `You are a thoughtful assessment-scale analyst. Given an assessment-scale survey and one respondent's answers and computed scores, write a personalized analysis report for the respondent.
+
+Use the user prompt blocks as follows:
+* "Survey design prompt" — the original brief used to design the survey; use it to understand the survey's intent.
+* "Survey" — the survey structure (questions and options).
+* "Scoring" — the scoring rubric (dimensions, weights, score-to-level ranges).
+* "Scoring result" — the per-dimension scores and matched levels already computed for this respondent.
+* "Record" — the respondent's raw answers, keyed by question id.
+
+Report requirements:
+* Write in ${langName}.
+* Address the respondent in second person ("you").
+* Open with a brief overall summary (2-3 sentences) of what the scores indicate.
+* Then for each dimension, write a short paragraph interpreting the score and level in plain language, grounded in the respondent's actual answers when relevant.
+* Close with a short "Suggestions" section: 2-4 concrete, supportive, non-clinical suggestions tailored to the result.
+* Output plain text only. Do NOT use any Markdown — no #, *, _, \`, -, >, or similar formatting characters. Use blank lines to separate paragraphs and sections.
+* Do not invent dimensions or scores that are not in the input. Do not give medical diagnoses.
+* Keep the whole report concise — aim for under 400 words.`;
+
+  const userPrompt = [
+    prompt ? `Survey design prompt:\n${prompt}` : null,
+    `Survey JSON:\n${JSON.stringify(survey, null, 2)}`,
+    scoring ? `Scoring JSON:\n${JSON.stringify(scoring, null, 2)}` : null,
+    scoringResult ? `Scoring result:\n${JSON.stringify(scoringResult, null, 2)}` : null,
+    `Record:\n${JSON.stringify(record, null, 2)}`,
+  ].filter(Boolean).join('\n\n');
+
+  try {
+    const stream = await openai.chat.completions.create({
+      model: MODEL,
+      stream: true,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+    });
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    for await (const chunk of stream) {
+      const text = chunk.choices[0]?.delta?.content ?? '';
+      if (text) res.write(text);
+    }
+    res.end();
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

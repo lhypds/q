@@ -43,6 +43,7 @@
     "noRecord": "No record found.",
     "noResponses": "No responses yet.",
     "collected": "{{count}} responses collected",
+    "analysisTitle": "Analysis",
     "otherResponses": "Other responses",
     "shareText": "Check out the survey results!\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}"
   },

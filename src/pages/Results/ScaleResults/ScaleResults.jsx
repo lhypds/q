@@ -1,36 +1,19 @@
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { computeScore } from "@utils/scoringUtils";
+import { AnalysisCard } from "../AnalysisCard";
 import styles from "./scale.module.css";
 
 const LEVEL_COLORS = ["#aee9c7", "#ffd6a0", "#ffb6c9", "#b3d4fc", "#cbb7fa", "#a0e8fa", "#fff3a0"];
 
-function computeScore(record, dimKey, dim, qConfig) {
-  let score = 0;
-  for (const qId of dim.question_ids) {
-    const qConf = qConfig?.[qId] || {};
-    const answer = record.result?.[qId];
-    if (answer === undefined || answer === null || answer === "") continue;
-    let val;
-    if (qConf.options && Object.keys(qConf.options).length > 0) {
-      val = Number(qConf.options[String(answer)] ?? 0);
-    } else {
-      val = parseFloat(answer);
-      if (isNaN(val)) val = 0;
-    }
-    score += val * (qConf.weight ?? 1);
-  }
-  const matchIdx = dim.results.findIndex((r) => score >= r.min && score <= r.max);
-  return { score, matchIdx };
-}
-
-export default function ScaleResults({ record, scoring }) {
+export default function ScaleResults({ record, scoring, surveyId, recordId }) {
   if (!scoring?.dimensions || !record) return null;
 
   const { dimensions, questions: qConfig } = scoring;
 
   const dimEntries = Object.entries(dimensions);
 
-  const radarData = dimEntries.map(([dimKey, dim]) => {
-    const { score } = computeScore(record, dimKey, dim, qConfig);
+  const radarData = dimEntries.map(([, dim]) => {
+    const { score } = computeScore(record, dim, qConfig);
     const fullMark = Math.max(...dim.results.map((r) => r.max));
     return { subject: dim.label, score, fullMark };
   });
@@ -72,7 +55,7 @@ export default function ScaleResults({ record, scoring }) {
       )}
 
       {dimEntries.map(([dimKey, dim]) => {
-        const { score, matchIdx } = computeScore(record, dimKey, dim, qConfig);
+        const { score, matchIdx } = computeScore(record, dim, qConfig);
 
         return (
           <div key={dimKey} className="card">
@@ -109,6 +92,8 @@ export default function ScaleResults({ record, scoring }) {
           </div>
         );
       })}
+
+      <AnalysisCard surveyId={surveyId} recordId={recordId} />
     </div>
   );
 }
