@@ -86,6 +86,23 @@ export default function Survey() {
   });
 
   async function handleEditSave(newSurveyObj) {
+    // If no records exist yet, update survey in place
+    const records = await fetch(`/records?survey_id=${qParam}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .catch(() => []);
+
+    if (records.length === 0) {
+      const patchRes = await fetch("/survey", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: qParam, survey: newSurveyObj }),
+      });
+      if (patchRes.ok) {
+        window.location.reload();
+        return;
+      }
+    }
+
     // Delete old survey
     await fetch("/survey", {
       method: "DELETE",
@@ -171,7 +188,7 @@ export default function Survey() {
     doSubmit(email.trim());
   }
 
-  const isEdit = new URLSearchParams(window.location.search).get("edit") === "true";
+  const isEditable = new URLSearchParams(window.location.search).get("edit") === "true";
 
   const resultsUrl = (() => {
     const params = new URLSearchParams(window.location.search);
@@ -214,7 +231,7 @@ export default function Survey() {
         </a>
 
         <div className={styles.actions}>
-          {isEdit && (
+          {isEditable && (
             <ActionButton
               tooltip={t("button.edit")}
               onClick={() => {
@@ -239,7 +256,7 @@ export default function Survey() {
             </svg>
           </ActionButton>
 
-          {isEdit && (
+          {isEditable && (
             <ActionButton tooltip={t("button.delete")} onClick={() => setDeleteModalOpen(true)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <polyline points="3 6 5 6 21 6" />

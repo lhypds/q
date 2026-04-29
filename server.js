@@ -104,6 +104,21 @@ app.post('/survey', (req, res) => {
   res.json({ id: info.lastInsertRowid });
 });
 
+// Update a survey's content by id (used when no records exist yet)
+app.patch('/survey', (req, res) => {
+  const { id, survey } = req.body;
+  if (!id || !survey) return res.status(400).json({ error: 'Missing id or survey' });
+  const surveyJson = JSON.stringify(survey);
+  try {
+    const info = db.prepare('UPDATE surveys SET survey = ? WHERE id = ? AND is_deleted = 0').run(surveyJson, id);
+    if (info.changes === 0) return res.status(404).json({ error: 'Survey not found' });
+    res.json({ id });
+  } catch (e) {
+    if (e.code === 'SQLITE_CONSTRAINT_UNIQUE') return res.status(409).json({ error: 'Survey already exists' });
+    throw e;
+  }
+});
+
 // Soft delete all records for a survey
 app.delete('/survey', (req, res) => {
   const { id } = req.body;
