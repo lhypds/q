@@ -12,11 +12,12 @@
     "cancel": "キャンセル",
     "save": "保存",
     "submit": "送信",
+    "notAllowSubmitted": "回答済み",
     "skip": "スキップ",
     "rewrite": "書き直す",
     "complete": "完成",
     "viewResults": "結果を見る →",
-    "viewSurvey": "← アンケート",
+    "viewMyResponse": "← 自分の回答を見る",
     "addQuestion": "質問を追加"
   },
   "toast": {

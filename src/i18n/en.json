@@ -12,11 +12,12 @@
     "cancel": "Cancel",
     "save": "Save",
     "submit": "Submit",
+    "notAllowSubmitted": "Submitted",
     "skip": "Skip",
     "rewrite": "Rewrite",
     "complete": "Complete",
     "viewResults": "View Results →",
-    "viewSurvey": "← Survey",
+    "viewMyResponse": "← My Responses",
     "addQuestion": "Add question"
   },
   "toast": {

@@ -64,7 +64,7 @@ export default function Survey() {
       .finally(() => setLoading(false));
   }, []);
 
-  const { title, subtitle, description, questions, surveyObj } = surveyData;
+  const { title, subtitle, description, type: surveyType, questions, surveyObj } = surveyData;
 
   const [error, setError] = useState("");
   const [createEditOpen, setCreateEditOpen] = useState(false);
@@ -375,12 +375,14 @@ export default function Survey() {
           {error && <p className="error-msg">{error}</p>}
           <div className="submit-row">
             <div className={styles.submitRowLeft}>
-              <button type="submit" className={styles.submitBtn} disabled={!allAnswered}>
-                {t("button.submit")}
+              <button type="submit" className={styles.submitBtn} disabled={!allAnswered || rParam}>
+                {rParam ? t("button.notAllowSubmitted") : t("button.submit")}
               </button>
-              <a href={resultsUrl} className="results-link small">
-                {t("button.viewResults")}
-              </a>
+              {(surveyType === "common" || rParam) && (
+                <a href={resultsUrl} className="results-link small">
+                  {t("button.viewResults")}
+                </a>
+              )}
             </div>
             <a href={"/"} className="results-link small">
               q

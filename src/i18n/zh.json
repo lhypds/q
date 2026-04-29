@@ -12,11 +12,12 @@
     "cancel": "取消",
     "save": "保存",
     "submit": "提交",
+    "notAllowSubmitted": "已作答",
     "skip": "跳过",
     "rewrite": "重写",
     "complete": "完成",
     "viewResults": "查看结果 →",
-    "viewSurvey": "← 调查问卷",
+    "viewMyResponse": "← 查看我的回答",
     "addQuestion": "添加问题"
   },
   "toast": {
@@ -36,7 +37,7 @@
     "answerAll": "请在提交前回答所有问题。",
     "submitFailed": "提交失败，请重试。",
     "shareText": "欢迎参与调查！\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}",
-    "shareTextResponse": "这是我的回答！\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}"
+    "shareTextResponse": "看看我的答案！\n\n{{title}}\n{{subtitle}}\n{{shareUrl}}"
   },
   "results": {
     "loading": "加载中…",

@@ -149,7 +149,7 @@ export default function Results() {
 
       <div className="submit-row">
         <a href={surveyUrl} className="results-link">
-          {t("button.viewSurvey")}
+          {t("button.viewMyResponse")}
         </a>
         <a href={"/"} className="results-link small">
           q
