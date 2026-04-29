@@ -40,7 +40,7 @@
   "results": {
     "loading": "加载中…",
     "fetchError": "加载结果失败。",
-    "noRecord": "未找到记录。",
+    "noRecord": "未找到回答记录。",
     "noResponses": "暂无回答。",
     "collected": "已收集 {{count}} 个回答",
     "analysisTitle": "分析报告",

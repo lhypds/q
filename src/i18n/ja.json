@@ -40,7 +40,7 @@
   "results": {
     "loading": "読み込み中…",
     "fetchError": "結果の読み込みに失敗しました。",
-    "noRecord": "記録が見つかりません。",
+    "noRecord": "回答記録が見つかりません。",
     "noResponses": "まだ回答がありません。",
     "collected": "{{count}} 件の回答が収集されました",
     "analysisTitle": "分析レポート",
