@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, TextArea } from "@ui";
-import { normalizeSurvey } from "@utils/surveyUtils";
+import { normalizeQjson } from "@utils/surveyUtils";
 import styles from "./edit.module.css";
 
 function toJson(obj) {
@@ -19,7 +19,7 @@ export default function CreateEdit({
   mode,
 }) {
   const { t } = useTranslation();
-  const normalizedSurveyObj = surveyObj ? normalizeSurvey(surveyObj) : {};
+  const normalizedSurveyObj = surveyObj ? normalizeQjson(surveyObj) : {};
 
   const [title, setTitle] = useState(currentTitle || normalizedSurveyObj.title || "");
   const [subtitle, setSubtitle] = useState(currentSubtitle || normalizedSurveyObj.subtitle || "");
@@ -99,7 +99,7 @@ export default function CreateEdit({
         setJsonError(t("createEdit.questionRequired"));
         return;
       }
-      onSave(normalizeSurvey(obj));
+      onSave(normalizeQjson(obj));
       onClose();
     } catch {
       setJsonError(t("createEdit.invalidJsonSave"));
@@ -116,9 +116,9 @@ export default function CreateEdit({
       const n = nums.length > 0 ? Math.max(...nums) + 1 : 1;
       const base = { title: `Question ${n} title`, description: "Description for this question..." };
       const byType = {
-        single:     { ...base, type: "single",     has_other_option: false, options: { 1: "Option 1", 2: "Option 2" } },
-        multi:      { ...base, type: "multi",       has_other_option: false, options: { 1: "Option 1", 2: "Option 2" } },
-        text:       { ...base, type: "text" },
+        single: { ...base, type: "single", has_other_option: false, options: { 1: "Option 1", 2: "Option 2" } },
+        multi: { ...base, type: "multi", has_other_option: false, options: { 1: "Option 1", 2: "Option 2" } },
+        text: { ...base, type: "text" },
         true_false: { ...base, type: "true_false" },
       };
       obj.questions[String(n)] = byType[type];
@@ -188,7 +188,8 @@ export default function CreateEdit({
                 <button key={type} type="button" className={styles.addQuestionBtn} onClick={() => handleAddQuestion(type)}>
                   +{type.replace("_", "")}
                 </button>
-              ))}</div>
+              ))}
+            </div>
           </div>
 
           <TextArea

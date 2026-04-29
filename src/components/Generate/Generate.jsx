@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, showToast, hideToast, TextArea } from "@ui";
 import styles from "./generate.module.css";
-import { normalizeSurvey, normalizeScoring } from "@utils/surveyUtils";
+import { normalizeQjson, normalizeSjson } from "@utils/surveyUtils";
 
 export default function Generate({ isOpen, onClose, onComplete }) {
   const { t } = useTranslation();
@@ -83,7 +83,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
       });
       const qjsonData = await qjsonRes.json();
       if (!qjsonRes.ok) throw new Error(qjsonData.error || "Failed to generate survey");
-      const survey = normalizeSurvey(qjsonData.survey);
+      const survey = normalizeQjson(qjsonData.survey);
 
       // If the generated survey type is not "common", generate scoring (sjson)
       let scoring = "";
@@ -95,7 +95,7 @@ export default function Generate({ isOpen, onClose, onComplete }) {
         });
         const sjsonData = await sjsonRes.json();
         if (!sjsonRes.ok) throw new Error(sjsonData.error || "Failed to generate scoring");
-        scoring = normalizeScoring(sjsonData.scoring);
+        scoring = normalizeSjson(sjsonData.scoring);
       }
 
       clearInterval(interval);

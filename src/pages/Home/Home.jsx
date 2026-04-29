@@ -125,7 +125,7 @@ export default function Home() {
       </div>
 
       <CreateEdit
-        key={createEditKey}
+        key={`create-${createEditKey}`}
         isOpen={createEditOpen}
         onClose={() => setCreateEditOpen(false)}
         surveyObj={createEditSurveyObj}
@@ -134,7 +134,7 @@ export default function Home() {
       />
 
       <Generate
-        key={generateKey}
+        key={`generate-${generateKey}`}
         isOpen={generateOpen}
         onClose={() => setGenerateOpen(false)}
         onComplete={handleGenerateComplete}
