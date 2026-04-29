@@ -3,6 +3,7 @@
 }
 
 .textarea {
+  display: block;
   width: 100%;
   padding: 10px;
   font-family: inherit;
@@ -18,7 +19,7 @@
 
 .handle {
   position: absolute;
-  bottom: 8px;
+  bottom: 2px;
   right: 1px;
   width: 14px;
   height: 10px;
